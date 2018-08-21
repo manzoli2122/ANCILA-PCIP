@@ -1,0 +1,152 @@
+<?php
+
+namespace App\Service\Administrador ;
+  
+use App\Models\Administrador\Pergunta;
+use Yajra\DataTables\DataTables;
+use App\Service\VueService; 
+use Illuminate\Http\Request; 
+
+
+
+class PerguntaService extends VueService  implements PerguntaServiceInterface 
+{
+
+
+    protected $model;   
+
+
+    protected $dataTable; 
+
+
+
+
+
+
+    public function __construct( Pergunta $pergunta , DataTables $dataTable ){  
+        $this->model = $pergunta ;    
+        $this->dataTable = $dataTable ; 
+    }
+  
+
+
+
+
+
+     /** 
+    * Busca um model pelo id
+    *
+    * @param int $id
+    *
+    * @return $model
+    */
+    public function  BuscarPeloId( Request $request , $id ){ 
+        $model = $this->model->with('assunto')->with('resposta')->find($id)  ;
+        return   $model   ; 
+    }
+
+
+
+
+
+
+    /**
+    * Função para ativar um usuario ja existente  
+    *
+    * @param Request $request
+    *  
+    * @param int  $id
+    *    
+    * @return void
+    */
+    public function  Ativar( Request $request , $id ){
+        throw_if(!$model = $this->model->withTrashed()->find($id), ModelNotFoundException::class);
+        $model->restore(); 
+        return 'Ativado';
+    }
+
+
+ 
+
+
+
+
+
+
+    /**
+    * Funcao para buscar as permissoes pelo datatable  
+    *
+    * @param Request $request 
+    *
+    * @return json
+    */
+    public function  BuscarDataTable( $request ){
+        $models = $this->model->getDatatable();
+        return $this->dataTable->eloquent($models)
+        ->addColumn('action', function($linha) {
+
+            if($linha->deleted_at != ''){
+                return '<button data-id="'.$linha->id.'" btn-ativar class="btn btn-success btn-sm" title="Ativar"><i class="fa fa-thumbs-up"></i> </button>' 
+                .'<button data-id="'.$linha->id.'" btn-excluir class="btn btn-danger btn-sm" title="Excluir Definitivamente"><i class="fa fa-trash"></i></button>';
+            } 
+            return 
+            '<a href="#/edit/'.$linha->id.'" class="btn btn-success btn-sm" title="Editar"><i class="fa fa-pencil"></i></a>'
+            . '<a href="#/show/'.$linha->id.'" class="btn btn-primary btn-sm" title="Visualizar" style="margin-left: 10px;"><i class="fa fa-search"></i></a>'
+            .'<button data-id="'.$linha->id.'" btn-desativar class="btn btn-danger btn-sm" title="Desativar"><i class="fa fa-thumbs-down"></i></button>';
+        })
+        ->setRowClass(function ($linha) {
+            $class = '';
+            if($linha->deleted_at != ''){
+                 $class .= 'alert-warning' ;
+            }
+            if($linha->status === 'Suspensa'){
+                 $class .= ' text-danger' ;
+            } 
+            return $class;
+        })
+        
+        ->addColumn('disciplina', function ($pergunta) {
+            return $pergunta->assunto->disciplina->nome ;
+        })
+         
+        ->make(true); 
+    }
+
+    
+ 
+    
+
+
+
+    /**
+    * Função para excluir um model  
+    *
+    * @param int $id
+    *    
+    * @return void
+    */
+    public function  Apagar( Request $request , $id ){
+
+        if( $model = $this->model->find($id)){
+            // foreach ( $model->assuntos as $assunto ) {
+            //     $assunto->delete();
+            // } 
+            $model->delete() ; 
+            return; 
+        }
+        
+        if( $model = $this->model->onlyTrashed()->find($id)){
+            $model->forceDelete(); 
+            return; 
+        }
+
+        throw_if( true , ModelNotFoundException::class);   
+
+    }
+
+
+
+
+
+
+}
