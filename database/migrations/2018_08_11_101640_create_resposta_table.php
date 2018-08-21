@@ -20,7 +20,7 @@ class CreateRespostaTable extends Migration
             
             $table->bigInteger('count' )->default(0);
 
-            $table->unsignedInteger('pergunta_id')->nullable();
+            $table->unsignedInteger('pergunta_id');
 
             $table->foreign('pergunta_id')->references('id')->on('pergunta')->onDelete('cascade');
 
