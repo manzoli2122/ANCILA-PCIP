@@ -16,9 +16,9 @@
 						</div>   
 						<div class="card-body ">  
 							<div class="row">
-								<div v-for="resposta in pergunta.resposta" class="col-md-12">
-									<div class="radio"  v-bind:class="[respondido & (resposta.id === pergunta.resposta_certa_id) ? 'text-green' : '']">
-										<label v-bind:class="[temp_errada === resposta.id ? 'text-red' : '' ]"  >
+								<div v-for="resposta in pergunta.resposta" :key="resposta.id" class="col-md-12">
+									<div class="radio"  v-bind:class="[respondido & (resposta.id === pergunta.resposta_certa_id) ? 'text-success' : '']">
+										<label v-bind:class="[temp_errada === resposta.id ? 'text-danger' : '' ]"  >
 											<input  style="margin-top: 8px;" type="radio" required name="resposta" :value="resposta.id" v-model="form.selected">
 											<span v-html="resposta.texto"></span>  
 										</label>
@@ -27,8 +27,8 @@
 							</div> 
 						</div> 
 						<div class="card-footer text-right"> 
-							<a class="btn btn-default btn-block btn-proximo" v-if="respondido" v-bind:class="respondido ? '' : 'disabled'" v-on:click="proximaPergunta()">
-								Proxima Pergunta  
+							<a class="btn btn-default btn-block btn-proximo text-white" v-if="respondido" v-bind:class="respondido ? '' : 'disabled'" v-on:click="proximaPergunta()">
+								Proxima Pergunta  <i class="fa fa-forward"></i>
 							</a> 
 							<button class="btn btn-success btn-block btn-responder" v-if="!respondido" v-bind:class="respondido ? 'disabled' : '' "  type="submit">
 								<i class="fa fa-check"></i> Responder  
@@ -36,6 +36,8 @@
 						</div> 
 					</crudCard>  
 				</form>  
+
+				<hr>
 				<crudCard  v-show="respondido">
 					<div class="card-header with-border text-center">
 						<h1 class="box-title"><b>Definições Abordadas</b></h1>
@@ -50,39 +52,40 @@
 				</crudCard> 
 				
 
+				<div class="row"> 
+					<div class="col-12 col-md-6 col-lg-4">
+						<crudCard>
+							<div class="card-header with-border text-center">
+								<h1 class="box-title"><b>Informações</b></h1>
+							</div>            
+							<div class="card-body">
+								<h4 class="text-center" v-if="pergunta"> {{ pergunta.assunto.nome  }} </h4>
+								<h4 class="text-center" v-if="pergunta">  <span class="right badge badge-info">{{ pergunta.dificuldade  }}</span></h4>
 
+								<div class="row">
+									<div class="col-6"><h4><b> Acertos:</b> <span class="right badge badge-success">{{ placar.certas  }}</span> </h4></div>
+									<div class="col-6"><h4><b>Erradas:</b> <span class="right badge badge-danger">{{  placar.erradas  }}</span> </h4></div>  
+									<!-- <div class="col-12"><h4><b>Questões respondidas: </b><span v-for="item in placar.realizadas" :key="item.id">{{  item }} , </span></h4></div> -->
+								</div>
+								<div class="row"> 
+									<div class="col-12"><h3><b>Aproveitamento:</b> {{ parseInt( placar.certas/(placar.certas + placar.erradas)*100)}}%</h3></div> 
+								</div>
+							</div> 
+						</crudCard> 
+					</div>
+					
+					<div class="col-12 col-md-6 col-lg-4">
+						<formDificuldade :url="url"  ></formDificuldade>
+					</div>
 
-				<crudCard>
-					<div class="card-header with-border text-center">
-						<h1 class="box-title"><b>Informações</b></h1>
-					</div>            
-					<div class="card-body">
-						<h4 class="text-center" v-if="pergunta"> {{ pergunta.assunto.nome  }} </h4>
-						<h4 class="text-center" v-if="pergunta">  <span class="right badge badge-info">{{ pergunta.dificuldade  }}</span></h4>
+					<div class="col-12 col-md-6 col-lg-4">
+						<formDisciplina :url="url"  :url_disciplina="url_disciplina"></formDisciplina> 
+					</div>
 
-						<div class="row">
-							<div class="col-12"><h4><b> Acertos:</b> <span class="right badge badge-success">{{ placar.certas  }}</span> </h4></div>
-							<div class="col-12"><h4><b>Erradas:</b><span class="right badge badge-danger">{{  placar.erradas  }}</span> </h4></div>  
-							<div class="col-12"><h4><b>Questões respondidas: </b><span v-for="item in placar.realizadas">{{  item }} , </span></h4></div>
-						</div>
-						<div class="row"> 
-							<div class="col-12"><h3><b>Aproveitamento:</b> {{ parseInt( placar.certas/(placar.certas + placar.erradas)*100)}}%</h3></div> 
-						</div>
-					</div> 
-				</crudCard> 
-
-
-
-
-
-				
-
-				
-
-				<formDificuldade :url="url"  ></formDificuldade>  
-				<formDisciplina :url="url"  :url_disciplina="url_disciplina"></formDisciplina> 
+				</div>
+ 
 				<a class="btn btn-info btn-block "  href="/">
-					<i class="fa fa-check"></i> Voltar  
+					<i class="fa fa-reply"></i> Voltar  
 				</a>
 			</div> 
 
@@ -139,53 +142,15 @@
 			onSubmit() {
 
 				if( this.form.selected === this.pergunta.resposta_certa_id ){
-					
-					alertSucesso('Você Acertou!!');
-
-
-					// let vm = this;
-					// swal({ 
-					// 	type: 'success',
-					// 	showCloseButton: true,
-					// 	title:  '<span class="text-success">Você Acertou!!</span><br>' +  vm.pergunta.resumo ,
-					// 	width: '98%', 
-					// 	confirmButtonColor: '#646464',
-					// 	confirmButtonText: '<h4>Proxima Pergunta</h4>',
-					// 	confirmButtonClass: 'bg-green',
-					// })
-					// .then((result) => {
-					// 	if (result.value) {
-					// 		this.proximaPergunta();
-					// 	}
-					// });
-
-
+				 
+					swal("Você Acertou!!", "", "success");
+ 
 				}  
 				else{
-					
-					alertErro('Você Errou!!' );
-
-					// let vm = this;
-					// swal({ 
-					// 	type: 'error',
-					// 	title:  '<span class="text-red">Você Errou!!</span><br>' + vm.pergunta.resumo ,
-					// 	showCloseButton: true,
-					// 	width: '98%',
-					// 	confirmButtonColor: '#646464',
-					// 	confirmButtonText: '<h4>Proxima Pergunta</h4>',
-					// 	confirmButtonClass: 'bg-red',
-					// })
-					// .then((result) => {
-					// 	if (result.value) {
-					// 		this.proximaPergunta();
-					// 	}
-					// });
-
-
+					swal("Você Errou!!", "", "error");
+					 
 					this.temp_errada =  this.form.selected;
-
-
-
+ 
 				}
 
 				this.respondido = true ;
@@ -201,7 +166,15 @@
 
 
 
-
+			atualizarPlacar(){
+				axios.get(  this.url  + '/placar' )
+				.then(response => {
+					this.placar = response.data  ;
+				})
+				.catch(error => {
+					console.log('erro ao atualiza placar');
+				});
+			},
 
 
 			atualizarPergunta(){
@@ -244,6 +217,7 @@
 
 		created() {
 			this.proximaPergunta(); 
+			this.atualizarPlacar(); 
 		},
 
 

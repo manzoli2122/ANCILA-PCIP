@@ -41,12 +41,7 @@
 			</form> 
 			
 		</crudCard>  
-
-
-
-
-
-
+ 
 	</section>
 
 </template>

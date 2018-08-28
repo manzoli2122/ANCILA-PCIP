@@ -62,7 +62,7 @@ Route::post('treinamento/dificuldade', 'TreinamentoController@alterarDificuldade
 Route::get('treinamento', 'TreinamentoController@index')->name('treinamento.index');
 Route::post('treinamento', 'TreinamentoController@responder')->name('treinamento.responder');
 Route::get('treinamento/proximo', 'TreinamentoController@proximo')->name('treinamento.proximo');
-
+Route::get('treinamento/placar', 'TreinamentoController@placar')->name('treinamento.placar');
 
 
 

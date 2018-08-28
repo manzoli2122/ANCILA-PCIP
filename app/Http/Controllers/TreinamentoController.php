@@ -60,6 +60,10 @@ class TreinamentoController extends Controller
     }
 
 
+    public function placar(Request $request)
+    { 
+        return response()->json( [  'certas' =>  session('certas' , 0 ) , 'erradas' =>  session('erradas' , 0 )  ,  'realizadas' => session('perguntas.id' , 0 )  ]   , 200); 
+    }
 
 
 
