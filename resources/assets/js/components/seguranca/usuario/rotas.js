@@ -7,6 +7,10 @@ let routes = [
         component: require('./paginas/Index')
     }, 
     {
+        path: '/create',
+        component: require('./paginas/Cadastro')
+    },
+    {
         path: '/:id/perfil',
         component: require('./paginas/Perfil') 
     },   

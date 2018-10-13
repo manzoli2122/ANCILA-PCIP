@@ -48,6 +48,16 @@ class AssuntoService extends VueService  implements AssuntoServiceInterface
 
 
 
+    /**
+    * Busca todos registros de um model 
+    *
+    * @param Request $request
+    *
+    * @return $model
+    */
+    public function  BuscarTodos( Request $request  ){
+        return $this->model->with('disciplina')->get();
+    }
 
 
 

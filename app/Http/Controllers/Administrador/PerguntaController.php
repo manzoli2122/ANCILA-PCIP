@@ -24,15 +24,19 @@ class PerguntaController extends VueController
 
         $this->service = $service ;
 
-        $this->middleware('auth')->except('respostas');  
+        $this->middleware('auth')->except('respostas' ,'destroy');  
 
-        $this->middleware('permissao:perguntas')->except('respostas') ;  
+        $this->middleware('permissao:pergunta')->except('respostas', 'destroy') ;
+        
+        $this->middleware('permissao:pergunta-editar')->only('update') ;
+          
+        $this->middleware('perfil:Admin')->only( 'destroy');
 
-        $this->middleware('permissao:perguntas_cadastrar')->only('store');
+        // $this->middleware('permissao:perguntas_cadastrar')->only('store');
 
-        $this->middleware('permissao:perguntas_excluir')->only('destroy');
+        // $this->middleware('permissao:perguntas_excluir')->only('destroy');
 
-        $this->middleware('permissao:perguntas_ativar')->only('ativar'); 
+        // $this->middleware('permissao:perguntas_ativar')->only('ativar'); 
 
     }
 
@@ -60,6 +64,16 @@ class PerguntaController extends VueController
 
 
 
+    /**
+    * Busca todos registros de um model 
+    *
+    * @param Request $request
+    *
+    * @return $model
+    */
+    public function  BuscarCriada( Request $request  ){
+        return response()->json( $this->service->BuscarCriada( $request  ) , 200); 
+    }
 
 
 
@@ -151,6 +165,19 @@ class PerguntaController extends VueController
     //     }
     // }
  
+
+
+    /**
+    * Função para gerar pdf dos usuarios 
+    *
+    * @param Request $request
+    *   
+    * @return pdf
+    */
+    public function  Pdf( Request $request ){
+        return  $this->service->Pdf( $request   ) ;
+    }
+
 
  
 

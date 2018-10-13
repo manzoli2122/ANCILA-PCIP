@@ -49,6 +49,7 @@ class User extends Authenticatable  implements JWTSubject
         'image',
         'nome', 
         'apelido', 
+        'password',
         'obs', 
         'status', 
         'updated_user',
@@ -76,6 +77,36 @@ class User extends Authenticatable  implements JWTSubject
     ];
 
 
+
+
+    /**
+     * Retorna as regras de validações para cadastro e atualização
+     *
+     * @return $rules
+    */
+    public function rules($id = '')
+    {
+            return [
+                'nome' => 'required|min:3|max:100',
+                'apelido' => "required|min:1|max:150",     
+                'id' => "required",     
+                'email' => "required",     
+            ];
+    }
+
+
+
+    public static function rulesCadastro($id = '')
+    {
+            return [
+                'nome' => 'required|min:3|max:100',
+                'apelido' => "required|min:1|max:150",     
+                'id' => "required|numeric|digits:11",     
+                'email' => "required", 
+                'password' => 'min:3',
+                'passwordConfirm' => 'required_with:password|same:password|min:3'    
+            ];
+    }
 
      /**
      * The channels the user receives notification broadcasts on.

@@ -26,8 +26,8 @@
 								</div>
 							</div> 
 						</div> 
-						<div class="card-footer text-right"> 
-							<a class="btn btn-default btn-block btn-proximo text-white" v-if="respondido" v-bind:class="respondido ? '' : 'disabled'" v-on:click="proximaPergunta()">
+						<div id="botao_proxima" class="card-footer text-right"> 
+							<a  class="btn btn-default btn-block btn-proximo text-white" v-if="respondido" v-bind:class="respondido ? '' : 'disabled'" v-on:click="proximaPergunta()">
 								Proxima Pergunta  <i class="fa fa-forward"></i>
 							</a> 
 							<button class="btn btn-success btn-block btn-responder" v-if="!respondido" v-bind:class="respondido ? 'disabled' : '' "  type="submit">
@@ -38,7 +38,7 @@
 				</form>  
 
 				<hr>
-				<crudCard  v-show="respondido">
+				<crudCard  v-show="respondido" color="card-danger">
 					<div class="card-header with-border text-center">
 						<h1 class="box-title"><b>Definições Abordadas</b></h1>
 					</div>            
@@ -52,33 +52,33 @@
 				</crudCard> 
 				
 
-				<div class="row"> 
-					<div class="col-12 col-md-6 col-lg-4">
+				<div class="row" > 
+					<div class="col-12 col-md-7 col-lg-7">
 						<crudCard>
 							<div class="card-header with-border text-center">
-								<h1 class="box-title"><b>Informações</b></h1>
+								<h1 class="box-title"><b>Informações - {{pergunta.id }}</b></h1>
 							</div>            
 							<div class="card-body">
-								<h4 class="text-center" v-if="pergunta"> {{ pergunta.assunto.nome  }} </h4>
-								<h4 class="text-center" v-if="pergunta">  <span class="right badge badge-info">{{ pergunta.dificuldade  }}</span></h4>
-
+								<h6 class="text-center" v-if="pergunta"> {{ pergunta.assunto.nome  }} </h6>
+								  
 								<div class="row">
-									<div class="col-6"><h4><b> Acertos:</b> <span class="right badge badge-success">{{ placar.certas  }}</span> </h4></div>
-									<div class="col-6"><h4><b>Erradas:</b> <span class="right badge badge-danger">{{  placar.erradas  }}</span> </h4></div>  
+									<div class="col-5"><h6><b> Acertos:</b> <span class="right badge badge-success">{{ placar.certas  }}</span> </h6></div>
+									<div class="col-7"><h6><b> Dificuldade:</b><span class="right badge badge-info">{{ pergunta.dificuldade  }}</span> </h6></div>
 									<!-- <div class="col-12"><h4><b>Questões respondidas: </b><span v-for="item in placar.realizadas" :key="item.id">{{  item }} , </span></h4></div> -->
 								</div>
 								<div class="row"> 
-									<div class="col-12"><h3><b>Aproveitamento:</b> {{ parseInt( placar.certas/(placar.certas + placar.erradas)*100)}}%</h3></div> 
+									<div class="col-5"><h6><b>Erradas:</b> <span class="right badge badge-danger">{{  placar.erradas  }}</span> </h6></div>  
+									<div class="col-7"><h6><b>Rendimento:</b> {{ parseInt( placar.certas/(placar.certas + placar.erradas)*100)}}%</h6></div> 
 								</div>
 							</div> 
 						</crudCard> 
 					</div>
 					
-					<div class="col-12 col-md-6 col-lg-4">
+					<!-- <div class="col-12 col-md-6 col-lg-4">
 						<formDificuldade :url="url"  ></formDificuldade>
-					</div>
+					</div> -->
 
-					<div class="col-12 col-md-6 col-lg-4">
+					<div class="col-12 col-md-5 col-lg-5">
 						<formDisciplina :url="url"  :url_disciplina="url_disciplina"></formDisciplina> 
 					</div>
 
@@ -152,8 +152,16 @@
 					this.temp_errada =  this.form.selected;
  
 				}
+				
 
 				this.respondido = true ;
+				$('html, body').animate({
+				    scrollTop: $("#botao_proxima").offset().top
+				}, 0);
+				// var posicaoInicial = $('#botao_proxima').scrollTop();
+				// var posicaoInicial = document.getElementById('botao_proxima').position().top;
+				// console.log(posicaoInicial);
+				// window.scrollTo(posicaoInicial, 0);
 
 				this.form.post( this.url )
 				.then(response => {
@@ -204,7 +212,7 @@
 					this.pergunta = response.data ;
 				})
 				.catch(error => {
-					toastErro('Não foi possivel achar a proxima pergunta, talvez vc ja tenha feito todas!!!!!!!!!!!!');
+					toastErro('Não foi possivel achar a proxima pergunta, provavelmente ja tenha feito todas!!!. Mude o filtro de disciplina para fazer novas, ou clique em proxima para repetir as questões.');
 					console.log('erro na proxima pergunta');
 					alertProcessandoHide();
 					this.respondido = true ;

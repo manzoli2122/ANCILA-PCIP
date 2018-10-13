@@ -1,5 +1,15 @@
 @extends('layout.master')
    
+
+@section('header')  
+	<li class="nav-item d-none d-sm-inline-block"> 
+		<a href="usuario#/create" class="nav-link"> 
+			<i class="fa fa-plus"></i> Cadastrar Usuário
+		</a>
+	</li>
+@endsection
+
+
 @section('content') 
 	<div id="usuario">				
         <router-view :url="{{ json_encode( route('usuario.index')  ) }}"></router-view>    

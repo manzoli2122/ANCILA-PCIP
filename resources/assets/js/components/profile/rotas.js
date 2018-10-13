@@ -9,7 +9,12 @@ let routes = [
     {
         path: '/notificacoes',
         component: require('./paginas/Notificacao') 
-    },   
+    },  
+    {
+        path: '/alterar/senha',
+        component: require('./paginas/alterarSenha') 
+    }, 
+      
        
     
 ];

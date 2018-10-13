@@ -102,8 +102,6 @@ class VueService  implements VueServiceInterface
     public function  Salvar( $request  ){
 
         throw_if( !$insert  = $this->model->create( $request->all() ) , Exception::class); 
-
-         
         return $insert ;  
     }
 

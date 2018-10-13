@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Auth;
 use App\Models\Administrador\Pergunta;
+use App\Models\Administrador\Disciplina;
 use App\Models\Administrador\Resposta;
 
 class TreinamentoController extends Controller
@@ -72,27 +73,63 @@ class TreinamentoController extends Controller
 
     public function proximo(Request $request )
     {
-        try {           
-            if( !$model = $this->model->ativo()
-                        ->whereNotIn( 'id' , session('perguntas.id' , [] ) )
-
-                        //->join('assunto', 'assunto.id', '=', 'pergunta.assunto_id')
-
-                        ->whereIn( 'pergunta.dificuldade' , session('dificuldade' , [ 'Muito Facil', 'Facil', 'Medio' ,  'Dificil' ,  'Muito Dificil'    ] ) )
-                        
-                        ->whereHas('assunto', function ($query) {
-                            $query->whereIn('disciplina_id', session('disciplina' , [ 6 , 7 , 8 , 9 , 10 ] )  );
-                        })
-
-                      //  ->whereIn( 'assunto.disciplina_id' , [6] ) //session('disciplina' , [ 6 ] ) )
+        try { 
+            $disciplina = Disciplina::select('id')->get()->toArray(); 
+            //return $disciplina ;         
+            
 
 
-                        ->with('resposta')->get()->random()    ){       
-                return response()->json(  'pergunta nao encontrada' , 500);             
-            } 
+            if(  Auth::check() ){
+                if( !$models = $this->model->ativo()
+                            ->whereNotIn( 'id' , session('perguntas.id' , [] ) )
+
+                            ->whereIn( 'pergunta.dificuldade' , session('dificuldade' , [ 'Muito Facil', 'Facil', 'Medio' ,  'Dificil' ,  'Muito Dificil'    ] ) )
+
+                             ->whereIn( 'pergunta.status' , [  'Validada' , 'Finalizada' ]  )
+
+                            ->whereHas('assunto', function ($query) use ($disciplina) {
+                                $query->whereIn('disciplina_id', session('disciplina' , $disciplina )  );
+                            })
+
+                            ->with('resposta')->get()    ){       
+                    return response()->json(  'pergunta nao encontrada' , 404);             
+                } 
+            }
+            else{
+                if( !$models = $this->model->ativo()
+                            ->whereNotIn( 'id' , session('perguntas.id' , [] ) )
+
+                            ->whereIn( 'pergunta.dificuldade' , session('dificuldade' , [ 'Muito Facil', 'Facil', 'Medio' ,  'Dificil' ,  'Muito Dificil'    ] ) )
+
+                            ->whereIn( 'pergunta.status' , [  'Validada' , 'Finalizada' ]  )
+                            
+                            ->whereHas('assunto', function ($query) use ($disciplina) {
+                                $query->whereIn('disciplina_id', session('disciplina' , $disciplina )  );
+                            })
+
+                            ->with('resposta')->get()    ){       
+                    return response()->json(  'pergunta nao encontrada' , 404);             
+                } 
+            }
+
+             
+
+
+
+            if( $models->count() < 1 ){
+                $request->session()->forget('perguntas.id');
+                return response()->json(  'pergunta nao encontrada' , 404);
+            }
+
+
+            $model = $models->random();
             $model->resposta = $model->resposta->shuffle();
-            return response()->json(  $model->only( 'id' , 'texto' , 'resposta_certa_id' , 'resumo' , 'assunto' ,'resposta' , 'dificuldade') , 200);              
-        }         
+
+            return response()->json(  $model->only( 'id' , 'texto' , 'resposta_certa_id' , 'resumo' , 'assunto' ,'resposta' , 'dificuldade') , 200);      
+
+
+        }   
+
         catch(Exception $e) {        
             return response()->json(  'pergunta nao encontrada' , 500);  ;
         }

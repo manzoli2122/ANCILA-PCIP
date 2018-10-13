@@ -11,7 +11,7 @@
 							<th pesquisavel style="max-width:90px">CPF</th>
 							<th pesquisavel>Nome</th> 
 							<th pesquisavel style="max-width:60px">Status</th>
-							<th style="min-width:90px" class="text-center">Ações</th> 
+							<th style="min-width:150px" class="text-center">Ações</th> 
 						</datatableService> 
 					</div>    
 				</crudCard> 
@@ -31,6 +31,9 @@
 		data() {
 			return {                
 				config: { 
+					pdf:{
+						url:this.url ,  
+					},
 					ativacao:{
 						url:this.url , 
 						item:'Usuário',

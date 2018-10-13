@@ -22,7 +22,16 @@ interface UsuarioServiceInterface  extends VueServiceInterface
     */
     public function  Ativar( Request $request , $id );  
    
-
+    /**
+    * Função para ResetarSenha um usuario ja existente  
+    *
+    * @param Request $request
+    *  
+    * @param int  $id
+    *    
+    * @return void
+    */
+    public function  ResetarSenha( Request $request , $userId );
 
     /**
     * Função para desativar um usuario ja existente  
@@ -113,7 +122,16 @@ interface UsuarioServiceInterface  extends VueServiceInterface
 
 
 
- 
+    
+    /**
+    * Função para gerar pdf dos usuarios 
+    *
+    * @param Request $request
+    *   
+    * @return pdf
+    */
+    public function  Pdf( Request $request );
+
 
 
 

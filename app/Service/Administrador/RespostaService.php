@@ -113,7 +113,51 @@ class RespostaService extends VueService  implements RespostaServiceInterface
 
 
 
+
+    /**
+    * Função para atualizar um model ja existente  
+    *
+    * @param Request $request
+    *  
+    * @param int  $id
+    *    
+    * @return void
+    */
+    public function  Atualizar( Request $request , $id){ 
+        throw_if(!$model = $this->model->find($id) , ModelNotFoundException::class);
+        if( $request->input('correta') == 'true' ){
+            $model->pergunta->resposta_correta()->associate($model) ;
+            $model->pergunta->save();
+        } 
+        throw_if( !$update = $model->update($request->all()) , Exception::class); 
+         
+        return $model;
+    }
+
  
+
+    /**
+    * Função para criar um model  
+    *
+    * @param Request $request
+    *    
+    * @return void
+    */
+    public function  Salvar( $request  ){
+
+        throw_if( !$insert  = $this->model->create( $request->all() ) , Exception::class); 
+
+         if( $request->input('correta') == 'true' ){
+             $insert->pergunta->resposta_correta()->associate($insert) ;
+              $insert->pergunta->save();
+        }
+        
+        return $insert ;  
+    }
+
+
+
+
 
    
 }

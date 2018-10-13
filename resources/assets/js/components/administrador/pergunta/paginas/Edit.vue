@@ -42,7 +42,7 @@
 								<label for="assunto_id">Assunto:</label> 
 								<select2   v-model="form.assunto_id" class="form-control" v-bind:class="{ 'is-invalid': form.errors.has('assunto_id') }">
 									<option    value="">Selecione a Assunto </option> 
-									<option v-for="item in assunto" :key="item.id" :value="item.id"> {{ item.nome }}</option>
+									<option v-for="item in assunto" :key="item.id" :value="item.id"> {{ item.nome }} - {{item.disciplina.nome}}</option>
 								</select2>     
 							</crudFormElemento>  
 						</div>

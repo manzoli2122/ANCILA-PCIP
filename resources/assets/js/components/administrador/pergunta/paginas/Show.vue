@@ -19,15 +19,19 @@
 					</div> 
 					<div class="card-body"> 
 						<h3> Pergunta: <span v-html="model.texto"></span></h3> 
+						<!-- <h3> Pergunta: <span>{{model.texto}}</span></h3>  -->
 						<hr>
 						<section class="row"> 		                         
-							<div class="col-12 col-sm-12" v-for="item in model.resposta" v-bind:class="[ item.id === model.resposta_certa_id ? 'text-red' : ''  ]"  >
+							<div class="col-12 col-sm-12" v-for="item in model.resposta" v-bind:class="[ item.id === model.resposta_certa_id ? 'text-danger' : ''  ]"  >
 								<h4>{{ item.id }} :  <span v-html="item.texto"></span>  {{ item.count }}  </h4>
 							</div>
 						</section>
 					</div>    
 					<div class="card-footer text-right">
 						<crudBotaoVoltar url="/" />  
+						
+						<router-link :to="'/edit/' +  $route.params.id" exact class="btn btn-success"><a><i class="fa fa-pencil"></i> Editar</a></router-link>
+						<!-- <a href="#/edit/'.$linha->id.'" btn-edit class="btn btn-success btn-sm" title="Editar"><i class="fa fa-pencil"></i></a> -->
 						<!-- <button v-if="model.ativo" class="btn btn-danger" v-on:click="ativar_desativar()">Desativar</button>
 						<button v-if="!model.ativo" class="btn btn-success" v-on:click="ativar_desativar()">Ativar</button> -->
 						<button  class="btn btn-info" v-on:click="proxima()">Próxima</button>  

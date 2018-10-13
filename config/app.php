@@ -155,7 +155,7 @@ return [
         App\Seguranca\AALServiceProvider::class,
 
         Yajra\Datatables\DatatablesServiceProvider::class,
-
+        Anouar\Fpdf\FpdfServiceProvider::class,
         /*
          * Application Service Providers...
          */
@@ -215,6 +215,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
 
         "AAL" => App\Seguranca\AALFacade::class,
+        'Fpdf' => Anouar\Fpdf\Facades\Fpdf::class,
     ],
 
 ];

@@ -15,6 +15,12 @@ use Exception;
 use Illuminate\Support\Facades\Mail; 
 use App\Notifications\PerfilAdicionadoNotification  ; 
 use App\Notifications\PerfilRemovidoNotification  ;  
+use Fpdf;
+
+
+class NewPdf extends Fpdf{
+
+}
 
 
 class UsuarioService extends VueService  implements UsuarioServiceInterface 
@@ -41,7 +47,19 @@ class UsuarioService extends VueService  implements UsuarioServiceInterface
 
 
 
-
+    /**
+    * Função para criar um model  
+    *
+    * @param Request $request
+    *    
+    * @return void
+    */
+    public function  Salvar( $request  ){ 
+        $data = $request->all() ;
+        $data['password'] =  bcrypt(  $data['password'] );
+        throw_if( !$insert  = $this->model->create( $data ) , Exception::class); 
+        return $insert ;  
+    }
 
 
 
@@ -89,7 +107,21 @@ class UsuarioService extends VueService  implements UsuarioServiceInterface
 
 
 
-
+    /**
+    * Função para ResetarSenha um usuario ja existente  
+    *
+    * @param Request $request
+    *  
+    * @param int  $id
+    *    
+    * @return void
+    */
+    public function  ResetarSenha( Request $request , $userId ){
+        throw_if(!$model = $this->model->withoutGlobalScope('ativo')->find($userId), ModelNotFoundException::class); 
+        $model->password = bcrypt(  'pmes@123'  ); 
+        $model->save(); 
+        return 'Alterado';
+    }
 
 
 
@@ -139,6 +171,9 @@ class UsuarioService extends VueService  implements UsuarioServiceInterface
     			return '<button data-id="'.$linha->id.'" btn-ativar class="btn btn-success btn-sm" title="Ativar"><i class="fa fa-unlock"></i> </button>' ;
     		} 
     		return '<a href="#/'.$linha->id.'/perfil" class="btn btn-primary btn-sm" title="Perfis"><i class="fa fa-id-card"></i></a> ' 
+
+            .'<a href="'. route('resetar.senha',$linha->id).'" class="btn btn-warning btn-sm" title="Resetar Senha"><i class="fa fa-key"></i></a>'
+
     		.'<button data-id="'.$linha->id.'" btn-desativar class="btn btn-danger btn-sm" title="Destivar"><i class="fa fa-lock"></i></button>' ; 
     	})
     	->setRowClass(function ($user) {
@@ -380,6 +415,110 @@ class UsuarioService extends VueService  implements UsuarioServiceInterface
  
  
 
+
+
+
+
+
+    /**
+    * Função para gerar pdf dos usuarios 
+    *
+    * @param Request $request
+    *   
+    * @return pdf
+    */
+    public function  Pdf( Request $request ){
+        
+        $models = $this->model->getDatatable();
+        
+        $dados = $this->dataTable->eloquent($models)->make(true); 
+        
+        $datas = $dados->getData()->data;
+         
+        
+
+        $pdf = new NewPdf();
+         
+        $pdf ::SetTitle("Batalhao Online da Policia Militar do ES");
+        $pdf ::SetSubject("DTIC Sempre Presente, contruindo o seu futuro.");
+        // $pdf ::SetAuthor('bruno'); 
+        // $pdf ::SetKeywords('baon cco desempenho individual ');
+        //Seta a posicao vertical e horizontal  
+        $pdf::SetY(-10);
+        $pdf::AddPage();
+        $pdf::AliasNbPages();
+        $pdf::SetAutoPageBreak(10, 10);
+
+        $pdf::SetFont('Arial', 'u', 11);
+         
+
+        if (count($datas) > 1) {
+
+            // Muda o tamanho da fonte
+            $pdf::SetFont('arial', '', 10);
+            
+            //linha do curso
+            $pdf::Cell(10, 3, " - ", 1, 0, 'C');
+            // $pdf::Cell(20, 8, "Cargo ", 1, 0, 'C'); 
+            $pdf::Cell(60, 3, "Nome ", 1, 0, 'C');
+            $pdf::Cell(25, 3, "CPF ", 1, 1, 'C');
+            // $pdf::Cell(25, 8, utf8_decode("Nº Funcional"), 1, 0, 'C');            
+            // $pdf::Cell(15, 8, "RG ", 1, 0, 'C');
+            // $pdf::Cell(15, 8, "Cargo", 1, 0, 'C');
+            // $pdf::Cell(20, 8, "Unidade", 1, 1, 'C');
+
+
+            $pdf::SetFont('arial', '', 7);
+            $linha = 1;
+
+            foreach ($datas as $data) {
+                //escreve no pdf largura,altura,conteudo,borda,quebra de linha,alinhamento,fundo  
+                if ($data->status == 'PENDENTE') {
+                    $pdf::SetFillColor(254, 142, 142);
+                } else {
+                    if ($linha % 2 == 0) {
+                        // Muda o fundo de c�lula
+                        $pdf::SetFillColor(255, 255, 255);
+                    } else {
+                        $pdf::SetFillColor(199, 199, 199);
+                    }
+                }
+                $pdf::Cell(10, 6, $linha, 1, 0, 'C', 1);
+                // $pdf::Cell(20, 6, $data->cargo, 1, 0, 'C', 1);
+                $pdf::Cell(60, 6, utf8_decode($data->nome), 1, 0, 'L', 1);
+                $pdf::Cell(25, 6, utf8_decode($data->id), 1, 1, 'C', 1);
+                // $pdf::Cell(25, 6, utf8_decode($data->numeroFuncional), 1, 0, 'C', 1);
+                // $pdf::Cell(15, 6, utf8_decode($data->rg), 1, 0, 'C', 1);
+                // $pdf::Cell(15, 6, utf8_decode($data->cargo)  , 1, 0, 'C', 1);
+                // $pdf::Cell(20, 6, utf8_decode($data->unidade), 1, 1, 'C', 1 );
+
+                if ($pdf::GetY() >= 280) {
+                    $pdf::AddPage();
+                    $pdf::SetFont('Arial', 'u', 11);
+                    $pdf::SetFont('arial', '', 10);
+                    //linha do curso
+                    $pdf::Cell(10, 3, " - ", 1, 0, 'C');
+                    // $pdf::Cell(20, 8, "Cargo ", 1, 0, 'C');
+                    $pdf::Cell(60, 3, "Nome ", 1, 0, 'C');
+                    $pdf::Cell(25, 3, "CPF ", 1, 1, 'C');
+                    // $pdf::Cell(25, 8, utf8_decode("Nº Funcional"), 1, 0, 'C');
+                    // $pdf::Cell(15, 8, "RG ", 1, 0, 'C');
+                    // $pdf::Cell(15, 8, "Cargo", 1, 0, 'C');
+                    // $pdf::Cell(20, 8, "Unidade", 1, 1, 'C');
+
+                    $pdf::SetFont('arial', '', 7);
+                } 
+                $linha++;
+            }
+ 
+        } else {
+
+            $pdf::Cell(0, 7, 'Nenhum registro de Atividades no periodo', 0, 1, 'C');
+        }
+        $pdf::Output('usuarios.pdf', 'D');
+        exit;
+ 
+    }
 
 
  }

@@ -13,8 +13,8 @@
 							<th pesquisavel>Assunto</th>       
 							<th pesquisavel>Dificuldade</th>       
 							<th pesquisavel>Status</th>       
-							<th>Disciplina</th> 
-							<th class="align-center" style="width:140px">Ações</th>
+							<th pesquisavel>Disciplina</th> 
+							<th class="align-center" style="width:150px">Ações</th>
 							 
 
 						</datatableService> 
@@ -36,6 +36,9 @@ export default {
 	data() {
 		return {                
 			config: {
+				pdf:{
+					url:this.url ,  
+				},
 				ativacao:{
 						url:this.url , 
 						item:'Pergunta',
@@ -45,7 +48,7 @@ export default {
 					evento:'perguntaoRemovida',
 					item:'Pergunta',
 				},
-				order: [[ 1, "asc" ]],
+				order: [[ 0, "desc" ]],
 				ajax: { 
 					url: this.url + '/datatable'
 				},

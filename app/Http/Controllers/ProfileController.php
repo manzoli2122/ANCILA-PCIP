@@ -181,4 +181,28 @@ class ProfileController extends Controller
 
 
 
+    public function updateSenha(Request $request)
+    {
+        $user = Auth::user();
+        $dataUser = $request->all();  
+        $senha = $dataUser['password'];
+        $confirm = $dataUser['passwordConfirm'];
+        $this->validate($request, [ 
+            'password' => 'min:3',
+            'passwordConfirm' => 'required_with:password|same:password|min:3'
+        ]); 
+
+        $dataUser['password'] = bcrypt($senha); 
+        $update = $user->update($dataUser);     
+        
+        if($update){
+           return response()->json( 'Senha alterada' , 200 );
+        }        
+        else {
+            return response()->json( 'error' , 500 );
+        }
+    }
+
+
+
 }

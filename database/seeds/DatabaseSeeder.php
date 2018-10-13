@@ -28,7 +28,7 @@ class DatabaseSeeder extends Seeder
             'apelido' => 'Administrador',
             'email' => 'manzoli2122@gmail.com', 
             'status' => 'A',  
-            'password' => bcrypt('123')
+            'password' => bcrypt('kosonaloxe')
         ]);
 
 
@@ -46,41 +46,41 @@ class DatabaseSeeder extends Seeder
             'descricao' =>  'Professor', 
         ]);
           
-        DB::table('perfils')->insert([
-            'nome' => 'Gerente',
-            'descricao' =>  'Gerente', 
-        ]);
+        // DB::table('perfils')->insert([
+        //     'nome' => 'Gerente',
+        //     'descricao' =>  'Gerente', 
+        // ]);
 
 
-        DB::table('perfils')->insert([
-            'nome' => 'Diretor',
-            'descricao' =>  'Diretor', 
-        ]);
+        // DB::table('perfils')->insert([
+        //     'nome' => 'Diretor',
+        //     'descricao' =>  'Diretor', 
+        // ]);
 
 
          
 
 
-        DB::table('mailable')->insert([ 
-            'nome' =>  'Login', 
-            'descricao' =>  'Envio de email a cada acesso', 
-        ]);
+        // DB::table('mailable')->insert([ 
+        //     'nome' =>  'Login', 
+        //     'descricao' =>  'Envio de email a cada acesso', 
+        // ]);
 
-        DB::table('mailable')->insert([ 
-            'nome' =>  'Perfil', 
-            'descricao' =>  'Envio de email ao ser adicionado ou retirado um perfil do Usuário', 
-        ]);
+        // DB::table('mailable')->insert([ 
+        //     'nome' =>  'Perfil', 
+        //     'descricao' =>  'Envio de email ao ser adicionado ou retirado um perfil do Usuário', 
+        // ]);
 
 
-        DB::table('users_mailable')->insert([
-            'mailable_id' => 1,
-            'user_id' => '00000000001' , 
-        ]);
+        // DB::table('users_mailable')->insert([
+        //     'mailable_id' => 1,
+        //     'user_id' => '00000000001' , 
+        // ]);
 
-        DB::table('users_mailable')->insert([
-            'mailable_id' => 2,
-            'user_id' => '00000000001' , 
-        ]);
+        // DB::table('users_mailable')->insert([
+        //     'mailable_id' => 2,
+        //     'user_id' => '00000000001' , 
+        // ]);
 
     }
 }

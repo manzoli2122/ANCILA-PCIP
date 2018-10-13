@@ -37,9 +37,38 @@ class LoginController extends Controller
     use AuthenticatesUsers;
 
 
-
+    public function cadastro(Request $request){  
+        return view("auth.cadastro");         
+    }
     
 
+
+    public function salvarCadastro(Request $request){  
+        
+         
+        $this->validate( $request  , User::rulesCadastro() );  
+        
+        $data = $request->all() ;
+        $data['password'] =  bcrypt(  $data['password'] );
+        $data['status'] =  'I' ;
+
+        try{ 
+            throw_if( !$insert  = User::create( $data ) , Exception::class); 
+            return redirect()->route('login')->with('success', 'Usuário cadastrado com sucesso!!! AGUARDANDO ATIVAÇÃO!! Em breve você receberá um email confirmando a ativação');
+        }  
+        catch(Exception $e){
+            $data['cpf'] =  $data['id'] ;
+            $messagem = 'Não foi possivel criar usuario';
+            foreach (array_only($data, ['nome', 'email' , 'cpf'])  as $key => $value) {
+                 $messagem .= '<br>' . $key . ' -> ' . $value;
+            }
+            $messagem .= '<br>' .   'Possíveis problemas:'  ;
+            $messagem .= '<br>' .   'CPF já Cadastrado'  ;
+            $messagem .= '<br>' .   'Email já Cadastrado'  ;
+            return redirect()->route('login')->withErrors(['message' => $messagem ]);
+        }    
+    }
+    
 
 
     /**

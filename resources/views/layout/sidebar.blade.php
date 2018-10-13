@@ -37,7 +37,7 @@
 
 				
 				
-				@if( Auth::user() )
+				
 				
 				<li class="nav-item">
 					<a href="{{ route('treinamento.index')}}" class="nav-link">
@@ -46,8 +46,8 @@
 					</a>
 				</li>
 
-
-
+				@if( Auth::user() )
+				@perfil('Admin')
 				<li class="nav-item has-treeview" id="menu-seguranca">
 					<a href="#" class="nav-link active">
 						<i class="nav-icon fa-lg fa-2x fa fa-lock"></i>
@@ -57,7 +57,7 @@
 					</a>
 					<ul class="nav nav-treeview">
 						
-						@perfil('Admin')
+						
 
 						@if(Route::getRoutes()->hasNamedRoute('permissao.index'))
 						<li class="nav-item">
@@ -88,7 +88,7 @@
 						</li>
 						@endif
 						
-						@endperfil
+						
 
 						
 						 
@@ -96,7 +96,7 @@
 
 					</ul>
 				</li>
-				
+				@endperfil
 				@endif
 				 
 
@@ -105,7 +105,7 @@
 
 
 				@if( Auth::user() )
-				
+				@permissao(['disciplina' , 'resposta' , 'pergunta' ,'assunto'] ) 
 				<li class="nav-item has-treeview " id="menu-administrador">
 					<a href="#" class="nav-link active">
 						<i class="nav-icon fa fa-briefcase  fa-lg fa-2x"></i>
@@ -115,54 +115,57 @@
 					</a>
 					<ul class="nav nav-treeview">
 						
-						@perfil('Admin')
-
-						@if(Route::getRoutes()->hasNamedRoute('disciplina.index'))
-						<li class="nav-item">
-							<a href="{{ route('disciplina.index')}}" class="nav-link " id="menu-administrador-disciplina">
-								<i class="nav-icon fa fa-book fa-lg fa-2x  "></i>
-								<p>Disciplina </p>
-							</a>
-						</li>
-						@endif  
-						
-						@if(Route::getRoutes()->hasNamedRoute('assunto.index'))
-						<li class="nav-item" >
-							<a href="{{ route('assunto.index')}}" class="nav-link " id="menu-administrador-assunto">
-								<i class="nav-icon fa fa-comments fa-lg fa-2x text-warning"></i>
-								<p>Assunto</p>
-							</a>
-						</li>
-						@endif  
+						@permissao('disciplina') 
+							@if(Route::getRoutes()->hasNamedRoute('disciplina.index'))
+							<li class="nav-item">
+								<a href="{{ route('disciplina.index')}}" class="nav-link " id="menu-administrador-disciplina">
+									<i class="nav-icon fa fa-book fa-lg fa-2x  "></i>
+									<p>Disciplina </p>
+								</a>
+							</li>
+							@endif  
+						@endpermissao
 
 
-						@if(Route::getRoutes()->hasNamedRoute('pergunta.index'))
-						<li class="nav-item">
-							<a href="{{ route('pergunta.index')}}" class="nav-link " id="menu-administrador-pergunta">
-								<i class="nav-icon fa fa-question fa-lg fa-2x text-info"></i>
-								<p>Pergunta </p>
-							</a>
-						</li>
-						@endif 
+						@permissao('assunto')
+							@if(Route::getRoutes()->hasNamedRoute('assunto.index'))
+							<li class="nav-item" >
+								<a href="{{ route('assunto.index')}}" class="nav-link " id="menu-administrador-assunto">
+									<i class="nav-icon fa fa-comments fa-lg fa-2x text-warning"></i>
+									<p>Assunto</p>
+								</a>
+							</li>
+							@endif  
 
-						@if(Route::getRoutes()->hasNamedRoute('resposta.index'))
-						<li class="nav-item">
-							<a href="{{ route('resposta.index')}}" class="nav-link " id="menu-administrador-resposta">
-								<i class="nav-icon fa  fa-bullhorn fa-lg fa-2x text-success"></i>
-								<p>Resposta </p>
-							</a>
-						</li>
-						@endif 
+						@endpermissao
 
+						@permissao('pergunta')
+							@if(Route::getRoutes()->hasNamedRoute('pergunta.index'))
+							<li class="nav-item">
+								<a href="{{ route('pergunta.index')}}" class="nav-link " id="menu-administrador-pergunta">
+									<i class="nav-icon fa fa-question fa-lg fa-2x text-info"></i>
+									<p>Pergunta </p>
+								</a>
+							</li>
+							@endif 
 
+						@endpermissao
 
-
-
-						@endperfil
+						@permissao('resposta')
+							@if(Route::getRoutes()->hasNamedRoute('resposta.index'))
+							<li class="nav-item">
+								<a href="{{ route('resposta.index')}}" class="nav-link " id="menu-administrador-resposta">
+									<i class="nav-icon fa  fa-bullhorn fa-lg fa-2x text-success"></i>
+									<p>Resposta </p>
+								</a>
+							</li>
+							@endif 
+ 						@endpermissao
+						 
  
 					</ul>
 				</li>
-				
+				@endpermissao
 				@endif
 				 
 

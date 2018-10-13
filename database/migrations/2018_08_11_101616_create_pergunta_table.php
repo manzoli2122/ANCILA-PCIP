@@ -34,7 +34,7 @@ class CreatePerguntaTable extends Migration
 
             $table->enum('status', ['Criada','Validada','Suspensa' , 'Finalizada']);
 
-            $table->smallInteger('ativo' );//->default(1);
+            $table->smallInteger('ativo' )->default(1);
 
             $table->softDeletes();
 

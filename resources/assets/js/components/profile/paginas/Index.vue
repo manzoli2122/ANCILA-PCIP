@@ -27,6 +27,9 @@
 						</ul>
  
 						<router-link to="/notificacoes" exact class="btn btn-primary btn-block"><a>Notificações</a></router-link>
+
+
+						<router-link to="/alterar/senha" exact class="btn btn-success btn-block"><a>Alterar Senha</a></router-link>
 					</div>
 
 				</crudCard> 

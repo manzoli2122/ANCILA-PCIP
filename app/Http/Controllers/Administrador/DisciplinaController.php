@@ -27,9 +27,13 @@ class DisciplinaController extends VueController
     public function __construct( DisciplinaServiceInterface $service  ){
           
         $this->service = $service ;    
-        $this->middleware('auth');
-        $this->middleware('permissao:disciplinas');
-        $this->middleware('perfil:Admin')->only('update', 'destroy');       
+        $this->middleware('auth')->except('BuscarTodos');
+        $this->middleware('permissao:disciplina')->except('BuscarTodos');
+       
+        $this->middleware('permissao:disciplina-editar')->only('update');
+        
+
+        $this->middleware('perfil:Admin')->only( 'destroy');       
     }
 
 

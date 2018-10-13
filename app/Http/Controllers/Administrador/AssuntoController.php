@@ -24,8 +24,9 @@ class AssuntoController extends VueController
           
         $this->service = $service ;    
         $this->middleware('auth');
-        $this->middleware('permissao:assuntos');
-        $this->middleware('perfil:Admin')->only('update', 'destroy');       
+        $this->middleware('permissao:assunto');
+        $this->middleware('permissao:assunto-editar')->only('update');
+        $this->middleware('perfil:Admin')->only( 'destroy');       
     }
 
 

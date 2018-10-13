@@ -14,13 +14,19 @@ Route::get('/', function () {    return view('welcome');})->name('inicio');
 Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
 Route::post('logout', 'Auth\LoginController@logout')->name('logout'); 
 Route::post('login', 'Auth\LoginController@login'); 
-Route::get('login/token', 'Auth\LoginController@authenticate');//->middleware('auth:api');
+Route::get('cadastro', 'Auth\LoginController@cadastro')->name('cadastro.view');
+Route::post('cadastro', 'Auth\LoginController@salvarCadastro')->name('cadastro.post');
+
+// Route::get('login/token', 'Auth\LoginController@authenticate');//->middleware('auth:api');
 
 
 
 
 
 // PROFILE
+
+
+Route::post('profile/alterar/senha', 'ProfileController@updateSenha') ;
 Route::post('profile/ativacao/{mailable_id}',      'ProfileController@AtivarNotificacaoEmail') ;  
 Route::delete('profile/desativacao/{mailable_id}', 'ProfileController@DesativarNotificacaoEmail') ; 
 Route::post('profile/mailable/datatable',  'ProfileController@getNotificacaoDatatable') ;
@@ -38,7 +44,7 @@ Route::get('profile',   'ProfileController@profile')->name('profile');
 // ROTAS TEMPORARIAS A SEREM APAGADAS
  
 //Route::post('login', 'Auth\AuthController@login');
-Route::get('/admin/login/{cpf?}', 'TemporarioController@login');
+// Route::get('/admin/login/{cpf?}', 'TemporarioController@login');
 
 
 
@@ -113,7 +119,12 @@ Route::namespace('Administrador')->prefix('administrador')->group(function () {
 	|--------------------------------------------------------------------------
 	| 
 	*/  
+
+
+	Route::get('pergunta/datatable/pdf', 'PerguntaController@pdf');
+
 	Route::get('pergunta/all', 'PerguntaController@BuscarTodos') ;
+	Route::get('pergunta/all/criada', 'PerguntaController@BuscarCriada') ;
 	Route::delete('pergunta/desativacao/{perguntaId}',   'PerguntaController@destroy') ; 
 	Route::post('pergunta/ativacao/{perguntaId}',   'PerguntaController@Ativar') ; 
 	Route::post('pergunta/datatable', 'PerguntaController@getDatatable')->name('pergunta.datatable');

@@ -1,8 +1,8 @@
 <template>             
 	<div> 
-		<crudHeader texto="Adicionar Assunto">
+		<crudHeader texto="Adicionar Pergunta">
 			<li class="breadcrumb-item">
-				<router-link to="/" exact><a>Assuntos </a></router-link> 
+				<router-link to="/" exact><a>Perguntas </a></router-link> 
 			</li>
 			<li class="breadcrumb-item active">Criação</li>
 		</crudHeader>  
@@ -15,7 +15,7 @@
 						<textarea id="texto" name="texto" class="form-control" v-model="form.texto" style="height:200px" v-bind:class="{ 'is-invalid': form.errors.has('texto') }"> </textarea>   
 					</crudFormElemento> 
 					<div class="row">
-						<div class="col-md-3"> 
+						<div class="col-md-6"> 
 							<crudFormElemento :errors="form.errors.has('dificuldade')" :errors_texto="form.errors.get('dificuldade')">
 								<label for="dificuldade">Dificuldade:</label>
 								<select2  v-model="form.dificuldade" class="form-control" v-bind:class="{'is-invalid': form.errors.has('dificuldade')}">
@@ -27,7 +27,7 @@
 								</select2> 
 							</crudFormElemento>   
 						</div>
-						<div class="col-md-3">
+						<div class="col-md-6">
 							<crudFormElemento :errors="form.errors.has('status')" :errors_texto="form.errors.get('status')">
 								<label for="status">Status:</label> 
 								<select2   v-model="form.status" class="form-control  " v-bind:class="{ 'is-invalid': form.errors.has('status') }"> 
@@ -38,12 +38,12 @@
 								</select2>  
 							</crudFormElemento>   
 						</div>
-						<div class="col-md-6"> 
+						<div class="col-md-12"> 
 							<crudFormElemento :errors="form.errors.has('assunto_id')" :errors_texto="form.errors.get('assunto_id')">
 								<label for="assunto_id">Assunto:</label> 
 								<select2   v-model="form.assunto_id" class="form-control" v-bind:class="{ 'is-invalid': form.errors.has('assunto_id') }">
 									<option    value="">Selecione a Assunto </option> 
-									<option v-for="item in assunto" :key="item.id" :value="item.id"> {{ item.nome }}</option>
+									<option v-for="item in assunto" :key="item.id" :value="item.id"> {{ item.nome }} - {{item.disciplina.nome}}</option>
 								</select2>     
 							</crudFormElemento>  
 						</div>

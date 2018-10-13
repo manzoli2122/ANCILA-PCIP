@@ -42,7 +42,7 @@ export default {
 					evento:'respostaRemovida',
 					item:'Respostas',
 				},
-				order: [[ 2, "asc" ]],
+				order: [[ 0, "desc" ]],
 				ajax: { 
 					url: this.url + '/datatable'
 				},

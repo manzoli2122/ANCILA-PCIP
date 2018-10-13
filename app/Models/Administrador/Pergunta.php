@@ -26,7 +26,7 @@ class Pergunta extends Model
     ];
 
     protected $hidden = [
-            'created_at',   'deleted_at' ,     'updated_at' ,
+            'created_at' ,     'updated_at' ,
     ];
 
     // public function assunto(){
@@ -67,7 +67,7 @@ class Pergunta extends Model
 
 
     public function getDatatable(){
-        return $this->withTrashed()->with('assunto')->select('pergunta.*' ) ;        
+        return $this->withTrashed()->with('resposta_correta')->with('resposta')->with('assunto')->select('pergunta.*'  ) ;        
     }
  
     

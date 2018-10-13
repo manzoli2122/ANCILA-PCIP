@@ -8,7 +8,7 @@ let routes = [
     },
     {
         path: '/create',
-        component: require('./paginas/Cadastro')
+        component: require('./paginas/CadastroUnico')
     },    
     {
         path: '/edit/:id',

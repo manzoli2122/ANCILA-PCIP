@@ -22,4 +22,19 @@ interface PerguntaServiceInterface  extends VueServiceInterface
     * @return void
     */
     public function  Ativar( Request $request , $id );
+
+    public function  BuscarCriada( Request $request  );
+
+    
+    /**
+    * Função para gerar pdf dos usuarios 
+    *
+    * @param Request $request
+    *   
+    * @return pdf
+    */
+    public function  Pdf( Request $request );
+
+
+    
 } 

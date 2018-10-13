@@ -21,6 +21,25 @@
 <div class="content">
     <div class="container-fluid">  
     <div class="row justify-content-center">
+        @if (\Session::has('success'))
+        <div class="col-md-8">
+            <div class="card card-success">
+                <div class="card-header">{{ \Session::pull('success') }}</div>  
+            </div>
+        </div> 
+            {{-- <input type="hidden" id="_success" value="{{ \Session::pull('success') }}"> --}}
+        @endif
+        @if ($errors->any())
+        @foreach ($errors->all() as $error)
+        <div class="col-md-8">
+            <div class="card card-danger">
+                <div class="card-header">{!! $error !!}</div>  
+            </div>
+        </div> 
+            
+        @endforeach
+        @endif
+
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header">Entrar</div> 
@@ -28,7 +47,7 @@
                     <form method="POST" action="{{ route('login') }}" aria-label="Entrar">
                         @csrf 
                         <div class="form-group row">
-                            <label for="id" class="col-sm-4 col-form-label text-md-right">E-Mail</label>
+                            <label for="id" class="col-sm-4 col-form-label text-md-right">CPF</label>
                             <div class="col-md-6">
                                 <input id="id" type="text" class="form-control{{ $errors->has('id') ? ' is-invalid' : '' }}" name="id" value="{{old('id')}}" required autofocus>
                                 @if ($errors->has('id'))
@@ -56,7 +75,19 @@
                                 </button> 
                             </div>
                         </div>
+                        <br>
+                         
+                        
+
+
                     </form>
+ 
+                    <div class="form-group row mb-0">
+                            <div class="col-md-8 offset-md-4">
+                                <a href="{{route('cadastro.view')}}">CLIQUE AQUI PARA CRIAR USUÁRIO</a>
+                                  
+                            </div>
+                    </div>
                 </div>
             </div>
         </div>

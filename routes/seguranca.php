@@ -16,17 +16,22 @@
 //==============================================================================================================
 //                              SEGURANCA USUARIO
 //============================================================================================================== 
+
+Route::get('usuario/datatable/pdf', 'UsuarioController@pdf');
+
+
 Route::get('usuario/{userId}/perfil/adicionar',             'UsuarioController@BuscarPerfisParaAdicionar') ; 
 Route::post('usuario/{userId}/adicionar/perfil',            'UsuarioController@adicionarPerfilAoUsuario') ;
 Route::delete('usuario/{userId}/delete/perfil/{perfilId}',  'UsuarioController@excluirPerfilDoUsuario') ; 
 //Route::post('usuario/{userId}/delete/perfil/{perfilId}',    'UsuarioController@excluirPerfilDoUsuario') ; 
-Route::post('usuario/{userId}/perfil/datatable',            'UsuarioController@BuscarPerfilDataTable') ; 
-Route::post('usuario/{userId}/perfil/log/datatable',        'UsuarioController@BuscarPerfilDataTableLog');  
-Route::get('usuario/{userId}/log/elasticsearch',            'UsuarioController@elasticsearch') ;  
-Route::post('usuario/ativacao/{userId}',          	        'UsuarioController@Ativar') ;  
-Route::delete('usuario/desativacao/{userId}',          	    'UsuarioController@Desativar') ;  
-Route::post('usuario/datatable',                            'UsuarioController@getDatatable') ;
-Route::resource('usuario',                                  'UsuarioController')->only(['index', 'show']);
+Route::post('usuario/{userId}/perfil/datatable',    'UsuarioController@BuscarPerfilDataTable') ; 
+Route::post('usuario/{userId}/perfil/log/datatable','UsuarioController@BuscarPerfilDataTableLog');  
+Route::get('usuario/{userId}/log/elasticsearch',    'UsuarioController@elasticsearch') ;  
+Route::post('usuario/ativacao/{userId}',            'UsuarioController@Ativar') ; 
+Route::get('usuario/resetarSenha/{userId}',         'UsuarioController@ResetarSenha')->name('resetar.senha') ;  
+Route::delete('usuario/desativacao/{userId}',       'UsuarioController@Desativar') ;  
+Route::post('usuario/datatable',                    'UsuarioController@getDatatable') ;
+Route::resource('usuario',                          'UsuarioController')->only(['index', 'show', 'store' ]);
  
 
 

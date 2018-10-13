@@ -1,11 +1,18 @@
 <template>   
-	<table class="table table-bordered table-striped  table-hover " :id="id" style="width:100%;">
-		<thead>     
-			<tr>
-				<slot></slot>
-			</tr>
-		</thead>  
-	</table>  
+	<div> 
+		<div  v-if="config.pdf" class="text-right">
+			<h4><a v-if="datatable" :href="url_pdf"><span class="right badge badge-primary">Gerar Pdf</span></a></h4>
+		</div> 
+		
+		<table class="table table-bordered table-striped  table-hover " :id="id" style="width:100%;">
+			<thead>     
+				<tr>
+					<slot></slot>
+				</tr>
+			</thead>  
+		</table>  
+
+	</div>
 </template>
 
 <script>
@@ -28,6 +35,12 @@
 			}
 		},
 
+		computed:{
+			url_pdf : function(){
+				return this.config.ajax.url + '/pdf?' + jQuery.param( this.datatable.ajax.params() )   ;
+			}
+		},
+			
 
 		mounted() {
 			this.datatable = this.montarDatatable(   );  
@@ -131,7 +144,7 @@
  
 
 
-			montarDatatable(   lengthMenu = [ [10, 25, 50, -1],   [10, 25, 50, "Todos"]  ]) { 
+			montarDatatable(   lengthMenu = [ [ 10, 20, 30, 40, 50, 70, 100, 150, -1],   [ 10, 20, 30, 40, 50, 70, 100, 150, "Todos"]  ]) { 
 				var seletorTabela = '#' + this.id ;  
 				var csrf_token = document.head.querySelector('meta[name="csrf-token"]').content; 
 				var configPadrao = {

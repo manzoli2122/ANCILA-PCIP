@@ -26,7 +26,11 @@ class RespostaController extends VueController
         
         $this->middleware('auth'); 
 
-        $this->middleware('permissao:respostas') ;   
+        $this->middleware('permissao:resposta') ; 
+
+        $this->middleware('permissao:resposta-editar')->only('update') ;   
+        
+        $this->middleware('perfil:Admin')->only('destroy');
                             
     }
 

@@ -24,7 +24,7 @@ class UsuarioController extends VueController
         $this->service = $service ;   
         $this->middleware('auth'); 
         $this->middleware('permissao:usuarios');  
-        $this->middleware('perfil:Admin')->only('update', 'destroy' , 'excluirPerfilDoUsuario' , 'adicionarPerfilAoUsuario'); 
+        $this->middleware('perfil:Admin')->only('update', 'destroy' , 'excluirPerfilDoUsuario' , 'adicionarPerfilAoUsuario' , 'ResetarSenha'); 
  
     }
 
@@ -45,6 +45,23 @@ class UsuarioController extends VueController
     */
     public function  Ativar( Request $request , $userId ){
         return response()->json( $this->service->Ativar( $request , $userId ), 200 );
+    }
+
+
+
+
+    /**
+    * Função para ResetarSenha um usuario ja existente  
+    *
+    * @param Request $request
+    *  
+    * @param int  $id
+    *    
+    * @return void
+    */
+    public function  ResetarSenha( Request $request , $userId ){
+        $this->service->ResetarSenha( $request , $userId );
+        return back();
     }
 
 
@@ -225,6 +242,19 @@ class UsuarioController extends VueController
          
     }
 
+
+    
+
+    /**
+    * Função para gerar pdf dos usuarios 
+    *
+    * @param Request $request
+    *   
+    * @return pdf
+    */
+    public function  Pdf( Request $request ){
+        return  $this->service->Pdf( $request   ) ;
+    }
 
 
 
