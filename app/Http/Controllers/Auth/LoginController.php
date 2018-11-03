@@ -50,11 +50,11 @@ class LoginController extends Controller
         
         $data = $request->all() ;
         $data['password'] =  bcrypt(  $data['password'] );
-        $data['status'] =  'I' ;
+        $data['status'] =  'A' ;
 
         try{ 
             throw_if( !$insert  = User::create( $data ) , Exception::class); 
-            return redirect()->route('login')->with('success', 'Usuário cadastrado com sucesso!!! AGUARDANDO ATIVAÇÃO!! Em breve você receberá um email confirmando a ativação');
+            return redirect()->route('login')->with('success', 'Usuário cadastrado com sucesso!!! Faça seu login e comece os estudos!!');
         }  
         catch(Exception $e){
             $data['cpf'] =  $data['id'] ;

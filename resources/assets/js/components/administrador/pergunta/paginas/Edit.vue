@@ -9,10 +9,29 @@
 		<div class="content">
 			<div class="container-fluid">
 				<Formulario :url="url +'/' + $route.params.id" :form="form" metodo="patch"> 
-					<crudFormElemento :errors="form.errors.has('texto')" :errors_texto="form.errors.get('texto')">
-						<label for="texto">Pergunta:</label>
-						<textarea id="texto" name="texto" class="form-control" v-model="form.texto" style="height:200px" v-bind:class="{ 'is-invalid': form.errors.has('texto') }"> </textarea>   
-					</crudFormElemento> 
+					<div class="row">
+						<div class="col-md-8"> 
+							<crudFormElemento :errors="form.errors.has('texto')" :errors_texto="form.errors.get('texto')">
+								<label for="texto">Pergunta:</label>
+								<textarea id="texto" name="texto" class="form-control" v-model="form.texto" style="height:270px" v-bind:class="{ 'is-invalid': form.errors.has('texto') }"> </textarea>   
+							</crudFormElemento> 
+							</div>
+						<div class="col-md-4"> 
+							<crudCard> 
+								<div class="card-header">
+									<h4> Informações:</h4>  
+								</div> 
+								<div class="card-body"> 
+									  <p> {{novaLinha}} </p>
+									  <p> <b> negrito </b> {{negrito}} </p>
+									  <p style="font-size: 10pt;"> <b class="text-danger">vermelho</b>{{vermelho}}</p>
+									  <p> <u> sublinhado </u> {{sublinhado}} </p>
+									  <p> <i> italico </i> {{italico}} </p> 
+								</div>    
+								<!-- <div class="card-footer text-center"> 	</div>  -->
+							</crudCard>
+						</div>
+					</div>
 					<div class="row">
 						<div class="col-md-3"> 
 							<crudFormElemento :errors="form.errors.has('dificuldade')" :errors_texto="form.errors.get('dificuldade')">
@@ -34,6 +53,7 @@
 									<option   value="Validada"> Validada </option>
 									<option   value="Suspensa"> Suspensa </option>
 									<option   value="Finalizada">   Finalizada </option>
+									<option   value="Restrita">   Restrita </option>
 								</select2>  
 							</crudFormElemento>   
 						</div>
@@ -79,7 +99,12 @@
 					dificuldade:'',    
 					status:'',    
 
-				})
+				}),
+				novaLinha:'nova linha = <br>', 
+				negrito:' =  <b>  texto </b>', 
+				vermelho:' =  <b class="text-danger"> texto </b>', 
+				sublinhado:' =  <u>  texto </u>', 
+				italico:' =  <i>  texto </i>', 
 			}
 		},
 

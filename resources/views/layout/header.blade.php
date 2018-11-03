@@ -19,7 +19,7 @@
     </li>  --}}
 
     <li class="nav-item">
-      <a class="nav-link" href="/login">Entrar Senha
+      <a class="nav-link" href="/login">Entrar 
         <i class="fa fa-sign-in"></i> 
       </a>
     </li> 

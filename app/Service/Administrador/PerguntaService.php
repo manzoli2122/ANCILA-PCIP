@@ -3,15 +3,16 @@
 namespace App\Service\Administrador ;
 
 use App\Models\Administrador\Pergunta;
+use App\Models\Administrador\Resposta;
 use Yajra\DataTables\DataTables;
 use App\Service\VueService; 
 use Illuminate\Http\Request; 
 use DB;
-
+use Auth;
 use Fpdf;
 
 
-class NewPdf extends Fpdf{
+class NewPdf extends Fpdf {
 
     protected $B = 0;
     protected $I = 0;
@@ -20,7 +21,7 @@ class NewPdf extends Fpdf{
 
     function WriteHTML($html)
     {
-    // HTML parser
+     
         $html = str_replace("\n",' ',$html);
         $a = preg_split('/<(.*)>/U',$html,-1,PREG_SPLIT_DELIM_CAPTURE);
         foreach($a as $i=>$e)
@@ -31,7 +32,7 @@ class NewPdf extends Fpdf{
                 if($this->HREF)
                     $this->PutLink($this->HREF,$e);
                 else
-                    Fpdf::Write(5,$e);
+                    $this->Write(5,$e);
             }
             else
             {
@@ -63,7 +64,7 @@ class NewPdf extends Fpdf{
         if($tag=='A')
             $this->HREF = $attr['HREF'];
         if($tag=='BR')
-            Fpdf::Ln(5);
+            $this->Ln(5);
     }
 
     function CloseTag($tag)
@@ -85,18 +86,115 @@ class NewPdf extends Fpdf{
             if($this->$s>0)
                 $style .= $s;
         }
-        Fpdf::SetFont('',$style);
+        $this->SetFont('',$style);
     }
 
     function PutLink($URL, $txt)
     {
     // Put a hyperlink
-        Fpdf::SetTextColor(0,0,255);
+        $this->SetTextColor(0,0,255);
         $this->SetStyle('U',true);
-        Fpdf::Write(5,$txt,$URL);
+        $this->Write(5,$txt,$URL);
         $this->SetStyle('U',false);
-        Fpdf::SetTextColor(0);
+        $this->SetTextColor(0);
     }
+
+    // function AddPage(){
+    //     Fpdf::AddPage();
+    //     $this->Header();
+    // }
+
+    // function SetDash($black=null, $white=null)
+    // {
+    //     if($black!==null)
+    //         $s=sprintf('[%.3F %.3F] 0 d',$black*$this->k,$white*$this->k);
+    //     else
+    //         $s='[] 0 d';
+    //     $this->_out($s);
+    // }
+
+    function Header()
+    {
+    // Logo   public_path('css/app.css')
+        // Fpdf::Image('http://chs2018.educacao.ws/img/pmes.png',10,6,17);
+        // $this->Image( public_path('img/pmes.png') ,10,6,17);
+        // $this->Image(public_path('img/bolsonaro-2.jpg'),10,6,21);
+        // $this->Image(public_path('img/tavares.jpeg'),10,6,20);
+        $this->Image(public_path('img/cavalaria.jpeg'),10,6,35);
+        
+        // $this->Image( public_path('img/espada.jpg') ,10,6,35);
+        // $this->Image( public_path('img/yin-yang.jpg') ,45,6,20);
+        // Fpdf::Image('http://chs2018.educacao.ws/img/brasil.JPG',30,6,22);
+        // Fpdf::Image(public_path('img/brasil.JPG'),30,6,22);
+        // Fpdf::Image('http://chs2018.educacao.ws/img/cavalaria.jpeg',55,6,25);
+        // Fpdf::Image(public_path('img/cavalaria.jpeg'),55,6,25);
+    // Arial bold 15
+        $this->SetFont('Arial','B',12);
+    // Move to the right
+        $this->Cell(80);
+    // Title
+        // $this->Cell(30,0,'Estado do Espirito Santo',0,0,'C');
+        $texto = utf8_decode('CURSO DE HABILITAÇÃO DE SARGENTO');
+        $this->Cell(30,0,$texto,0,0,'C');
+
+        // $this->Ln(); 
+        // $this->Cell(80); 
+        // $this->Cell(30,9,'Policia Militar',0,0,'C');
+       
+
+        $texto = utf8_decode('3º Pelotão');
+        // $this->Cell(30,10,$texto,0,0,'C');
+        
+        // $texto = utf8_decode('3º Pelotão'); 
+        // $this->Ln(); 
+        // $this->Cell(80); 
+        // $this->Cell(30,1, $texto ,0,0,'C');
+
+        $this->Ln(); 
+        $this->Cell(80); 
+        $this->Cell(30,10,'Perguntas para Estudo',0,0,'C');
+
+
+        $this->Ln(); 
+        $this->Cell(80); 
+        $texto = utf8_decode('Respostas estão no final do arquivo');
+        $this->Cell(30,1,$texto,0,0,'C');
+         
+        
+        // Fpdf::Image('http://chs2018.educacao.ws/img/brasaoES.jpg',180,6,21);
+        // $this->Image(public_path('img/bolsonaro-2.jpg'),157,6,21);
+        $this->Image(public_path('img/brasaoES.jpg'),180,6,21);
+        // Fpdf::Image('http://chs2018.educacao.ws/img/cfa.jpg',150,0,25);
+        // Fpdf::Image(public_path('img/cfa.jpg'),150,0,25);
+    // Line break
+        $this->Ln(9);
+        // $this->Ln(9);
+    }
+
+    function Footer()
+    {
+    // Position at 1.5 cm from bottom
+        $this->SetY(-15);
+    // Arial italic 8
+        $this->SetFont('Arial','I',8);
+    // Page number
+        $this->Cell(0,7,'Page '.$this->PageNo().'/{nb}',0,0,'C');
+        $this->Ln();
+        $this->SetFont('Arial','BI',7);
+        $texto = utf8_decode('Solidários, seremos união. Separados uns dos outros seremos pontos de vista. Juntos, alcançaremos a realização de nossos propósitos.'); 
+        $autor = utf8_decode('"Bezerra de Menezes"!!');  
+
+        // $texto = utf8_decode('A união do rebanho obriga o leão a deitar-se com fome.');
+        // $autor = utf8_decode('"Provérbio africano"!!');   
+        $this->SetTextColor(255,0,0);
+        // $this->Write(2,$texto);
+        $this->Cell(0,2,$texto,0,0,'C');
+        $this->SetFont('Arial','I',7);
+        $this->Ln();
+        $this->SetTextColor(0,0,0);
+        $this->Cell(0,5,$autor,0,1,'C');
+    }
+
 }
 
 
@@ -122,9 +220,26 @@ class PerguntaService extends VueService  implements PerguntaServiceInterface
 
 
 
+    public function  AlterarResposta( Request $request , $id  ){
+
+        throw_if(!$model = $this->model->with('assunto')->with('resposta')->find($id) , ModelNotFoundException::class);
+        
+        $resposta = Resposta::find( $request->input('resposta_id'));
+
+        $model->resposta_correta()->associate($resposta) ;
+
+        $model->save(); 
+         
+        return $model;
+    }
+
+
+
+
+
     public function  BuscarCriada( Request $request  ){
-     return $this->model->where('status', 'Criada')->get();
- }
+        return $this->model->where('status', 'Criada')->get();
+    }
 
 
 
@@ -261,23 +376,25 @@ class PerguntaService extends VueService  implements PerguntaServiceInterface
         
 
         $pdf = new NewPdf();
-
-        $pdf::SetTitle("Questões para Estudo");
-        $pdf::SetSubject("DTIC Sempre Presente, contruindo o seu futuro.");
+        $texto = utf8_decode('Questões para Estudo'); 
+        $pdf->SetTitle($texto);
+        $pdf->SetSubject("DTIC Sempre Presente, contruindo o seu futuro.");
         // $pdf ::SetAuthor('bruno'); 
         // $pdf ::SetKeywords('baon cco desempenho individual ');
         //Seta a posicao vertical e horizontal  
-        $pdf::SetY(-10);
-        $pdf::AddPage();
-        $pdf::AliasNbPages();
-        $pdf::SetAutoPageBreak(10, 10);
+        $pdf->SetY(-10);
+        $pdf->AddPage();
+        // $pdf->SetDash(5,5);
+        //$pdf->Header();
+        $pdf->AliasNbPages();
+        // $pdf::SetAutoPageBreak(10, 10);
 
-        $pdf::SetFont('Arial', 'u', 11);
+        $pdf->SetFont('Arial', 'u', 11);
 
         // Fpdf::Write(5,"To find out what's new in this tutorial, click ");
         
 
-        if (count($datas) > 1) {
+        if (count($datas) >= 1) {
 
            
 
@@ -285,23 +402,33 @@ class PerguntaService extends VueService  implements PerguntaServiceInterface
 
 
                 if($data->deleted_at == ''){
-                    if($data->status === 'Validada'  || $data->status === 'Finalizada' ){
+                    
+
+                    if($data->status === 'Validada'  || $data->status === 'Finalizada' || ($request->user()->can('Admin') && $data->status === 'Restrita') ){
                         
-                        $pdf::SetFont('arial', '', 10);
+                        $pdf->SetFont('arial', '', 10);
 
                         $html = html_entity_decode( $data->id . ') ' . $data->texto);
+                        $html = str_replace(['–' , '—'], '-' ,$html ); 
+                        $html = str_replace(['”' , '“'], '"' ,$html );
+                        $html = str_replace(['‘' , '’'], '"' ,$html );
+                        $html = str_replace('…', '. . .' ,$html );
                         $html = utf8_decode($html); 
                         $pdf->WriteHTML( $html ); 
-                        Fpdf::Ln();
+                        $pdf->Ln();
                         foreach ($data->resposta as $reposta) {
-                            $pdf::SetFont('arial', '', 8);
+                            $pdf->SetFont('arial', '', 8);
                             $html = html_entity_decode( '(   ) ' . $reposta->texto);
+                            $html = str_replace(['–' , '—'], '-' ,$html ); 
+                            $html = str_replace(['”' , '“'], '"' ,$html );
+                            $html = str_replace(['‘' , '’'], '"' ,$html );
+                            $html = str_replace('…', '. . .' ,$html );
                             $html = utf8_decode($html); 
                             $pdf->WriteHTML( $html ); 
                         // Fpdf::Write( 5 , '(  ) ' . utf8_decode($reposta->texto));
-                            Fpdf::Ln();
+                            $pdf->Ln();
                         }
-                        Fpdf::Ln();
+                        $pdf->Ln();
 
                     }
                 }
@@ -311,32 +438,45 @@ class PerguntaService extends VueService  implements PerguntaServiceInterface
 
             }
             // Muda o tamanho da fonte
-            $pdf::SetFont('arial', '', 10);
+            $pdf->SetFont('arial', 'B', 15);
             
-            $pdf::AddPage();
-            Fpdf::Write( 5 , 'GABARITO' );
-            Fpdf::Ln();
+            $pdf->AddPage();
+            $pdf->MultiCell( 0,5,'GABARITO ',0,'C' ); 
+            // Fpdf::Write( 5 , 'GABARITO' );
+            $pdf->Ln();
 
 
             foreach ($datas as $data) {
 
                 if($data->deleted_at == ''){
-                    if($data->status === 'Validada'  || $data->status === 'Finalizada' ){
+                    if($data->status === 'Validada'  || $data->status === 'Finalizada' || ($request->user()->can('Admin') && $data->status === 'Restrita') ){
                         
                         if( $data->resposta_correta){
-                            $pdf::SetFont('arial', '', 15);
-                            Fpdf::MultiCell( 0,5,'Pergunta ' . $data->id,0,'C' ); 
-                            $pdf::SetFont('arial', 'u', 10);
+                            $pdf->SetFont('arial', '', 15);
+                            $pdf->MultiCell( 0,5,'Pergunta ' . $data->id,0,'C' ); 
+                            $pdf->SetFont('arial', 'u', 10);
+                            
                             $html = html_entity_decode('Resposta ----> ' . $data->resposta_correta->texto);
+                            $html = str_replace(['–' , '—'], '-' ,$html ); 
+                            $html = str_replace(['”' , '“'], '"' ,$html );
+                            $html = str_replace(['‘' , '’'], '"' ,$html );
+                            $html = str_replace('…', '. . .' ,$html );
                             $html = utf8_decode($html); 
                             $pdf->WriteHTML( $html ); 
-                            Fpdf::Ln();   
-                            $pdf::SetFont('arial', '', 10);
-                            $html = html_entity_decode(  $data->resumo);
+                            
+
+                            $pdf->Ln();   
+                            $pdf->SetFont('arial', '', 10);
+                            $html = html_entity_decode(  $data->resumo );
+                            $html = str_replace(['–' , '—'], '-' ,$html ); 
+                            $html = str_replace(['”' , '“'], '"' ,$html );
+                            $html = str_replace(['‘' , '’'], '"' ,$html );
+                            $html = str_replace('…', '. . .' ,$html );
+                             
                             $html = utf8_decode($html); 
                             $pdf->WriteHTML( $html ); 
-                            Fpdf::Ln();
-                            Fpdf::Ln();
+                            $pdf->Ln();
+                            $pdf->Ln();
 
 
 
@@ -354,7 +494,7 @@ class PerguntaService extends VueService  implements PerguntaServiceInterface
 
             // $pdf::Cell(0, 7, 'Nenhum registro de Atividades no periodo', 0, 1, 'C');
         }
-        $pdf::Output('questoes.pdf', 'D');
+        $pdf->Output('questoes.pdf', 'D');
         exit;
 
     }

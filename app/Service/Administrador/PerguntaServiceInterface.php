@@ -25,6 +25,8 @@ interface PerguntaServiceInterface  extends VueServiceInterface
 
     public function  BuscarCriada( Request $request  );
 
+
+    public function  AlterarResposta( Request $request , $id  );
     
     /**
     * Função para gerar pdf dos usuarios 

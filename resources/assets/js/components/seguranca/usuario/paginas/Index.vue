@@ -10,8 +10,9 @@
 						<datatableService :config="config" id="datatableUsuarios"> 
 							<th pesquisavel style="max-width:90px">CPF</th>
 							<th pesquisavel>Nome</th> 
+							<th pesquisavel>Email</th> 
 							<th pesquisavel style="max-width:60px">Status</th>
-							<th style="min-width:150px" class="text-center">Ações</th> 
+							<th style="min-width:200px" class="text-center">Ações</th> 
 						</datatableService> 
 					</div>    
 				</crudCard> 
@@ -45,6 +46,7 @@
 					columns: [
 					{ data: 'id', name: 'id'  },
 					{ data: 'nome', name: 'nome' },  
+					{ data: 'email', name: 'email' },  
 					{ data: 'status', name: 'status' }, 
 					{ data: 'action', name: 'action', orderable: false, searchable: false, class: 'text-center'}
 					],

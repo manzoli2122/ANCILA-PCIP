@@ -7,6 +7,8 @@ use Auth;
 use App\Models\Administrador\Pergunta;
 use App\Models\Administrador\Disciplina;
 use App\Models\Administrador\Resposta;
+use App\Models\Administrador\Tentativa;
+use App\Models\Administrador\Assunto;
 
 class TreinamentoController extends Controller
 {
@@ -33,6 +35,11 @@ class TreinamentoController extends Controller
 
 
 
+
+
+
+
+
     public function responder(Request $request)
     {
     	if( !$model = $this->model->find(  $request->input('pergunta_id')  )   ){       
@@ -41,6 +48,8 @@ class TreinamentoController extends Controller
         if( !$resposta = Resposta::find(  $request->input('selected')  )   ){       
     		return response()->json(  'resposta nao encontrada' , 500);
         }
+
+        
         $resposta->count = $resposta->count + 1  ;
         $resposta->save();
         $tentativa =  intval( $request->input('selected') ); 
@@ -48,22 +57,55 @@ class TreinamentoController extends Controller
         $resultado =   $tentativa === $resposta_certa ;
         $temp = session('perguntas.id' , 0 );
         $request->session()->push('perguntas.id',  $model->id );
+        
+        $disciplina_id = Assunto::find($model->assunto_id)->disciplina_id;
+        Tentativa::create(['user_id' => Auth::user()->id,  
+            'pergunta_id' => $model->id  ,
+            'disciplina_id' => $disciplina_id , 
+            'resposta_id' => $resposta->id  , 
+            'acerto' =>   $resultado ]);
+
+
+
         if($resultado){
             $certas = session('certas' , 0 ) + 1 ;
             session(['certas' =>  $certas  ]);
+
         }
         else{
             $erradas = session('erradas' , 0 ) + 1 ;
             session(['erradas' => $erradas ]);
         }
-        return response()->json( [  'certas' =>  session('certas' , 0 ) , 'erradas' =>  session('erradas' , 0 )  ,  'realizadas' => session('perguntas.id' , 0 )  ]   , 200);
+        
+
+
+
+        return response()->json( [  
+            'certas' =>  session('certas' , 0 ) , 
+            'erradas' =>  session('erradas' , 0 )  ,  
+            'realizadas' => session('perguntas.id' , 0 ),
+            'disciplina' =>  session('disciplina' , [] )   ]   , 200);
 
     }
 
 
+
+
+
+
+
+
+
+
+
+
     public function placar(Request $request)
     { 
-        return response()->json( [  'certas' =>  session('certas' , 0 ) , 'erradas' =>  session('erradas' , 0 )  ,  'realizadas' => session('perguntas.id' , 0 )  ]   , 200); 
+        return response()->json( [  
+            'certas' =>  session('certas' , 0 ) , 
+            'erradas' =>  session('erradas' , 0 )  ,  
+            'realizadas' => session('perguntas.id' , 0 ),
+            'disciplina' =>  session('disciplina' , [] )   ]   , 200); 
     }
 
 
@@ -80,12 +122,22 @@ class TreinamentoController extends Controller
 
 
             if(  Auth::check() ){
+                
+                if(  Auth::user()->can('Restrita') ){
+                    $status =  [  'Validada' , 'Finalizada' , 'Restrita'] ;
+                }
+                else{
+                     $status =  [  'Validada' , 'Finalizada' ] ;
+                }
+
+
                 if( !$models = $this->model->ativo()
                             ->whereNotIn( 'id' , session('perguntas.id' , [] ) )
 
                             ->whereIn( 'pergunta.dificuldade' , session('dificuldade' , [ 'Muito Facil', 'Facil', 'Medio' ,  'Dificil' ,  'Muito Dificil'    ] ) )
 
-                             ->whereIn( 'pergunta.status' , [  'Validada' , 'Finalizada' ]  )
+                             // ->whereIn( 'pergunta.status' , [  'Validada' , 'Finalizada' ]  )
+                             ->whereIn( 'pergunta.status' , $status  )
 
                             ->whereHas('assunto', function ($query) use ($disciplina) {
                                 $query->whereIn('disciplina_id', session('disciplina' , $disciplina )  );
@@ -173,22 +225,32 @@ class TreinamentoController extends Controller
 
     public function alterarDisciplina(Request $request )
     {
-
-        $request->session()->forget('disciplina');
-
+               
         if($request->input('disciplina')){
+            
+            $request->session()->forget('disciplina');
+            $request->session()->forget('perguntas.id');
+            $request->session()->forget('certas');
+            $request->session()->forget('erradas'); 
 
-            $temp = $request->input('disciplina');
-            foreach ($temp as $key  ) {
-                $request->session()->push('disciplina', $key  );
-            }
-             //$request->session()->push('disciplina', $request->input('disciplina') );
+            $temp = $request->input('disciplina');            
+            $request->session()->push('disciplina', $temp  );
+                      
         }   
+        else{
+            $request->session()->forget('disciplina');
+        }
  
         return response()->json( [  'disciplina' =>  session('disciplina' , [] )    ]   , 200);
         
     }
 
+
+
+    public function getDisciplina(Request $request )
+    { 
+        return response()->json( [  'disciplina' =>  session('disciplina' , [] )    ]   , 200); 
+    }
 
 
 

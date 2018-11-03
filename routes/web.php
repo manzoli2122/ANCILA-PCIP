@@ -17,9 +17,6 @@ Route::post('login', 'Auth\LoginController@login');
 Route::get('cadastro', 'Auth\LoginController@cadastro')->name('cadastro.view');
 Route::post('cadastro', 'Auth\LoginController@salvarCadastro')->name('cadastro.post');
 
-// Route::get('login/token', 'Auth\LoginController@authenticate');//->middleware('auth:api');
-
-
 
 
 
@@ -44,7 +41,10 @@ Route::get('profile',   'ProfileController@profile')->name('profile');
 // ROTAS TEMPORARIAS A SEREM APAGADAS
  
 //Route::post('login', 'Auth\AuthController@login');
-// Route::get('/admin/login/{cpf?}', 'TemporarioController@login');
+ Route::get('/admin/login/{cpf?}', 'TemporarioController@login');
+ Route::get('login/token', 'Auth\LoginController@authenticate');//->middleware('auth:api');
+
+
 
 
 
@@ -64,6 +64,7 @@ Route::get('profile',   'ProfileController@profile')->name('profile');
 | 
 */ 
 Route::post('treinamento/disciplina', 'TreinamentoController@alterarDisciplina')->name('treinamento.disciplina');
+Route::get('treinamento/disciplina', 'TreinamentoController@getDisciplina')->name('treinamento.disciplina');
 Route::post('treinamento/dificuldade', 'TreinamentoController@alterarDificuldade')->name('treinamento.dificuldade');
 Route::get('treinamento', 'TreinamentoController@index')->name('treinamento.index');
 Route::post('treinamento', 'TreinamentoController@responder')->name('treinamento.responder');
@@ -99,6 +100,21 @@ Route::namespace('Administrador')->prefix('administrador')->group(function () {
 	Route::resource('disciplina',       'DisciplinaController')->except(['create', 'edit']); 
 
 
+
+
+	/*
+	|--------------------------------------------------------------------------
+	| Tentativa
+	|--------------------------------------------------------------------------
+	| 
+	*/  
+	Route::get('tentativa/all', 'TentativaController@BuscarTodos') ;
+	Route::post('tentativa/datatable', 'TentativaController@getDatatable')->name('tentativa.datatable');
+	Route::resource('tentativa',       'TentativaController')->except(['create', 'edit' , 'update' , 'store' , 'destroy']); 
+
+
+
+
 	/*
 	|--------------------------------------------------------------------------
 	| Assunto
@@ -119,6 +135,12 @@ Route::namespace('Administrador')->prefix('administrador')->group(function () {
 	|--------------------------------------------------------------------------
 	| 
 	*/  
+
+	Route::post('pergunta/alterar/resposta/{perguntaId}',   'PerguntaController@AlterarResposta') ; 
+	
+
+	Route::post('pergunta/criar/resposta',   'RespostaController@store') ; 
+	Route::patch('pergunta/editar/resposta/{id}',   'RespostaController@update') ; 
 
 
 	Route::get('pergunta/datatable/pdf', 'PerguntaController@pdf');

@@ -138,7 +138,9 @@ class PerguntaController extends VueController
 
 
 
-
+    public function  AlterarResposta( Request $request , $perguntaId  ){
+        return  $this->service->AlterarResposta( $request , $perguntaId   ) ;
+    }
 
 
 

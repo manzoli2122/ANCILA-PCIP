@@ -1,15 +1,26 @@
 <template>
 	<div>   
 		<div class="content">
-			<div class="container-fluid">
-				<div class="row">
+			<div class="container-fluid"  v-if="placar">
+				
+
+
+				<div class="row" v-if="placar.disciplina.length > 0 ">
 					<div class="col-12">
 						<h4 class="titulo text-center" v-if="pergunta">
 							<b>DISCIPLINA:</b> {{ pergunta.assunto.disciplina.nome  }} 
 						</h4>
+						<p class=" text-center" v-if="pergunta">
+							<b><span class=" text-success">{{ positivas  }}</span></b>	  pessoas ACERTARAM | <b><span class=" text-danger">{{ negativas  }}</span></b> pessoas ERRARAM
+						</p>
+						<p class=" text-center" v-if="pergunta">
+							 
+						</p>
 					</div>
 				</div> 
-				<form method="post" action="#"  @submit.prevent="onSubmit"> 
+
+
+				<form method="post" action="#"  @submit.prevent="onSubmit" v-if="placar.disciplina.length > 0 "> 
 					<crudCard>
 						<div class="card-header  "> 
 							<h1 class="box-title"><span v-html="pergunta.texto"></span></h1>
@@ -38,7 +49,7 @@
 				</form>  
 
 				<hr>
-				<crudCard  v-show="respondido" color="card-danger">
+				<crudCard  v-show="respondido" color="card-danger" v-if="placar.disciplina.length > 0 ">
 					<div class="card-header with-border text-center">
 						<h1 class="box-title"><b>Definições Abordadas</b></h1>
 					</div>            
@@ -53,7 +64,7 @@
 				
 
 				<div class="row" > 
-					<div class="col-12 col-md-7 col-lg-7">
+					<div class="col-12 col-md-7 col-lg-7" v-if="placar.disciplina.length > 0 ">
 						<crudCard>
 							<div class="card-header with-border text-center">
 								<h1 class="box-title"><b>Informações - {{pergunta.id }}</b></h1>
@@ -79,11 +90,11 @@
 					</div> -->
 
 					<div class="col-12 col-md-5 col-lg-5">
-						<formDisciplina :url="url"  :url_disciplina="url_disciplina"></formDisciplina> 
+						<formDisciplina :url="url"  :url_disciplina="url_disciplina" v-on:mudouDisciplina="mudouDisciplina()"></formDisciplina> 
 					</div>
 
 				</div>
- 
+ <br><br><br>
 				<a class="btn btn-info btn-block "  href="/">
 					<i class="fa fa-reply"></i> Voltar  
 				</a>
@@ -110,6 +121,34 @@
 		'url',   'url_disciplina'     
 		],
 
+		computed: {
+			positivas: function () {
+				let valor = 0 ; 
+				for (var i = 0 ; i <= this.pergunta.resposta.length - 1; i++) {
+					if(this.pergunta.resposta[i].id === this.pergunta.resposta_certa_id)
+					valor += this.pergunta.resposta[i].count;
+				}
+				return valor;
+			},
+			negativas: function () {
+				let valor = 0 ; 
+				for (var i = 0 ; i <= this.pergunta.resposta.length - 1; i++) {
+					if(this.pergunta.resposta[i].id !== this.pergunta.resposta_certa_id)
+					valor += this.pergunta.resposta[i].count;
+				}
+				return valor;
+			},
+
+			mensagem: function () {
+				let valor = (this.placar.certas + this.placar.erradas) % 2 ; 
+				 
+				return valor;
+			},
+
+		},
+
+
+
 		data() {
 			return {                
 				form: new Form({
@@ -121,6 +160,7 @@
 				respondido:'',
 				pergunta:'',          
 				placar:'',
+				disciplina:'',
 			}
 		},
 
@@ -141,19 +181,15 @@
 
 			onSubmit() {
 
-				if( this.form.selected === this.pergunta.resposta_certa_id ){
-				 
-					swal("Você Acertou!!", "", "success");
- 
+				if( this.form.selected === this.pergunta.resposta_certa_id ){				 
+					swal("Você Acertou!!", "", "success"); 
+					
 				}  
 				else{
-					swal("Você Errou!!", "", "error");
-					 
-					this.temp_errada =  this.form.selected;
- 
+					swal("Você Errou!!", "", "error");					 
+					this.temp_errada =  this.form.selected; 
 				}
 				
-
 				this.respondido = true ;
 				$('html, body').animate({
 				    scrollTop: $("#botao_proxima").offset().top
@@ -165,8 +201,24 @@
 
 				this.form.post( this.url )
 				.then(response => {
-					console.log(response);
+					console.log(response.realizadas);
 					this.placar = response ;
+					let total = this.placar.certas + this.placar.erradas
+					if( total % 5 === 0 ){
+						if(this.placar.certas / total >= 0.9 ){
+							toastSucesso('Parabens!! você esta indo muito bem!!');
+						}
+						else if(this.placar.certas / total >= 0.7 ){
+							toastSucesso('Parabens!! você esta indo bem!!');
+						}
+						else if(this.placar.certas / total >= 0.5 ){
+							toastSucesso('Vamos lá!! você esta indo bem, mas precisa melhorar um pouco!!');
+						}
+						else{
+							toastSucesso('Não desista!! vamos tentar melhorar o resultado!!');
+						}
+						
+					}
 				})            
 				.catch(errors => console.log(errors));
 			},
@@ -196,7 +248,10 @@
 			},
 
 
-
+			mudouDisciplina() {				 				 
+				this.proximaPergunta();
+				this.atualizarPlacar(); 
+			},
 
 
 
@@ -226,6 +281,7 @@
 		created() {
 			this.proximaPergunta(); 
 			this.atualizarPlacar(); 
+			// this.getDisciplina();
 		},
 
 

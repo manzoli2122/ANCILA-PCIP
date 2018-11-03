@@ -11,6 +11,10 @@ let routes = [
         component: require('./paginas/Cadastro')
     },
     {
+        path: '/edit/:id',
+        component: require('./paginas/Edit')
+    },
+    {
         path: '/:id/perfil',
         component: require('./paginas/Perfil') 
     },   

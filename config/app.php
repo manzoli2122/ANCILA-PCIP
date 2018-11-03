@@ -215,7 +215,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
 
         "AAL" => App\Seguranca\AALFacade::class,
-        'Fpdf' => Anouar\Fpdf\Facades\Fpdf::class,
+        'Fpdf' => Anouar\Fpdf\Fpdf::class,
     ],
 
 ];

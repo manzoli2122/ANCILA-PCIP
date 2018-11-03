@@ -275,7 +275,7 @@ class User extends Authenticatable  implements JWTSubject
     {
         return $this->withoutGlobalScope('ativo')
         ->select([
-            'id', 'nome', DB::raw("CASE status    WHEN 'A' THEN 'Ativo'   WHEN 'I' THEN 'Inativo' END AS status "),
+            'id', 'nome', 'email' ,  DB::raw("CASE status    WHEN 'A' THEN 'Ativo'   WHEN 'I' THEN 'Inativo' END AS status "),
         ]);        
     }
 

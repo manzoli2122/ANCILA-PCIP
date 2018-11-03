@@ -161,7 +161,19 @@
 							</li>
 							@endif 
  						@endpermissao
-						 
+						 	
+						 @permissao('tentativa') 
+							@if(Route::getRoutes()->hasNamedRoute('tentativa.index'))
+							<li class="nav-item">
+								<a href="{{ route('tentativa.index')}}" class="nav-link " id="menu-administrador-tentativa">
+									<i class="nav-icon fa fa-book fa-lg fa-2x  "></i>
+									<p>Tentativas </p>
+								</a>
+							</li>
+							@endif  
+						@endpermissao
+
+
  
 					</ul>
 				</li>

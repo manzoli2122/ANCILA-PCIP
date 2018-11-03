@@ -31,7 +31,7 @@ Route::post('usuario/ativacao/{userId}',            'UsuarioController@Ativar') 
 Route::get('usuario/resetarSenha/{userId}',         'UsuarioController@ResetarSenha')->name('resetar.senha') ;  
 Route::delete('usuario/desativacao/{userId}',       'UsuarioController@Desativar') ;  
 Route::post('usuario/datatable',                    'UsuarioController@getDatatable') ;
-Route::resource('usuario',                          'UsuarioController')->only(['index', 'show', 'store' ]);
+Route::resource('usuario',                          'UsuarioController')->only(['index', 'show', 'store' , 'update' ]);
  
 
 
