@@ -11,6 +11,7 @@
 							<th pesquisavel style="max-width:90px">CPF</th>
 							<th pesquisavel>Nome</th> 
 							<th pesquisavel>Email</th> 
+							<th pesquisavel>created_at</th> 
 							<th pesquisavel style="max-width:60px">Status</th>
 							<th style="min-width:200px" class="text-center">Ações</th> 
 						</datatableService> 
@@ -47,6 +48,7 @@
 					{ data: 'id', name: 'id'  },
 					{ data: 'nome', name: 'nome' },  
 					{ data: 'email', name: 'email' },  
+					{ data: 'created_at', name: 'created_at' },  
 					{ data: 'status', name: 'status' }, 
 					{ data: 'action', name: 'action', orderable: false, searchable: false, class: 'text-center'}
 					],

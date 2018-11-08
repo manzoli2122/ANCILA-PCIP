@@ -1,14 +1,11 @@
 <template>
-	<section class="dificuladade"> 
+	<section class="dificuladade"  > 
 		
 		<crudCard>
 			<div class="card-header with-border text-center">
-				<!-- <h3>
-					<b>Disciplinas: </b> <small v-for="dif in temp.disciplina">{{dif}} , </small>    
-				</h3>  -->
 				<h3>
 					<b>Disciplinas Atual: </b> 
-					<small v-for="dif in disciplina" v-if="verifica(dif.id) " >{{dif.nome}} , </small>    
+					<small>{{disciplina_atual}} </small>    
 				</h3> 
 			</div>    
 			<form method="post" :action="url + '/disciplina'" id="formEscolherDisciplina" @submit.prevent="enviarDisciplina"> 
@@ -17,7 +14,7 @@
 						<div   class="col-md-12">
 							<select name="disciplina" class="form-control  js-example-basic-multiple" > 
 								<option  value="">Selecione a Disciplina </option>
-								<option v-for="disc in disciplina"   :value="disc.id"> {{disc.nome}} </option>
+								<option v-for="disc in disciplinas"   :value="disc.id"> {{disc.nome}} </option>
 							</select>   
 						</div>
 					</div> 
@@ -37,45 +34,17 @@
 	
 	export default {
 		props:[
-		'url' , 'url_disciplina' 
+		'url' , 'disciplinas' , 'disciplina_atual'
 		],
 
 		data() {
-			return {                
-				disciplina:'',  
-				temp:'',
+			return {    
 			}
 		},
 		
-		// computed: {    		
-  //   		reversedMessage: function () {
-  //     			return this.disciplina.filter(function (item) {
-  //     				return item.id == 1
-  //     			}) 
-  //     		}
-  //     	},
-
-
-		watch: { 
-			disciplina: function (newpergunta_id, oldpergunta_id) {
-				// $('.js-example-basic-multiple').select2();
-			} 
-		},    
 		
 		methods: {
-
-
-			verifica(id){
-				if(this.temp){
-					for (var i = this.temp.disciplina.length - 1; i >= 0; i--) {
-						if(this.temp.disciplina[i] == id ){
-							return true;
-						}					
-					}
-				} 
-				return false; 
-			},
-
+  
 
 			enviarDisciplina() {
 				var form = document.forms["formEscolherDisciplina"];
@@ -84,11 +53,8 @@
 
 				axios.post( this.url + '/disciplina' , dados )
 				.then(response => {
-					console.log(response.data); 
-					this.temp = response.data ;
-					// if(this.temp.disciplina.length > 0 ){
-						this.$emit('mudouDisciplina', this.temp);
-					// }  
+					// console.log(response.data); 
+					this.$emit('mudouDisciplina', response.data.disciplina);					 
 				})
 				.catch(errors => {
 					console.log(errors);
@@ -96,30 +62,7 @@
 			},
 			
 		},
-		
-		mounted(){
-			axios.get( this.url + '/disciplina'  )
-				.then(response => { 
-					this.temp = response.data ; 
-				})
-				.catch(errors => {
-					console.log(errors);
-				});
-		},
-
-
-
-		created() { 
-			axios.get(this.url_disciplina + '/all'  )
-			.then(response => {
-				this.disciplina = response.data ;
-			})
-			.catch(error => {
-				toastErro('Não foi possivel achar as disciplinas'); 
-			});
-
-			// this.enviarDisciplina();
-		},
+		 
 
 	}
 	

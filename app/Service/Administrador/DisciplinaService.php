@@ -31,7 +31,16 @@ class DisciplinaService extends VueService  implements DisciplinaServiceInterfac
 
 
 
-
+     /**
+    * Busca todos registros de um model 
+    *
+    * @param Request $request
+    *
+    * @return $model
+    */
+    public function  BuscarTodos( Request $request  ){
+        return $this->model->select('id' , 'nome')->get();
+    }
 
 
 

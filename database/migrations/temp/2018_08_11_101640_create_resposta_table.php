@@ -29,6 +29,8 @@ class CreateRespostaTable extends Migration
             $table->softDeletes();
 
             $table->timestamps();
+
+            $table->index('pergunta_id');
         });
     }
 

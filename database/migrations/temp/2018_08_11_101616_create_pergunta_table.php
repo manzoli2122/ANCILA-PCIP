@@ -40,6 +40,10 @@ class CreatePerguntaTable extends Migration
 
 
             $table->timestamps();
+
+            $table->index('status');
+            $table->index('assunto_id');
+            
         });
     }
 

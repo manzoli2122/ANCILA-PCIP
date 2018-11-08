@@ -1,26 +1,25 @@
 <template>
 	<div>   
 		<div class="content">
-			<div class="container-fluid"  v-if="placar">
-				
+			<div class="container-fluid"  v-if="placar"> 
 
-
-				<div class="row" v-if="placar.disciplina.length > 0 ">
+				<div class="row" v-if="disciplina_id_atual.length > 0 ">
 					<div class="col-12">
-						<h4 class="titulo text-center" v-if="pergunta">
-							<b>DISCIPLINA:</b> {{ pergunta.assunto.disciplina.nome  }} 
-						</h4>
-						<p class=" text-center" v-if="pergunta">
-							<b><span class=" text-success">{{ positivas  }}</span></b>	  pessoas ACERTARAM | <b><span class=" text-danger">{{ negativas  }}</span></b> pessoas ERRARAM
+						<h6 class="titulo text-center" v-if="pergunta" style="margin-bottom:0px">
+							<b>DISCIPLINA:</b> {{ disciplina_pergunta  }} 
+						</h6>
+						<p class=" text-center" v-if="pergunta" style="margin-bottom:0px">
+							<b>Dificulidade:<span class=" text-success"> {{ dificuldade  }}</span></b>	  
 						</p>
-						<p class=" text-center" v-if="pergunta">
-							 
+						<p class=" text-center" v-if="pergunta" style="margin-bottom:0px">
+							<b><span class=" text-success">{{ positivas  }}</span></b>	  pessoas ACERTARAM | <b><span class=" text-danger">{{ negativas  }}</span></b> pessoas ERRARAM    
 						</p>
+						 
 					</div>
 				</div> 
 
 
-				<form method="post" action="#"  @submit.prevent="onSubmit" v-if="placar.disciplina.length > 0 "> 
+				<form method="post" action="#"  @submit.prevent="onSubmit" v-if="disciplina_id_atual.length > 0 "> 
 					<crudCard>
 						<div class="card-header  "> 
 							<h1 class="box-title"><span v-html="pergunta.texto"></span></h1>
@@ -49,7 +48,7 @@
 				</form>  
 
 				<hr>
-				<crudCard  v-show="respondido" color="card-danger" v-if="placar.disciplina.length > 0 ">
+				<crudCard  v-show="respondido" color="card-danger" v-if="(disciplina_id_atual.length > 0) && pergunta.resumo ">
 					<div class="card-header with-border text-center">
 						<h1 class="box-title"><b>Definições Abordadas</b></h1>
 					</div>            
@@ -64,7 +63,7 @@
 				
 
 				<div class="row" > 
-					<div class="col-12 col-md-7 col-lg-7" v-if="placar.disciplina.length > 0 ">
+					<div class="col-12 col-md-7 col-lg-7" v-if="disciplina_id_atual.length > 0 ">
 						<crudCard>
 							<div class="card-header with-border text-center">
 								<h1 class="box-title"><b>Informações - {{pergunta.id }}</b></h1>
@@ -79,7 +78,7 @@
 								</div>
 								<div class="row"> 
 									<div class="col-5"><h6><b>Erradas:</b> <span class="right badge badge-danger">{{  placar.erradas  }}</span> </h6></div>  
-									<div class="col-7"><h6><b>Rendimento:</b> {{ parseInt( placar.certas/(placar.certas + placar.erradas)*100)}}%</h6></div> 
+									<div class="col-7"><h6><b>Rendimento:</b> {{ rendimento }}%</h6></div> 
 								</div>
 							</div> 
 						</crudCard> 
@@ -89,8 +88,8 @@
 						<formDificuldade :url="url"  ></formDificuldade>
 					</div> -->
 
-					<div class="col-12 col-md-5 col-lg-5">
-						<formDisciplina :url="url"  :url_disciplina="url_disciplina" v-on:mudouDisciplina="mudouDisciplina()"></formDisciplina> 
+					<div class="col-12 col-md-5 col-lg-5" >
+						<formDisciplina :disciplina_atual="disciplina_atual" :disciplinas="disciplinas" :url="url" v-on:mudouDisciplina="mudouDisciplina($event)"></formDisciplina> 
 					</div>
 
 				</div>
@@ -122,6 +121,20 @@
 		],
 
 		computed: {
+			
+
+
+			rendimento: function () {
+				let total = this.placar.certas + this.placar.erradas;
+				let valor = 0 ; 
+				if(total>0){
+					valor = parseInt( this.placar.certas/total*100) ; 
+				}			 
+				return valor;
+			},
+
+
+
 			positivas: function () {
 				let valor = 0 ; 
 				for (var i = 0 ; i <= this.pergunta.resposta.length - 1; i++) {
@@ -130,6 +143,10 @@
 				}
 				return valor;
 			},
+
+
+
+
 			negativas: function () {
 				let valor = 0 ; 
 				for (var i = 0 ; i <= this.pergunta.resposta.length - 1; i++) {
@@ -139,11 +156,77 @@
 				return valor;
 			},
 
+
+
+
 			mensagem: function () {
-				let valor = (this.placar.certas + this.placar.erradas) % 2 ; 
-				 
+				let valor = (this.placar.certas + this.placar.erradas) % 2 ; 				 
 				return valor;
+			}, 
+
+
+
+			disciplina_atual(){ 
+				for (var i = this.disciplinas.length - 1; i >= 0; i--) {
+					if(this.disciplinas[i].id == this.disciplina_id_atual[0] ){
+						return this.disciplinas[i].nome;
+					}					
+				} 
+				return ''; 
 			},
+
+
+
+			disciplina_pergunta(){ 
+				for (var i = this.disciplinas.length - 1; i >= 0; i--) {
+					if(this.disciplinas[i].id == this.pergunta.assunto.disciplina_id ){
+						return this.disciplinas[i].nome;
+					}					
+				} 
+				return ''; 
+			},
+
+
+
+			dificuldade(){ 
+				let total = this.positivas + this.negativas;
+				if(this.positivas / total > 0.95  ){
+					return 'Muito Facil';
+				}
+				if(this.positivas / total > 0.9){
+					return 'Facil';
+				}
+				if(this.positivas / total > 0.8 || ( total < 3 )  ) {
+					return 'Médio';
+				}
+				if(this.positivas / total > 0.7 || ( total < 6 ) ){
+					return 'Difícil';
+				}
+
+				if(this.positivas / total > 0.6 || ( total < 9 ) ){
+					return 'Muito Difícil';
+				}
+
+				if(this.positivas / total > 0.5){
+					return 'Sobrenatural';
+				}
+
+				if(this.positivas / total > 0.4){
+					return 'Colossal';
+				}
+
+				if(this.positivas / total > 0.3){
+					return 'Utópica';
+				}
+
+				if(this.positivas / total > 0.0){
+					return 'Lendária';
+				} 
+
+				return ''; 
+			},
+
+
 
 		},
 
@@ -160,7 +243,10 @@
 				respondido:'',
 				pergunta:'',          
 				placar:'',
-				disciplina:'',
+
+
+				disciplinas:'',
+				disciplina_id_atual:'',
 			}
 		},
 
@@ -201,7 +287,7 @@
 
 				this.form.post( this.url )
 				.then(response => {
-					console.log(response.realizadas);
+					// console.log(response.realizadas);
 					this.placar = response ;
 					let total = this.placar.certas + this.placar.erradas
 					if( total % 5 === 0 ){
@@ -248,9 +334,10 @@
 			},
 
 
-			mudouDisciplina() {				 				 
+			mudouDisciplina(evento) {				 				 
 				this.proximaPergunta();
 				this.atualizarPlacar(); 
+				this.disciplina_id_atual = evento ;
 			},
 
 
@@ -275,13 +362,46 @@
 			},
 
 
+
+
+
+
+			//BUSCA TODAS AS DISCIPLINAS
+			getDisciplinasAtivas() {				 				 
+				axios.get(this.url_disciplina + '/all'  )
+				.then(response => {
+					this.disciplinas = response.data ;
+				})
+				.catch(error => {
+					toastErro('Não foi possivel achar as disciplinas'); 
+				});
+			},
+
+
+
+
+
+
+			//BUSCA A DISCIPLINA ATUAL
+			getDisciplinaAtual() {				 				 
+				axios.get(this.url + '/disciplina'  )
+				.then(response => {
+					this.disciplina_id_atual = response.data.disciplina ;
+				})
+				.catch(error => {
+					toastErro('Não foi possivel achar as disciplinas'); 
+				});
+			},
+
+
 		},
 
 
 		created() {
 			this.proximaPergunta(); 
 			this.atualizarPlacar(); 
-			// this.getDisciplina();
+			this.getDisciplinasAtivas();
+			this.getDisciplinaAtual();
 		},
 
 

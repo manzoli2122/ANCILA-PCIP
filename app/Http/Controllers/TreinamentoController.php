@@ -17,8 +17,7 @@ class TreinamentoController extends Controller
 
 
 
-    public function __construct(Pergunta $pergunta)
-    {
+    public function __construct(Pergunta $pergunta){
     	$this->model = $pergunta;
         $this->middleware('auth');
     }
@@ -26,8 +25,7 @@ class TreinamentoController extends Controller
 
 
     
-    public function index()
-    {
+    public function index(){
         return view('treinamento.index');
     }
 
@@ -40,8 +38,7 @@ class TreinamentoController extends Controller
 
 
 
-    public function responder(Request $request)
-    {
+    public function responder(Request $request) {
     	if( !$model = $this->model->find(  $request->input('pergunta_id')  )   ){       
     		return response()->json(  'pergunta nao encontrada' , 500);
         }
@@ -83,8 +80,9 @@ class TreinamentoController extends Controller
         return response()->json( [  
             'certas' =>  session('certas' , 0 ) , 
             'erradas' =>  session('erradas' , 0 )  ,  
-            'realizadas' => session('perguntas.id' , 0 ),
-            'disciplina' =>  session('disciplina' , [] )   ]   , 200);
+            // 'realizadas' => session('perguntas.id' , 0 ),
+            // 'disciplina' =>  session('disciplina' , [] )   
+            ]   , 200);
 
     }
 
@@ -99,13 +97,13 @@ class TreinamentoController extends Controller
 
 
 
-    public function placar(Request $request)
-    { 
+    public function placar(Request $request){ 
         return response()->json( [  
             'certas' =>  session('certas' , 0 ) , 
             'erradas' =>  session('erradas' , 0 )  ,  
-            'realizadas' => session('perguntas.id' , 0 ),
-            'disciplina' =>  session('disciplina' , [] )   ]   , 200); 
+            // 'realizadas' => session('perguntas.id' , 0 ),
+            // 'disciplina' =>  session('disciplina' , [] ) 
+              ]   , 200); 
     }
 
 
@@ -117,11 +115,8 @@ class TreinamentoController extends Controller
     {
         try { 
             $disciplina = Disciplina::select('id')->get()->toArray(); 
-            //return $disciplina ;         
             
-
-
-            if(  Auth::check() ){
+            // if(  Auth::check() ){
                 
                 if(  Auth::user()->can('Restrita') ){
                     $status =  [  'Validada' , 'Finalizada' , 'Restrita'] ;
@@ -129,32 +124,16 @@ class TreinamentoController extends Controller
                 else{
                      $status =  [  'Validada' , 'Finalizada' ] ;
                 }
-
-
+ 
                 if( !$models = $this->model->ativo()
                             ->whereNotIn( 'id' , session('perguntas.id' , [] ) )
 
-                            ->whereIn( 'pergunta.dificuldade' , session('dificuldade' , [ 'Muito Facil', 'Facil', 'Medio' ,  'Dificil' ,  'Muito Dificil'    ] ) )
+                            // ->whereIn( 'pergunta.dificuldade' , session('dificuldade' , [ 'Muito Facil', 'Facil', 'Medio' ,  'Dificil' ,  'Muito Dificil'    ] ) )
 
                              // ->whereIn( 'pergunta.status' , [  'Validada' , 'Finalizada' ]  )
-                             ->whereIn( 'pergunta.status' , $status  )
-
-                            ->whereHas('assunto', function ($query) use ($disciplina) {
-                                $query->whereIn('disciplina_id', session('disciplina' , $disciplina )  );
-                            })
-
-                            ->with('resposta')->get()    ){       
-                    return response()->json(  'pergunta nao encontrada' , 404);             
-                } 
-            }
-            else{
-                if( !$models = $this->model->ativo()
-                            ->whereNotIn( 'id' , session('perguntas.id' , [] ) )
-
-                            ->whereIn( 'pergunta.dificuldade' , session('dificuldade' , [ 'Muito Facil', 'Facil', 'Medio' ,  'Dificil' ,  'Muito Dificil'    ] ) )
-
-                            ->whereIn( 'pergunta.status' , [  'Validada' , 'Finalizada' ]  )
                             
+                            ->whereIn( 'pergunta.status' , $status  )
+
                             ->whereHas('assunto', function ($query) use ($disciplina) {
                                 $query->whereIn('disciplina_id', session('disciplina' , $disciplina )  );
                             })
@@ -162,24 +141,41 @@ class TreinamentoController extends Controller
                             ->with('resposta')->get()    ){       
                     return response()->json(  'pergunta nao encontrada' , 404);             
                 } 
-            }
 
-             
+                
+            // }
 
 
 
+
+
+            // else{
+            //     if( !$models = $this->model->ativo()
+            //                 ->whereNotIn( 'id' , session('perguntas.id' , [] ) )
+
+            //                 ->whereIn( 'pergunta.dificuldade' , session('dificuldade' , [ 'Muito Facil', 'Facil', 'Medio' ,  'Dificil' ,  'Muito Dificil'    ] ) )
+
+            //                 ->whereIn( 'pergunta.status' , [  'Validada' , 'Finalizada' ]  )
+                            
+            //                 ->whereHas('assunto', function ($query) use ($disciplina) {
+            //                     $query->whereIn('disciplina_id', session('disciplina' , $disciplina )  );
+            //                 })
+
+            //                 ->with('resposta')->get()    ){       
+            //         return response()->json(  'pergunta nao encontrada' , 404);             
+            //     } 
+            // }
+ 
             if( $models->count() < 1 ){
                 $request->session()->forget('perguntas.id');
                 return response()->json(  'pergunta nao encontrada' , 404);
             }
-
-
+ 
             $model = $models->random();
             $model->resposta = $model->resposta->shuffle();
 
             return response()->json(  $model->only( 'id' , 'texto' , 'resposta_certa_id' , 'resumo' , 'assunto' ,'resposta' , 'dificuldade') , 200);      
-
-
+ 
         }   
 
         catch(Exception $e) {        

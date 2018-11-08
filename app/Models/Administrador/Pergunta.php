@@ -33,9 +33,15 @@ class Pergunta extends Model
     //     return $this->belongsTo('App\Models\Assunto', 'assunto_id') ;
     // }
 
+
     public function assunto(){
-        return $this->belongsTo('App\Models\Administrador\Assunto', 'assunto_id')->with('disciplina');
+        return $this->belongsTo('App\Models\Administrador\Assunto', 'assunto_id')->select('id' , 'nome' , 'disciplina_id'); //->with('disciplina');
     }
+
+
+
+
+
 
     public function resposta_correta(){
         return $this->belongsTo('App\Models\Administrador\Resposta', 'resposta_certa_id');

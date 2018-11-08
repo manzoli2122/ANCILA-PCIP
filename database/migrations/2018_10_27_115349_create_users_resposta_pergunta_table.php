@@ -30,9 +30,9 @@ class CreateUsersRespostaPerguntaTable extends Migration
             $table->foreign('resposta_id')->references('id')->on('resposta')->onDelete('restrict');  
 
 
-
-
             $table->timestamps();
+
+            $table->index('created_at');
         });
     }
 

@@ -180,6 +180,13 @@ class UsuarioService extends VueService  implements UsuarioServiceInterface
     	->setRowClass(function ($user) {
     		return $user->status === 'Ativo' ? '' : 'alert-warning';
     	})
+
+        ->editColumn('created_at', function ($user) {
+                return $user->created_at->format('Y/m/d');
+            })
+            ->filterColumn('created_at', function ($query, $keyword) {
+                $query->whereRaw("DATE_FORMAT(created_at,'%Y/%m/%d') like ?", ["%$keyword%"]);
+            }) 
     	->make(true); 
     }
 

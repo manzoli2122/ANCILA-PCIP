@@ -27,6 +27,9 @@ class CreateAssuntoTable extends Migration
             $table->softDeletes();
 
             $table->timestamps();
+
+            $table->index('disciplina_id');
+            
         });
     }
 

@@ -66,7 +66,7 @@ class User extends Authenticatable  implements JWTSubject
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token', 'deleted_at' ,  'updated_at' ,  'created_at' , 'pivot'
+        'password', 'remember_token', 'deleted_at' ,  'updated_at'  , 'pivot'
     ];
 
 
@@ -275,7 +275,7 @@ class User extends Authenticatable  implements JWTSubject
     {
         return $this->withoutGlobalScope('ativo')
         ->select([
-            'id', 'nome', 'email' ,  DB::raw("CASE status    WHEN 'A' THEN 'Ativo'   WHEN 'I' THEN 'Inativo' END AS status "),
+            'id', 'nome', 'email',  'created_at' ,  DB::raw("CASE status    WHEN 'A' THEN 'Ativo'   WHEN 'I' THEN 'Inativo' END AS status "),
         ]);        
     }
 
