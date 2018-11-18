@@ -74,6 +74,12 @@ class AppServiceProvider extends ServiceProvider
         );
 
 
+        $this->app->bind(
+            'App\Service\Administrador\ComentarioPerguntaServiceInterface',
+            'App\Service\Administrador\ComentarioPerguntaService'
+        );
+
+
 
 
     }

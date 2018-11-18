@@ -70,8 +70,11 @@ Route::get('treinamento', 'TreinamentoController@index')->name('treinamento.inde
 Route::post('treinamento', 'TreinamentoController@responder')->name('treinamento.responder');
 Route::get('treinamento/proximo', 'TreinamentoController@proximo')->name('treinamento.proximo');
 Route::get('treinamento/placar', 'TreinamentoController@placar')->name('treinamento.placar');
+Route::get('treinamento/historico', 'TreinamentoController@historico')->name('treinamento.historico');
 
 
+
+Route::post('treinamento/criar/comentario',   'Administrador\ComentarioPerguntaController@store') ; 
 
 
 
@@ -164,6 +167,20 @@ Route::namespace('Administrador')->prefix('administrador')->group(function () {
 	Route::post('resposta/datatable', 'RespostaController@getDatatable')->name('resposta.datatable');
 	Route::resource('resposta',       'RespostaController')->except(['create', 'edit']);
 
+
+
+
+
+	/*
+	|--------------------------------------------------------------------------
+	| Comentario
+	|--------------------------------------------------------------------------
+	| 
+	*/ 
+	Route::delete('comentario/desativacao/{comentarioId}',   'ComentarioPerguntaController@destroy') ; 
+	Route::post('comentario/ativacao/{comentarioId}',   'ComentarioPerguntaController@Ativar') ;  
+	Route::post('comentario/datatable', 'ComentarioPerguntaController@getDatatable')->name('comentario.datatable');
+	Route::resource('comentario',       'ComentarioPerguntaController')->except(['create', 'edit']);
 
 
 

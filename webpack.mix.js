@@ -21,6 +21,8 @@ mix.js('resources/assets/js/components/administrador/pergunta/rotas.js', 'public
 
 mix.js('resources/assets/js/components/administrador/resposta/rotas.js', 'public/js/resposta.js');
 
+mix.js('resources/assets/js/components/administrador/comentarioPergunta/rotas.js', 'public/js/comentario.js');
+
 mix.js('resources/assets/js/components/administrador/tentativa/rotas.js', 'public/js/tentativa.js');
 
 

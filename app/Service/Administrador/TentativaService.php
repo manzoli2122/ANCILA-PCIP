@@ -58,7 +58,7 @@ class TentativaService extends VueService  implements TentativaServiceInterface
 	        //     return $tentativa->usuario->nome ;
 	        // })
             ->editColumn('created_at', function ($user) {
-                return $user->created_at->format('Y/m/d');
+                return $user->created_at->format('Y/m/d H:i');
             })
             ->filterColumn('created_at', function ($query, $keyword) {
                 $query->whereRaw("DATE_FORMAT(created_at,'%Y/%m/%d') like ?", ["%$keyword%"]);

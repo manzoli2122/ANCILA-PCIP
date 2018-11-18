@@ -92,6 +92,19 @@ class TreinamentoController extends Controller
 
 
 
+    public function historico(Request $request){ 
+        
+        $disciplina = session('disciplina' , [] );
+
+        $id = Auth::user()->id;
+
+        $resposta = Tentativa::where('user_id', $id)->whereIn('disciplina_id' , $disciplina )->select('acerto', 'pergunta_id')->get();
+
+        return response()->json(  $resposta    , 200); 
+    }
+
+
+
 
 
 

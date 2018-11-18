@@ -55,15 +55,16 @@
 				<crudCard> 
 					<div class="card-header">
 						<h4>  
-							<span class="right badge badge-danger">{{ model.assunto.disciplina.nome }}</span>  
-							<span data-toggle="tooltip" :title="model.assunto.nome " class="badge bg-success">{{ model.assunto.nome  }} </span>
-							<span data-toggle="tooltip" :title="model.dificuldade" class="badge bg-primary">{{ model.dificuldade }} </span>
+							<!-- <span class="right badge badge-danger">{{ model.assunto.disciplina.nome }}</span>   -->
+							<!-- <span data-toggle="tooltip" :title="model.assunto.nome " class="badge bg-success">{{ model.assunto.nome  }} </span> -->
+							<!-- <span data-toggle="tooltip" :title="model.dificuldade" class="badge bg-primary">{{ model.dificuldade }} </span> -->
+							<h3> Pergunta: <span v-html="model.texto"></span></h3> 
 						</h4>  
 					</div> 
 					<div class="card-body"> 
-						<h3> Pergunta: <span v-html="model.texto"></span></h3> 
+						<!-- <h3> Pergunta: <span v-html="model.texto"></span></h3>  -->
 						<!-- <h3> Pergunta: <span>{{model.texto}}</span></h3>  -->
-						<hr>
+						<!-- <hr> -->
 						<section class="row"> 		                         
 							<div class="col-12 col-sm-12" v-for="item in model.resposta" v-bind:class="[ item.id === model.resposta_certa_id ? 'text-danger' : ''  ]"  >
 								<h4>

@@ -9,7 +9,7 @@
 							<b>DISCIPLINA:</b> {{ disciplina_pergunta  }} 
 						</h6>
 						<p class=" text-center" v-if="pergunta" style="margin-bottom:0px">
-							<b>Dificulidade:<span class=" text-success"> {{ dificuldade  }}</span></b>	  
+							<b>Questão Nº:<span class=" text-primary"> {{pergunta.id }}</span></b>	| <b>Dificulidade:<span class=" text-success"> {{ dificuldade  }}</span></b>	  
 						</p>
 						<p class=" text-center" v-if="pergunta" style="margin-bottom:0px">
 							<b><span class=" text-success">{{ positivas  }}</span></b>	  pessoas ACERTARAM | <b><span class=" text-danger">{{ negativas  }}</span></b> pessoas ERRARAM    
@@ -31,6 +31,7 @@
 										<label v-bind:class="[temp_errada === resposta.id ? 'text-danger' : '' ]"  >
 											<input  style="margin-top: 8px;" type="radio" required name="resposta" :value="resposta.id" v-model="form.selected">
 											<span v-html="resposta.texto"></span>  
+											<span v-show="respondido">  ( {{resposta.count}} ) </span>  
 										</label>
 									</div>
 								</div>
@@ -52,7 +53,7 @@
 					<div class="card-header with-border text-center">
 						<h1 class="box-title"><b>Definições Abordadas</b></h1>
 					</div>            
-					<div class="card-body">
+					<div class="card-body">						
 						<div class="row">
 							<div class="col-md-12">
 								<span v-html="pergunta.resumo"></span>
@@ -60,37 +61,185 @@
 						</div>
 					</div> 
 				</crudCard> 
+
+
+
+				<crudCard  v-show="respondido" color="card-danger" v-if="pergunta">
+					<div class="card-header with-border text-center">
+						<h1 class="box-title"><b>Comentário</b></h1>
+					</div>            
+					<div class="card-body">
+						<h5>Deixe seu comentário aqui:</h5>
+						<crudFormElemento > 
+							<textarea maxlength="1500" id="texto" name="texto" class="form-control" v-model="comentario"  style="height:150px"  ></textarea> 
+						</crudFormElemento> 
+					</div> 
+					<div class="card-footer text-center"> 
+						<button  class="btn btn-success btn-sm" v-on:click="criarComentario()"><i class="fa fa-check"></i> Enviar</button>
+					</div> 
+				</crudCard> 
+
+
+
+
 				
 
 				<div class="row" > 
-					<div class="col-12 col-md-7 col-lg-7" v-if="disciplina_id_atual.length > 0 ">
+					<div class="col-12 col-md-6 col-lg-6" v-if="disciplina_id_atual.length > 0 ">
 						<crudCard>
 							<div class="card-header with-border text-center">
-								<h1 class="box-title"><b>Informações - {{pergunta.id }}</b></h1>
+								<h1 class="box-title"><b>Informações Parciais</b></h1>
 							</div>            
-							<div class="card-body">
-								<h6 class="text-center" v-if="pergunta"> {{ pergunta.assunto.nome  }} </h6>
-								  
+							<div class="card-body"> 
 								<div class="row">
 									<div class="col-5"><h6><b> Acertos:</b> <span class="right badge badge-success">{{ placar.certas  }}</span> </h6></div>
-									<div class="col-7"><h6><b> Dificuldade:</b><span class="right badge badge-info">{{ pergunta.dificuldade  }}</span> </h6></div>
-									<!-- <div class="col-12"><h4><b>Questões respondidas: </b><span v-for="item in placar.realizadas" :key="item.id">{{  item }} , </span></h4></div> -->
+									<div class="col-7"><h6><b>Rendimento:</b> {{ rendimento }}%</h6></div>  
 								</div>
 								<div class="row"> 
 									<div class="col-5"><h6><b>Erradas:</b> <span class="right badge badge-danger">{{  placar.erradas  }}</span> </h6></div>  
-									<div class="col-7"><h6><b>Rendimento:</b> {{ rendimento }}%</h6></div> 
+									
 								</div>
 							</div> 
 						</crudCard> 
 					</div>
+
+
+
+
+					<div class="col-12 col-md-6 col-lg-6" v-if="historico && pergunta && (disciplina_id_atual.length > 0 )">
+						<crudCard>
+							<div class="card-header with-border text-center">
+								<h1 class="box-title"><b>Histórico geral em {{ disciplina_pergunta  }}</b></h1>
+							</div>            
+							<div class="card-body"> 
+								<div class="row">
+									<div class="col-5"><h6><b> Acertos:</b> <span class="right badge badge-success">{{ historico_certas  }}</span> </h6></div> 
+									<div class="col-7"><h6><b>Rendimento geral:</b> {{ rendimento_historico }}%</h6></div> 
+								</div>
+								<div class="row"> 
+									<div class="col-5"><h6><b>Erradas:</b> <span class="right badge badge-danger">{{  historico_erradas  }}</span> </h6></div>  
+									
+								</div>
+
+							</div> 
+						</crudCard> 
+					</div>
 					
+
+
+
+
 					<!-- <div class="col-12 col-md-6 col-lg-4">
 						<formDificuldade :url="url"  ></formDificuldade>
 					</div> -->
 
-					<div class="col-12 col-md-5 col-lg-5" >
+					<div class="col-12 col-md-6 col-lg-6" >
 						<formDisciplina :disciplina_atual="disciplina_atual" :disciplinas="disciplinas" :url="url" v-on:mudouDisciplina="mudouDisciplina($event)"></formDisciplina> 
 					</div>
+
+
+
+
+					<div class="col-12 col-md-6 col-lg-6" v-if="pergunta && (disciplina_id_atual.length > 0 )">
+						<crudCard>
+							<div class="card-header with-border text-center">
+								<h1 class="box-title"><b>Tabela de Dificudade</b></h1>
+							</div>            
+							<div class="card-body"> 
+								<div class="row">
+									<div class="col-5 text-right"><h6><b> Muito Facil:</b>	</h6></div> 
+									<div class="col-7"><h6>
+										<span class="right badge badge-info">I</span> 
+									</h6></div> 
+
+									<div class="col-5 text-right"><h6><b>Facil:</b>	</h6></div> 
+									<div class="col-7"><h6>
+										<span class="right badge badge-info">I</span> 
+										<span class="right badge badge-success">I</span> 
+									</h6></div> 
+
+									<div class="col-5 text-right"><h6><b>Médio:</b>	</h6></div> 
+									<div class="col-7"><h6>
+										<span class="right badge badge-info">I</span> 
+										<span class="right badge badge-success">I</span> 
+										<span class="right badge badge-success">I</span>
+									</h6></div> 
+
+									<div class="col-5 text-right"><h6><b>Difícil:</b>	</h6></div> 
+									<div class="col-7"><h6>
+										<span class="right badge badge-info">I</span> 
+										<span class="right badge badge-success">I</span> 
+										<span class="right badge badge-success">I</span>
+										<span class="right badge badge-warning">I</span>
+									</h6></div> 
+
+									<div class="col-5 text-right"><h6><b>Muito Difícil:</b>	</h6></div> 
+									<div class="col-7"><h6>
+										<span class="right badge badge-info">I</span> 
+										<span class="right badge badge-success">I</span> 
+										<span class="right badge badge-success">I</span>
+										<span class="right badge badge-warning">I</span>
+										<span class="right badge badge-warning">I</span>
+									</h6></div> 
+
+									<div class="col-5 text-right"><h6><b>Sobrenatural:</b></h6></div> 
+									<div class="col-7"><h6>
+										<span class="right badge badge-info">I</span> 
+										<span class="right badge badge-success">I</span> 
+										<span class="right badge badge-success">I</span>
+										<span class="right badge badge-warning">I</span>
+										<span class="right badge badge-warning">I</span>
+										<span class="right badge badge-warning">I</span>
+										<span class="right badge badge-danger">I</span>
+									</h6></div>
+
+									<div class="col-5 text-right"><h6><b>Colossal:</b>	</h6></div> 
+									<div class="col-7"><h6>
+										<span class="right badge badge-info">I</span> 
+										<span class="right badge badge-success">I</span> 
+										<span class="right badge badge-success">I</span>
+										<span class="right badge badge-warning">I</span>
+										<span class="right badge badge-warning">I</span>
+										<span class="right badge badge-warning">I</span>
+										<span class="right badge badge-danger">I</span>
+										<span class="right badge badge-danger">I</span>
+									</h6></div>
+
+									<div class="col-5 text-right"><h6><b>Utópica:</b>	</h6></div> 
+									<div class="col-7"><h6>
+										<span class="right badge badge-info">I</span> 
+										<span class="right badge badge-success">I</span> 
+										<span class="right badge badge-success">I</span>
+										<span class="right badge badge-warning">I</span>
+										<span class="right badge badge-warning">I</span>
+										<span class="right badge badge-warning">I</span>
+										<span class="right badge badge-danger">I</span>
+										<span class="right badge badge-danger">I</span>
+										<span class="right badge badge-danger">I</span>
+									</h6></div>
+									 
+									<div class="col-5 text-right"><h6><b>Lendária:</b>	</h6></div> 
+									<div class="col-7"><h6>
+										<span class="right badge badge-info">I</span> 
+										<span class="right badge badge-success">I</span> 
+										<span class="right badge badge-success">I</span>
+										<span class="right badge badge-warning">I</span>
+										<span class="right badge badge-warning">I</span>
+										<span class="right badge badge-warning">I</span>
+										<span class="right badge badge-danger">I</span>
+										<span class="right badge badge-danger">I</span>
+										<span class="right badge badge-danger">I</span>
+										<span class="right badge badge-dark">I</span>
+									</h6></div>
+									  
+				   
+								</div>
+								 
+
+							</div> 
+						</crudCard> 
+					</div>
+
 
 				</div>
  <br><br><br>
@@ -124,11 +273,42 @@
 			
 
 
+			historico_certas: function () {
+				let total = this.historico.filter(function (number) {
+						      	return number.acerto
+						    });				 	 
+				return total.length;
+			},
+
+
+
+			historico_erradas: function () {
+				let total = this.historico.filter(function (number) {
+						      	return ! number.acerto
+						    });				 	 
+				return total.length;
+			},
+
+
+
+
 			rendimento: function () {
 				let total = this.placar.certas + this.placar.erradas;
 				let valor = 0 ; 
 				if(total>0){
 					valor = parseInt( this.placar.certas/total*100) ; 
+				}			 
+				return valor;
+			},
+
+
+
+
+			rendimento_historico: function () {
+				let total = this.historico_certas + this.historico_erradas;
+				let valor = 0 ; 
+				if(total>0){
+					valor = parseInt( this.historico_certas/total*100) ; 
 				}			 
 				return valor;
 			},
@@ -190,32 +370,32 @@
 
 			dificuldade(){ 
 				let total = this.positivas + this.negativas;
-				if(this.positivas / total > 0.95  ){
+				if(this.positivas / total > 0.9  ){
 					return 'Muito Facil';
 				}
-				if(this.positivas / total > 0.9){
+				if(this.positivas / total > 0.8){
 					return 'Facil';
 				}
-				if(this.positivas / total > 0.8 || ( total < 3 )  ) {
+				if(this.positivas / total > 0.7 || ( total <= 3 )  ) {
 					return 'Médio';
 				}
-				if(this.positivas / total > 0.7 || ( total < 6 ) ){
+				if(this.positivas / total > 0.6 || ( total <= 6 ) ){
 					return 'Difícil';
 				}
 
-				if(this.positivas / total > 0.6 || ( total < 9 ) ){
+				if(this.positivas / total > 0.5 || ( total <= 9 ) ){
 					return 'Muito Difícil';
 				}
 
-				if(this.positivas / total > 0.5){
+				if(this.positivas / total > 0.3){
 					return 'Sobrenatural';
 				}
 
-				if(this.positivas / total > 0.4){
+				if(this.positivas / total > 0.2){
 					return 'Colossal';
 				}
 
-				if(this.positivas / total > 0.3){
+				if(this.positivas / total > 0.1){
 					return 'Utópica';
 				}
 
@@ -244,6 +424,8 @@
 				pergunta:'',          
 				placar:'',
 
+				historico:'',
+				comentario:'',
 
 				disciplinas:'',
 				disciplina_id_atual:'',
@@ -255,7 +437,7 @@
 		watch: {
 
 			pergunta: function (newpergunta_id, oldpergunta_id) {
-				this.form.pergunta_id = this.pergunta.id ;
+				this.form.pergunta_id = this.pergunta.id ; 
 				alertProcessandoHide();
 			},
 
@@ -264,6 +446,36 @@
 
 
 		methods: {
+
+
+			
+
+			criarComentario(){
+				
+				let data = {}; 
+		         
+		        data['texto'] = this.comentario ;
+		        data['pergunta_id'] = this.pergunta.id ; 
+		        data['status'] = 'Criada' ; 
+
+		        alertProcessando();
+		        axios.post(this.url + '/criar/comentario'  , data  )
+				.then(response => {  
+					alertProcessandoHide();
+					toastSucesso(response.data); 
+					this.comentario = ''; 
+
+				})
+				.catch(error => { 
+					alertProcessandoHide();
+					// console.log(error.response.data.message);
+					toastErro('Não foi Possivel Cadastrar o comentário.');
+					toastErro(error.response.data.message);
+				}); 
+ 				 
+			},
+
+
 
 			onSubmit() {
 
@@ -277,6 +489,8 @@
 				}
 				
 				this.respondido = true ;
+				this.comentario = '';
+
 				$('html, body').animate({
 				    scrollTop: $("#botao_proxima").offset().top
 				}, 0);
@@ -309,7 +523,15 @@
 				.catch(errors => console.log(errors));
 			},
 
-
+			getHistorico(){
+				axios.get(  this.url  + '/historico' )
+				.then(response => {
+					this.historico = response.data  ;
+				})
+				.catch(error => {
+					console.log('erro ao atualiza placar');
+				});
+			},
 
 
 			atualizarPlacar(){
@@ -337,6 +559,7 @@
 			mudouDisciplina(evento) {				 				 
 				this.proximaPergunta();
 				this.atualizarPlacar(); 
+				this.getHistorico();
 				this.disciplina_id_atual = evento ;
 			},
 
@@ -402,6 +625,7 @@
 			this.atualizarPlacar(); 
 			this.getDisciplinasAtivas();
 			this.getDisciplinaAtual();
+			this.getHistorico();
 		},
 
 
@@ -412,6 +636,11 @@
 </script>
 
 <style scoped>
+
+.badge{
+	padding-left: 4px;
+	padding-right: 4px;
+}
 
 .content {
 	padding: 10px;

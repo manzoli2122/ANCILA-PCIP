@@ -65,6 +65,11 @@ class NewPdf extends Fpdf {
             $this->HREF = $attr['HREF'];
         if($tag=='BR')
             $this->Ln(5);
+
+        if($tag=='IMG')
+            $this->Image(public_path($attr['SRC']),50,null,0,90);
+
+
     }
 
     function CloseTag($tag)

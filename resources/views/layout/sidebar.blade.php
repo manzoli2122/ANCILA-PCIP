@@ -162,7 +162,7 @@
 							@endif 
  						@endpermissao
 						 	
-						 @permissao('tentativa') 
+						@permissao('tentativa') 
 							@if(Route::getRoutes()->hasNamedRoute('tentativa.index'))
 							<li class="nav-item">
 								<a href="{{ route('tentativa.index')}}" class="nav-link " id="menu-administrador-tentativa">
@@ -172,6 +172,17 @@
 							</li>
 							@endif  
 						@endpermissao
+
+						@perfil('Admin') 
+							@if(Route::getRoutes()->hasNamedRoute('comentario.index'))
+							<li class="nav-item">
+								<a href="{{ route('comentario.index')}}" class="nav-link " id="menu-administrador-comentario">
+									<i class="nav-icon fa fa-book fa-lg fa-2x  "></i>
+									<p>Comentário </p>
+								</a>
+							</li>
+							@endif  
+						@endperfil
 
 
  
