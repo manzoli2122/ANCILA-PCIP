@@ -20,6 +20,8 @@ class CreateDisciplinaTable extends Migration
 
             $table->string('descricao' , 500 );
 
+            $table->enum('nivel', ['Validada', 'Admin',  'Restrita' ,  ])->default('Validada');
+
             $table->softDeletes();
 
             $table->timestamps();

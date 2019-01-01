@@ -7,8 +7,7 @@ use App\Models\Administrador\Resposta;
 use Yajra\DataTables\DataTables;
 use App\Service\VueService; 
 use Illuminate\Http\Request; 
-use DB;
-use Auth;
+  
 use Fpdf;
 
 
@@ -67,9 +66,9 @@ class NewPdf extends Fpdf {
             $this->Ln(5);
 
         if($tag=='IMG')
-            $this->Image(public_path($attr['SRC']),50,null,0,90);
+            $this->Image(public_path( strstr( $attr['SRC'] , '/img'  ) ),50,null,0,90);
 
-
+        
     }
 
     function CloseTag($tag)
@@ -125,7 +124,8 @@ class NewPdf extends Fpdf {
         // $this->Image( public_path('img/pmes.png') ,10,6,17);
         // $this->Image(public_path('img/bolsonaro-2.jpg'),10,6,21);
         // $this->Image(public_path('img/tavares.jpeg'),10,6,20);
-        $this->Image(public_path('img/cavalaria.jpeg'),10,6,35);
+        // $this->Image(public_path('img/cavalaria.jpeg'),10,6,35);
+        $this->Image(public_path('img/ubuntu.jpg'),10,6,30);
         
         // $this->Image( public_path('img/espada.jpg') ,10,6,35);
         // $this->Image( public_path('img/yin-yang.jpg') ,45,6,20);
@@ -185,9 +185,12 @@ class NewPdf extends Fpdf {
     // Page number
         $this->Cell(0,7,'Page '.$this->PageNo().'/{nb}',0,0,'C');
         $this->Ln();
-        $this->SetFont('Arial','BI',7);
-        $texto = utf8_decode('Solidários, seremos união. Separados uns dos outros seremos pontos de vista. Juntos, alcançaremos a realização de nossos propósitos.'); 
-        $autor = utf8_decode('"Bezerra de Menezes"!!');  
+        $this->SetFont('Arial','BI',11);
+        // $texto = utf8_decode('Solidários, seremos união. Separados uns dos outros seremos pontos de vista. Juntos, alcançaremos a realização de nossos propósitos.'); 
+        // $autor = utf8_decode('"Bezerra de Menezes"!!');
+        
+        $texto = utf8_decode('"Ubuntu, tio, como poderia um de nós ficar feliz se todos os outros estivessem tristes?"'); 
+        $autor = utf8_decode('');
 
         // $texto = utf8_decode('A união do rebanho obriga o leão a deitar-se com fome.');
         // $autor = utf8_decode('"Provérbio africano"!!');   
@@ -461,7 +464,7 @@ class PerguntaService extends VueService  implements PerguntaServiceInterface
                             $pdf->MultiCell( 0,5,'Pergunta ' . $data->id,0,'C' ); 
                             $pdf->SetFont('arial', 'u', 10);
                             
-                            $html = html_entity_decode('Resposta ----> ' . $data->resposta_correta->texto);
+                            $html = html_entity_decode('Resposta Correta ----> ' . $data->resposta_correta->texto);
                             $html = str_replace(['–' , '—'], '-' ,$html ); 
                             $html = str_replace(['”' , '“'], '"' ,$html );
                             $html = str_replace(['‘' , '’'], '"' ,$html );
@@ -469,7 +472,10 @@ class PerguntaService extends VueService  implements PerguntaServiceInterface
                             $html = utf8_decode($html); 
                             $pdf->WriteHTML( $html ); 
                             
-
+                            $pdf->Ln();
+                            $pdf->Ln();
+                             // $this->Write(5,$e);
+                            $pdf->Write( 5, 'Comentario:' ); 
                             $pdf->Ln();   
                             $pdf->SetFont('arial', '', 10);
                             $html = html_entity_decode(  $data->resumo );

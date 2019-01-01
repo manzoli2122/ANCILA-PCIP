@@ -26,6 +26,10 @@ mix.js('resources/assets/js/components/administrador/comentarioPergunta/rotas.js
 mix.js('resources/assets/js/components/administrador/tentativa/rotas.js', 'public/js/tentativa.js');
 
 
+mix.js('resources/assets/js/components/administrador/core/rotas.js', 'public/js/administrador.js');
+mix.js('resources/assets/js/components/estatistica/rotas.js', 'public/js/estatistica.js');
+
+
 mix.js('resources/assets/js/components/treinamento/treinamento.js', 'public/js/treinamento.js');
  
 /*

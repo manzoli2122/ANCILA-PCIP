@@ -15,6 +15,9 @@
 							<b><span class=" text-success">{{ positivas  }}</span></b>	  pessoas ACERTARAM | <b><span class=" text-danger">{{ negativas  }}</span></b> pessoas ERRARAM    
 						</p>
 						 
+						<p class=" text-center" v-if="rank.rank" style="margin-bottom:0px">Classificação: 
+							<b><span class=" text-success">{{ rank.rank  }}º</span></b>	 lugar geral com <b><span class=" text-info">{{ parseFloat(rank.porcentagem).toFixed(2)  }}%</span></b> de acerto    
+						</p>
 					</div>
 				</div> 
 
@@ -69,13 +72,13 @@
 						<h1 class="box-title"><b>Comentário</b></h1>
 					</div>            
 					<div class="card-body">
-						<h5>Deixe seu comentário aqui:</h5>
+						<h5>Deixe seu comentário, crítica ou sugestão aqui:</h5>
 						<crudFormElemento > 
 							<textarea maxlength="1500" id="texto" name="texto" class="form-control" v-model="comentario"  style="height:150px"  ></textarea> 
 						</crudFormElemento> 
 					</div> 
 					<div class="card-footer text-center"> 
-						<button  class="btn btn-success btn-sm" v-on:click="criarComentario()"><i class="fa fa-check"></i> Enviar</button>
+						<button style="width: 90%" class="btn btn-success  " v-on:click="criarComentario()"><i class="fa fa-check"></i> Enviar</button>
 					</div> 
 				</crudCard> 
 
@@ -319,7 +322,7 @@
 				let valor = 0 ; 
 				for (var i = 0 ; i <= this.pergunta.resposta.length - 1; i++) {
 					if(this.pergunta.resposta[i].id === this.pergunta.resposta_certa_id)
-					valor += this.pergunta.resposta[i].count;
+					valor +=  parseInt(this.pergunta.resposta[i].count);
 				}
 				return valor;
 			},
@@ -331,7 +334,7 @@
 				let valor = 0 ; 
 				for (var i = 0 ; i <= this.pergunta.resposta.length - 1; i++) {
 					if(this.pergunta.resposta[i].id !== this.pergunta.resposta_certa_id)
-					valor += this.pergunta.resposta[i].count;
+					valor +=  parseInt(this.pergunta.resposta[i].count);
 				}
 				return valor;
 			},
@@ -416,7 +419,9 @@
 			return {                
 				form: new Form({
 					selected:'',
-					pergunta_id:'',
+					pergunta_id:'', 
+					latitude:'',
+					longitude:'',
 				}), 
 
 				temp_errada:'',
@@ -427,6 +432,10 @@
 				historico:'',
 				comentario:'',
 
+				rank:'',
+				geolocation:'',
+				latitude:'',
+				longitude:'',
 				disciplinas:'',
 				disciplina_id_atual:'',
 			}
@@ -478,6 +487,9 @@
 
 
 			onSubmit() {
+
+				this.form.latitude = this.latitude ;
+				this.form.longitude = this.longitude; 
 
 				if( this.form.selected === this.pergunta.resposta_certa_id ){				 
 					swal("Você Acertou!!", "", "success"); 
@@ -532,6 +544,19 @@
 					console.log('erro ao atualiza placar');
 				});
 			},
+
+
+
+			getRank(){
+				axios.get(  this.url  + '/meu/rank' )
+				.then(response => {
+					this.rank = response.data  ;
+				})
+				.catch(error => {
+					console.log('erro ao atualiza rank');
+				});
+			},
+
 
 
 			atualizarPlacar(){
@@ -617,15 +642,40 @@
 			},
 
 
+			showPosition(position) {
+				// this.geolocation = position.coords;
+				this.latitude = position.coords.latitude ;
+				this.longitude = position.coords.longitude; 
+
+				this.form.latitude = position.coords.latitude ;
+				this.form.longitude = position.coords.longitude; 
+
+				// x.innerHTML = "Latitude: " + position.coords.latitude + 
+				// "<br>Longitude: " + position.coords.longitude; 
+			},
+
+
 		},
+
+		  
 
 
 		created() {
+			 
 			this.proximaPergunta(); 
+
+			if (navigator.geolocation) {
+				navigator.geolocation.getCurrentPosition(this.showPosition);
+			} else {
+				console.log("Geolocation is not supported by this browser.");
+			}
+			 
+			
 			this.atualizarPlacar(); 
 			this.getDisciplinasAtivas();
 			this.getDisciplinaAtual();
 			this.getHistorico();
+			this.getRank();
 		},
 
 

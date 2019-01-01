@@ -17,12 +17,12 @@ class Disciplina extends Model
 
 
     protected $fillable = [
-            'nome',   'descricao' 
+            'nome',   'descricao' , 'nivel'
     ];
 
 
     protected $hidden = [
-              'deleted_at' ,     'updated_at' ,   'created_at' ,
+              'deleted_at' ,     'updated_at' ,   'created_at' , 
     ];
 
 
@@ -56,7 +56,7 @@ class Disciplina extends Model
 
     
     public function getDatatable(){
-        return $this->withTrashed()->select([ 'id' ,  'nome', 'descricao', 
+        return $this->withTrashed()->select([ 'id' ,  'nome', 'descricao', 'nivel',
           DB::raw("CASE  WHEN deleted_at is null THEN 'Ativo' ELSE 'Inativo' END AS status ")  ]) ;        
     }
     

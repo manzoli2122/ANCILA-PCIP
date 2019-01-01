@@ -127,6 +127,24 @@ class UsuarioService extends VueService  implements UsuarioServiceInterface
 
 
 
+    /**
+    * Função para excluir um model  
+    *
+    * @param int $id
+    *    
+    * @return void
+    */
+    public function  Apagar( Request $request , $id ){
+        // Log::debug($id);
+        // return response()->json([ 'message' => $id ] , 500 );
+        throw_if(!$model = $this->model->withoutGlobalScope('ativo')->find($id) , ModelNotFoundException::class);   
+        throw_if( !$delete = $model->forceDelete()  , Exception::class);   
+
+
+    }
+
+
+
 
 
     /**
@@ -168,7 +186,8 @@ class UsuarioService extends VueService  implements UsuarioServiceInterface
     	return $this->dataTable->eloquent($models)
     	->addColumn('action', function($linha) { 
     		if($linha->status === 'Inativo'){
-    			return '<button data-id="'.$linha->id.'" btn-ativar class="btn btn-success btn-sm" title="Ativar"><i class="fa fa-unlock"></i> </button>' ;
+    			return '<button data-id="'.$linha->id.'" btn-ativar class="btn btn-success btn-sm" title="Ativar"><i class="fa fa-unlock"></i> </button>'
+                .'<button data-id="'.$linha->id.'" btn-excluir class="btn btn-danger btn-sm" title="Excluir Definitivamente"><i class="fa fa-trash"></i></button>' ;
     		} 
     		return '<a href="#/'.$linha->id.'/perfil" class="btn btn-primary btn-sm" title="Perfis"><i class="fa fa-id-card"></i></a> ' 
 
@@ -305,18 +324,33 @@ class UsuarioService extends VueService  implements UsuarioServiceInterface
     *
     * @return void
     */
-    public function adicionarPerfilAoUsuario( int $perfilId , string  $userId , Request  $request )
+    public function adicionarPerfilAoUsuario( int $perfilId ,   $userId , Request  $request )
     {        
+
     	$usuario = $this->model->find($userId);
-    	$perfil = $this->perfil->find( $perfilId );
+    	
+
+
+        $perfil = $this->perfil->find( $perfilId );
     	if( $perfil->nome == 'Admin' and !Auth::user()->hasPerfil('Admin')){
     		abort(403, 'Você não tem permissão para adicionar o perfil Admin.');
     	}
-    	$usuario->attachPerfil($perfil, Auth::user()->id );
+        if(Auth::check()){
+            $usuario->attachPerfil($perfil, Auth::user()->id );
+            $this->Log( $perfilId , $userId  , Auth::user()->id , 'Adicionar' );  
+        }
+        else {
+            if($userId){
+                $usuario->attachPerfil($perfil, '00000000001' );
+                $this->Log( $perfilId , $userId  ,'00000000001' , 'Adicionar' ); 
+            }
+             
+        }
+    	
  
-        $usuario->notify( new PerfilAdicionadoNotification( $perfil ) );
+        //$usuario->notify( new PerfilAdicionadoNotification( $perfil ) );
  
-    	$this->Log( $perfilId , $userId  , Auth::user()->id , 'Adicionar' );  
+    	
     }
 
 
@@ -354,7 +388,7 @@ class UsuarioService extends VueService  implements UsuarioServiceInterface
     	} 
     	$usuario->detachPerfil($perfilId); 
 
-        $usuario->notify( new PerfilRemovidoNotification( $perfil ) );
+        //$usuario->notify( new PerfilRemovidoNotification( $perfil ) );
  
     	$this->Log( $perfilId , $userId  , Auth::user()->id , 'Excluir' ); 
     }

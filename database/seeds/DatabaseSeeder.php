@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon ;
 
 class DatabaseSeeder extends Seeder
 {
@@ -25,6 +26,7 @@ class DatabaseSeeder extends Seeder
         DB::table('users')->insert([ 
             'id' => '00000000001',
             'nome' => 'Administrador.dtic',
+            'created_at' => Carbon::now(),
             'apelido' => 'Administrador',
             'email' => 'manzoli2122@gmail.com', 
             'status' => 'A',  
@@ -41,10 +43,10 @@ class DatabaseSeeder extends Seeder
         
 
          
-        DB::table('perfils')->insert([
-            'nome' => 'Professor',
-            'descricao' =>  'Professor', 
-        ]);
+        // DB::table('perfils')->insert([
+        //     'nome' => 'Professor',
+        //     'descricao' =>  'Professor', 
+        // ]);
           
         // DB::table('perfils')->insert([
         //     'nome' => 'Gerente',

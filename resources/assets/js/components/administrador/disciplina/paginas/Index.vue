@@ -12,6 +12,7 @@
 							<th pesquisavel>Nome</th>
 							<th pesquisavel>Descrição</th>  
 							<th pesquisavel>Status</th>  
+							<th pesquisavel>Nivel</th>  
 							<th class="text-center" style="min-width:150px">Ações</th>
 						</datatableService> 
 					</div>    
@@ -50,6 +51,7 @@ export default {
 				{ data: 'nome', name: 'nome' },
 				{ data: 'descricao', name: 'descricao' }, 
 				{ data: 'status', name: 'status' }, 
+				{ data: 'nivel', name: 'nivel' }, 
 				{ data: 'action', name: 'action', orderable: false, searchable: false, class: 'text-center'}
 				],
 			} , 

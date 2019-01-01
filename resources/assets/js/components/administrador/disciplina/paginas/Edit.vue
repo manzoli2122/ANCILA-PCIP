@@ -16,7 +16,15 @@
 					<crudFormElemento :errors="form.errors.has('descricao')" :errors_texto="form.errors.get('descricao')">
 						<label for="descricao">Descrição:</label>
 						<input type="text" id="descricao" name="descricao" class="form-control" v-model="form.descricao" v-bind:class="{ 'is-invalid': form.errors.has('descricao') }">
-					</crudFormElemento> 
+					</crudFormElemento>
+					<crudFormElemento :errors="form.errors.has('nivel')" :errors_texto="form.errors.get('nivel')">
+								<label for="nivel">Nível:</label> 
+								<select2   v-model="form.nivel" class="form-control  " v-bind:class="{ 'is-invalid': form.errors.has('nivel') }">   
+									<option   value="Validada"> Validada </option>
+									<!-- <option   value="Suspensa"> Suspensa </option>  -->
+									<option   value="Restrita">   Restrita </option>
+								</select2>  
+							</crudFormElemento>  
 				</Formulario>  
 			</div> 
 		</div>    
@@ -39,7 +47,8 @@
 				model:'',
 				form: new Form({
 					nome: '',    
-					descricao: ''               
+					descricao: '',            
+					nivel: ''               
 				})
 			}
 		},
@@ -48,6 +57,7 @@
 			model: function (newmodel, oldmodel) {
 				this.form.nome = this.model.nome;
 				this.form.descricao = this.model.descricao;  
+				this.form.nivel = this.model.nivel ; 
 			}
 
 		},    

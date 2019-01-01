@@ -145,6 +145,7 @@ class VueController extends Controller
     */
     public function destroy( Request $request, $id)
     { 
+         
         try{  
             $this->service->Apagar( $request , $id);  
             return response()->json( 'Exclusão realizada com sucesso' , 200); 

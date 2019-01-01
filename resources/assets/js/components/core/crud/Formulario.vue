@@ -5,7 +5,7 @@
 				 <slot></slot>
 			</div>
 			<div class="card-footer text-right">
-				<crudBotaoVoltar url="/"/>  
+				<crudBotaoVoltar :url="url_retorno"/>  
 				<crudBotaoSalvar :disabled="form.errors.any()" /> 
 			</div>
 		</crudCard> 
@@ -17,9 +17,19 @@
 	export default {
 
 		props:[
-		'url' , 'form' , 'metodo'
+		'url' , 'form' , 'metodo' , 'retorno'
 		], 
-  
+  		
+
+  		computed: { 
+			url_retorno: function () { 
+				if(this.retorno){
+					return '/' + this.retorno;
+				}
+				return '/'; 
+			}
+		},
+
 		methods: {
 
 			onSubmit() {

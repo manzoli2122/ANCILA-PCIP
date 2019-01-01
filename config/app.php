@@ -151,6 +151,7 @@ return [
          * Package Service Providers...
          */
 
+        Barryvdh\Cors\ServiceProvider::class,
         
         App\Seguranca\AALServiceProvider::class,
 

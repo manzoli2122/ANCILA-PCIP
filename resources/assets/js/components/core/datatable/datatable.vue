@@ -177,7 +177,7 @@
 							
 							}
 					},
-					ajax: { type: 'post',	data: { '_token': csrf_token }	}, 
+					ajax: { type: 'post',	data: { '_token': csrf_token }, headers: { 'Authorization': 'Bearer ' + token_api.content }}, 
 			        
 			        initComplete:function(){//Retira a busca a cada caractere digitado. Pesquisando apenas com Enter  
 			        	var $searchInput = $(seletorTabela  +'_filter input'); 

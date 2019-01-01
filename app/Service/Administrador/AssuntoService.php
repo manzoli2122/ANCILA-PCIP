@@ -56,7 +56,7 @@ class AssuntoService extends VueService  implements AssuntoServiceInterface
     * @return $model
     */
     public function  BuscarTodos( Request $request  ){
-        return $this->model->with('disciplina')->get();
+        return $this->model->with('disciplina')->orderBy('id', 'desc')->get();
     }
 
 

@@ -17,6 +17,8 @@
 							<th style="min-width:25px">Res</th>  
 							<th pesquisavel style="min-width:40px">Certa</th>   
 							<th pesquisavel  >Data</th>   
+							<th pesquisavel  >latitude</th>   
+							<th pesquisavel  >longitude</th>   
 						</datatableService> 
 					</div>    
 				</crudCard> 
@@ -37,7 +39,7 @@ export default {
 		return {                
 			config: {
 				 
-				order: [[ 1, "asc" ]],
+				order: [[ 5, "desc" ]],
 				ajax: { 
 					url: this.url + '/datatable'
 				},
@@ -51,6 +53,8 @@ export default {
 				{ data: 'resposta_id', name: 'resposta_id' }, 
 				{ data: 'acerto', name: 'acerto' }, 
 				{ data: 'created_at', name: 'created_at' }, 
+				{ data: 'latitude', name: 'latitude' }, 
+				{ data: 'longitude', name: 'longitude' }, 
 				 
 				],
 			} , 

@@ -40,7 +40,12 @@
 						url:this.url , 
 						item:'Usuário',
 					},
-					order: [[ 1, "asc" ]],
+					exclusao:{
+						url:this.url,
+						evento:'usuarioRemovido',
+						item:'Usuario',
+					},
+					order: [[ 3, "desc" ]],
 					ajax: { 
 						url: this.url + '/datatable'
 					},

@@ -1,0 +1,104 @@
+<template>  
+	<div>  
+		<crudHeader texto="Perguntas Cadastrados">
+			<li class="breadcrumb-item">Perguntas</li>
+		</crudHeader> 
+		<div class="content">
+			<div class="container-fluid">
+				<crudCard>
+					<div class="card-body  table-responsive"> 
+						<datatableService :config="config" id="datatablePergunta"> 
+							<th pesquisavel style="max-width:35px">ID</th>
+							<th pesquisavel>Texto</th> 
+							<th pesquisavel>Assunto</th>       
+							<th pesquisavel>Dificuldade</th>       
+							<th pesquisavel>Status</th>       
+							<th pesquisavel>Disciplina</th> 
+							<th class="align-center" style="width:150px">Ações</th> 
+						</datatableService> 
+					</div>    
+				</crudCard> 
+			</div> 
+		</div>  
+	</div>
+</template>
+
+<script>
+
+	export default {
+
+		props:[
+		'url' 
+		],  
+
+		data() {
+			return {                
+				config: {
+					pdf:{
+						url:this.url  + this.$apiPergunta ,  
+					},
+					ativacao:{
+						url:this.url + this.$apiPergunta , 
+						item:'Pergunta',
+					},
+					exclusao:{
+						url:this.url,
+						evento:'perguntaoRemovida',
+						item:'Pergunta',
+					},
+					order: [[ 0, "desc" ]],
+					ajax: { 
+						url: this.url + this.$apiPergunta + '/datatable'
+					},
+					columns: [
+					{ data: 'id', name: 'pergunta.id'  },
+					{ data: 'texto', name: 'pergunta.texto' }, 
+					{ data: 'assunto.nome', name: 'assunto.nome' }, 
+					{ data: 'dificuldade', name: 'dificuldade' }, 
+					{ data: 'status', name: 'status' }, 
+					{ data: 'disciplina', name: 'assunto.disciplina_id'  },  
+					{ data: 'action', name: 'action', orderable: false, searchable: false, class: 'align-center'}
+					],
+				} , 
+				reload:'',
+			}
+		}, 
+
+
+		created() {
+			$(document).ready(function() {  
+				var el3 = document.getElementById('li-nav-create');
+				el3.innerHTML = '<a href="admin#/pergunta/create" class="nav-link"><i class="fa fa-plus"></i> Cadastrar Pergunta</a>';  
+			}); 
+		},
+
+
+
+		mounted(){
+			$(document).ready(function() {  
+				var treeview = document.getElementById('menu-administrador-treeview'); 
+				Array.from(treeview.childNodes).filter(function (value) {
+					if(value.className == 'nav-item')
+						Array.from(value.childNodes).filter(function (value) { 
+							if(value.nodeName=="A"){
+								value.classList.remove("active");  
+							} 
+						})  
+					return value  ;
+				})  ;
+
+				var el2 = document.getElementById('menu-administrador-pergunta');
+				el2.classList.add("active"); 
+
+			}); 
+		},
+
+	}
+
+</script>
+
+<style > 
+.btn-sm{
+	margin-left: 10px; 
+}
+</style>

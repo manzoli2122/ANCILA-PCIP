@@ -47,7 +47,7 @@
 								</select2> 
 							</crudFormElemento>   
 						</div>
-						<div class="col-md-6">
+						<!-- <div class="col-md-6">
 							<crudFormElemento :errors="form.errors.has('status')" :errors_texto="form.errors.get('status')">
 								<label for="status">Status:</label> 
 								<select2   v-model="form.status" class="form-control  " v-bind:class="{ 'is-invalid': form.errors.has('status') }"> 
@@ -58,7 +58,7 @@
 									<option   value="Restrita">   Restrita </option>
 								</select2>  
 							</crudFormElemento>   
-						</div>
+						</div> -->
 						<div class="col-md-12"> 
 							<crudFormElemento :errors="form.errors.has('assunto_id')" :errors_texto="form.errors.get('assunto_id')">
 								<label for="assunto_id">Assunto:</label> 
@@ -96,7 +96,7 @@
 					resumo: '',
 					assunto_id:'' ,
 					dificuldade:'',    
-					status:'',    
+					status:'Criada',    
 
 				}),
 				novaLinha:'nova linha = <br>', 

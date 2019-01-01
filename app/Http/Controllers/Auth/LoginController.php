@@ -12,7 +12,8 @@ use App\Mail\LoginSuccessMail;
 use Illuminate\Support\Facades\Mail; 
  
 
-
+use App\Service\Seguranca\UsuarioServiceInterface;
+use App\Models\Seguranca\Perfil;
 
 use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
@@ -53,7 +54,16 @@ class LoginController extends Controller
         $data['status'] =  'A' ;
 
         try{ 
+
             throw_if( !$insert  = User::create( $data ) , Exception::class); 
+
+            $perfil = Perfil::where('nome', 'UsuarioRestrita')->first();
+            
+            if($perfil){
+                $this->usuarioService->adicionarPerfilAoUsuario( $perfil->id, $insert->id, $request);
+            }
+             
+
             return redirect()->route('login')->with('success', 'Usuário cadastrado com sucesso!!! Faça seu login e comece os estudos!!');
         }  
         catch(Exception $e){
@@ -65,6 +75,7 @@ class LoginController extends Controller
             $messagem .= '<br>' .   'Possíveis problemas:'  ;
             $messagem .= '<br>' .   'CPF já Cadastrado'  ;
             $messagem .= '<br>' .   'Email já Cadastrado'  ;
+            $messagem .= '<br>' .   $e->getMessage()  ;
             return redirect()->route('login')->withErrors(['message' => $messagem ]);
         }    
     }
@@ -78,7 +89,7 @@ class LoginController extends Controller
     */
     protected $redirectTo = '/';
 
-
+    protected $usuarioService; 
 
 
 
@@ -89,8 +100,9 @@ class LoginController extends Controller
      *
      * @return void
      */
-    public function __construct()
+    public function __construct( UsuarioServiceInterface $service )
     {
+        $this->usuarioService = $service ;
     	$this->middleware('guest')->except('logout' );
         // $this->middleware('guest')->except('logout' ,'authenticate' );
     }
@@ -178,7 +190,10 @@ class LoginController extends Controller
     		//FIX-ME TESTAR VIA TOKEN DO SCA
     		//Auth::guard('web')->loginUsingId( $user->id );
             //Auth::guard('web')->loginUsingId( Auth::guard('api')->user()->id );
-    		Auth::guard('web')->loginUsingId( $payload['sub'] ); 
+    		
+
+
+            Auth::guard('web')->loginUsingId( $payload['sub'] ); 
     		$this->authenticated( $request, Auth::guard('web')->user() ); 
     		return  redirect()->intended('/');
 
@@ -221,10 +236,18 @@ class LoginController extends Controller
      */
     protected function authenticated(Request $request, User $usuario)
     {
+
     	if($usuario->hasMailable('Login') and  $usuario->email!== ''  ){
     		Mail::to($usuario->email)->send(new LoginSuccessMail( $usuario ));
     	}
     	 
+        $credentials = request(['id', 'password']);
+
+        if ($token = Auth::guard('api')->attempt($credentials)) {    
+            session(['token_api' => $token]);        
+        }
+
+         
     }
 
  

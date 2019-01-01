@@ -22,6 +22,8 @@ class CreateUsersRespostaPerguntaTable extends Migration
             $table->unsignedInteger('resposta_id');  
             $table->boolean('acerto')->default(false);
             $table->softDeletes();
+            $table->string('latitude', 100)->nullable();
+            $table->string('longitude', 100)->nullable();
 
             
             $table->foreign('user_id')->references('id')->on('users')->onDelete('restrict'); 

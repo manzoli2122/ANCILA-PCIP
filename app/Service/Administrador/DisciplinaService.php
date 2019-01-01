@@ -8,7 +8,7 @@ use App\Service\VueService;
 use Illuminate\Http\Request; 
 use App\Exceptions\ModelNotFoundException; 
 
-
+use Auth;
 
 class DisciplinaService extends VueService  implements DisciplinaServiceInterface 
 {
@@ -39,7 +39,15 @@ class DisciplinaService extends VueService  implements DisciplinaServiceInterfac
     * @return $model
     */
     public function  BuscarTodos( Request $request  ){
-        return $this->model->select('id' , 'nome')->get();
+
+        if( Auth::user() && Auth::user()->can('DisciplinaNivelRestrita') ){
+            return $this->model->select('id' , 'nome')->orderBy('nome' , 'asc')->get();
+        }
+        else{
+           return $this->model->where('nivel' , 'Validada')->select('id' , 'nome')->orderBy('nome' , 'asc')->get();
+        }
+        
+
     }
 
 

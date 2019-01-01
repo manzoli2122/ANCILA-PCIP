@@ -86,7 +86,7 @@ interface UsuarioServiceInterface  extends VueServiceInterface
     *
     * @return void
     */
-    public function adicionarPerfilAoUsuario( int $perfilId , string $userId , Request  $request);
+    public function adicionarPerfilAoUsuario( int $perfilId ,  $userId , Request  $request);
 
 
     /**

@@ -60,6 +60,8 @@ class TreinamentoController extends Controller
             'pergunta_id' => $model->id  ,
             'disciplina_id' => $disciplina_id , 
             'resposta_id' => $resposta->id  , 
+            'latitude' => $request->input('latitude')  , 
+            'longitude' => $request->input('longitude') ,
             'acerto' =>   $resultado ]);
 
 
@@ -129,18 +131,25 @@ class TreinamentoController extends Controller
         try { 
             $disciplina = Disciplina::select('id')->get()->toArray(); 
             
-            // if(  Auth::check() ){
-                
-                if(  Auth::user()->can('Restrita') ){
+             
+                if(  Auth::user()->can('DificuldadeMuitoDificil') ){
+                    $status =  [ 'Validada' , 'Finalizada' , 'Restrita'] ;
+                    $dificuldade = [ 'Muito Facil', 'Facil', 'Medio',  'Dificil',  'Muito Dificil' ];
+                }
+                else  if(  Auth::user()->can('Restrita') ){
                     $status =  [  'Validada' , 'Finalizada' , 'Restrita'] ;
+                    $dificuldade = [ 'Muito Facil', 'Facil', 'Medio',  'Dificil'  ];
                 }
                 else{
                      $status =  [  'Validada' , 'Finalizada' ] ;
+                     $dificuldade = [ 'Muito Facil', 'Facil', 'Medio',  'Dificil'  ];
                 }
  
                 if( !$models = $this->model->ativo()
                             ->whereNotIn( 'id' , session('perguntas.id' , [] ) )
 
+                            ->whereIn( 'pergunta.dificuldade' , $dificuldade )
+                            
                             // ->whereIn( 'pergunta.dificuldade' , session('dificuldade' , [ 'Muito Facil', 'Facil', 'Medio' ,  'Dificil' ,  'Muito Dificil'    ] ) )
 
                              // ->whereIn( 'pergunta.status' , [  'Validada' , 'Finalizada' ]  )

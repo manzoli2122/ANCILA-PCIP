@@ -8,7 +8,14 @@
 */
  
 
+Route::get('/estatistica', function () {    return view('estatistica.index');})->name('estatistica');
+
+
+Route::get('/admin', function () {    return view('administrador.index');})->name('admin');
+
 Route::get('/', function () {    return view('welcome');})->name('inicio');
+Route::get('/desenvolvedor', function () {    return view('desenvolvedor');})->name('desenvolvedor');
+
   
 // Rotas para autenticação 
 Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
@@ -76,6 +83,8 @@ Route::get('treinamento/historico', 'TreinamentoController@historico')->name('tr
 
 Route::post('treinamento/criar/comentario',   'Administrador\ComentarioPerguntaController@store') ; 
 
+Route::get('treinamento/meu/rank',   'Administrador\TentativaController@MeuRank') ; 
+
 
 
 
@@ -111,6 +120,7 @@ Route::namespace('Administrador')->prefix('administrador')->group(function () {
 	|--------------------------------------------------------------------------
 	| 
 	*/  
+	// Route::get('tentativa/ranking', 'TentativaController@Rankiar') ;
 	Route::get('tentativa/all', 'TentativaController@BuscarTodos') ;
 	Route::post('tentativa/datatable', 'TentativaController@getDatatable')->name('tentativa.datatable');
 	Route::resource('tentativa',       'TentativaController')->except(['create', 'edit' , 'update' , 'store' , 'destroy']); 

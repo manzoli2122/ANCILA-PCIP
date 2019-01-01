@@ -17,7 +17,7 @@ class Tentativa extends Model
 
 
     protected $fillable = [
-            'user_id',  'pergunta_id' , 'disciplina_id', 'resposta_id', 'acerto'
+            'user_id',  'pergunta_id' , 'disciplina_id', 'resposta_id', 'acerto' , 'latitude' , 'longitude' , 
     ];
 
     protected $hidden = [
