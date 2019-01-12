@@ -24,7 +24,7 @@
   		computed: { 
 			url_retorno: function () { 
 				if(this.retorno){
-					return '/' + this.retorno;
+					return  this.retorno;
 				}
 				return '/'; 
 			}
@@ -38,7 +38,7 @@
 				.then(response => { 
 					toastSucesso(response);  
 					alertProcessandoHide();
-					this.$router.push('/')
+					this.$router.push(  this.url_retorno )
 				})
 				.catch(errors => { 
 					alertProcessandoHide();

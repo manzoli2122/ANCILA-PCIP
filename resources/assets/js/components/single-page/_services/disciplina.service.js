@@ -3,10 +3,18 @@ import { authHeader } from '../_helpers';
  
 export const disciplinaService = {
 	getAll , 
+	getUrl,
+	getDisciplina,
 };
 
 
 const url = '/api/v1/disciplina' ;
+
+
+
+function getUrl(  ) { 
+	return  url; 
+}
 
 
 
@@ -21,4 +29,18 @@ function getAll(  ) {
 		}) 
 	}); 
 }
-  
+
+
+
+function getDisciplina( id ) { 
+	return  new Promise((resolve, reject) => {
+		axios.get( url + '/' + id  , {headers: authHeader() }  )
+		.then(response => {    
+			resolve( response.data);  
+		})
+		.catch(error => {  
+			reject(error.response);
+		}) 
+	}); 
+}
+ 

@@ -7,14 +7,14 @@
 			<div class="container-fluid">
 				<crudCard>
 					<div class="card-body  table-responsive"> 
-						<datatableService :config="config" id="datatableDisciplina"> 
+						<datatable :config="config" id="datatableDisciplina"> 
 							<th style="max-width:50px">ID</th>
 							<th pesquisavel>Nome</th>
 							<th pesquisavel>Descrição</th>  
 							<th pesquisavel>Status</th>  
 							<th pesquisavel>Nivel</th>  
 							<th class="text-center" style="min-width:150px">Ações</th>
-						</datatableService> 
+						</datatable> 
 					</div>    
 				</crudCard> 
 			</div> 
@@ -24,7 +24,7 @@
 
 <script>
 
-
+	import { disciplinaService  }  from '../../../_services';
 
 	export default {
 
@@ -39,17 +39,17 @@
 				url_disciplina: '',
 				config: {
 					ativacao:{
-						url:this.url + this.$apiDisciplina , 
+						url: disciplinaService.getUrl() , 
 						item:'Disciplina',
 					},
 					exclusao:{
-						url:this.url + this.$apiDisciplina,
+						url: disciplinaService.getUrl(),
 						evento:'disciplinaRemovida',
 						item:'Disciplina',
 					},
 					order: [[ 1, "asc" ]],
 					ajax: { 
-						url: this.url + this.$apiDisciplina + '/datatable'
+						url: disciplinaService.getUrl() + '/datatable'
 					},
 					columns: [
 					{ data: 'id', name: 'id'  },
@@ -66,14 +66,10 @@
 
 
 
-		created() {
-			
+		created() {			
 			acertaMenu('menu-administrador');
-
 			document.getElementById('menu-administrador-disciplina').classList.add("active");
-
-			document.getElementById('li-nav-create').innerHTML = '<a href="admin#/disciplina/create" class="nav-link"><i class="fa fa-plus"></i> Cadastrar Disciplina</a>';  
-
+			document.getElementById('li-nav-create').innerHTML = '<a href="#/disciplina/create" class="nav-link"><i class="fa fa-plus"></i> Cadastrar Disciplina</a>'; 
 		},
 
  

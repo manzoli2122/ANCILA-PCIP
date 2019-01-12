@@ -2,13 +2,13 @@
 	<div> 
 		<crudHeader texto="Adicionar Assunto">
 			<li class="breadcrumb-item">
-				<router-link to="/assunto" exact><a>Assuntos </a></router-link> 
+				<router-link :to="url_retorno" exact><a>Assuntos </a></router-link> 
 			</li>
 			<li class="breadcrumb-item active">Criação</li>
 		</crudHeader>  
 		<div class="content">
 			<div class="container-fluid">   
-				<Formulario :url="url + this.$apiAssunto" :form="form" metodo="post" retorno="assunto">
+				<Formulario :url="api_assunto" :form="form" metodo="post" :retorno="url_retorno">
 					<crudFormElemento :errors="form.errors.has('nome')" :errors_texto="form.errors.get('nome')">
 						<label for="nome">Nome:</label>
 						<input type="text" id="nome" name="nome" class="form-control" v-model="form.nome" v-bind:class="{ 'is-invalid': form.errors.has('nome') }"> 
@@ -24,8 +24,7 @@
 							<option    value="">Selecione a Disciplina </option>  
 							<option v-for="item in disciplinas" :key="item.id" :value="item.id"> {{ item.nome }}</option>   
 						</select2>  
-					</crudFormElemento> 
-				
+					</crudFormElemento>  
 					 
 				</Formulario> 
 			</div> 
@@ -35,7 +34,11 @@
 
 
 <script> 
-	import Form from '../../../../core/Form'; 
+
+	import Form from '../../../_core/formulario/Form'; 
+
+	import { assuntoService , disciplinaService }  from '../../../_services';
+
 	export default {
 
 		props:[
@@ -49,25 +52,29 @@
 					nome: '',    
 					disciplina_id: '',    
 					descricao: ''               
-				})
+				}),
+				api_assunto: assuntoService.getUrl(),
+				url_retorno:'/assunto',
 			}
 		}, 
 
 		created() {
-			axios.get(this.url  + this.$apiDisciplina  + '/all'  )
+			
+
+			disciplinaService.getAll() 
 			.then(response => {
-				this.disciplinas = response.data ;
+				this.disciplinas = response ;
 			})
 			.catch(error => {
 				toastErro('Não foi possivel achar as disciplinas');
-
 			});
 
+			 
+
 			acertaMenu('menu-administrador');
-
 			document.getElementById('menu-administrador-assunto').classList.add("active");
+			document.getElementById('li-nav-create').innerHTML = '<a href="#/assunto/create" class="nav-link"><i class="fa fa-plus"></i> Cadastrar Assunto</a>'; 
 
-			document.getElementById('li-nav-create').innerHTML = '<a href="admin#/assunto/create" class="nav-link"><i class="fa fa-plus"> </i> Cadastrar Assunto</a>' ;
 		},
 
 	} 

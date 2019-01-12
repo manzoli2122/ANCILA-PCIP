@@ -24,6 +24,8 @@
 </template>
 
 <script>
+	
+	import { assuntoService  }  from '../../../_services';
 
 	export default {
 
@@ -35,17 +37,17 @@
 			return {                
 				config: {
 					ativacao:{
-						url:this.url + this.$apiAssunto , 
+						url: assuntoService.getUrl() , 
 						item:'Assunto',
 					},
 					exclusao:{
-						url:this.url + this.$apiAssunto ,
+						url: assuntoService.getUrl() ,
 						evento:'assuntoRemovida',
 						item:'Assunto',
 					},
 					order: [[ 1, "asc" ]],
 					ajax: { 
-						url: this.url + this.$apiAssunto + '/datatable', 
+						url:  assuntoService.getUrl() + '/datatable', 
 					},
 					columns: [
 					{ data: 'id', name: 'assunto.id' , class: 'text-center' },
@@ -62,17 +64,10 @@
 
 
 		created() { 
-
 			acertaMenu('menu-administrador');
-
 			document.getElementById('menu-administrador-assunto').classList.add("active");
-
-			document.getElementById('li-nav-create').innerHTML = '<a href="admin#/assunto/create" class="nav-link"><i class="fa fa-plus"> </i> Cadastrar Assunto</a>' ;
-
+			document.getElementById('li-nav-create').innerHTML = '<a href="#/assunto/create" class="nav-link"><i class="fa fa-plus"></i> Cadastrar Assunto</a>'; 
 		},
-
-
-
 
 
 

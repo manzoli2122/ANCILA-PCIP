@@ -3,11 +3,18 @@ import { authHeader } from '../_helpers';
  
 export const assuntoService = {
 	getAssunto ,
-	getPerguntasPorAssunto
+	getPerguntasPorAssunto,
+	getUrl,
 };
 
 
 const url = '/api/v1/assunto' ;
+
+
+
+function getUrl(  ) { 
+	return  url; 
+}
 
 
 
@@ -22,6 +29,8 @@ function getAssunto( id ) {
 		}) 
 	}); 
 }
+ 
+
  
 function getPerguntasPorAssunto( id ) { 
 	return  new Promise((resolve, reject) => {

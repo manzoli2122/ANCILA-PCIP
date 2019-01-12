@@ -76,7 +76,7 @@
 			    alertConfimacao('Confirma a Desativação do ', vm.config.ativacao.item , 
 			        function() { 
 						alertProcessando();
-			            axios.delete( vm.config.ativacao.url + '/desativacao/'  + id  , {headers: authHeader() }  )
+			         axios.delete( vm.config.ativacao.url + '/desativacao/'  + id  , {headers: authHeader() }  )
 						.then(response => {  
 							vm.datatable.ajax.reload();
 							alertProcessandoHide();

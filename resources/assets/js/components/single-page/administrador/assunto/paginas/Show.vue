@@ -93,15 +93,7 @@
 				}
 				toastErro('Não foi possivel achar Assunto');
 			});
-
-			
-			// axios.get(this.url + this.$apiAssunto + '/' + this.$route.params.id )
-			// .then(response => {
-			// 	this.model = response.data ;
-			// })
-			// .catch(error => {
-			// 	toastErro('Não foi possivel achar Assunto');
-			// });
+ 
 
 			assuntoService.getPerguntasPorAssunto( this.$route.params.id )
 			.then(response => {
@@ -113,22 +105,11 @@
 				}
 				toastErro('Não foi possivel achar as perguntas');
 			});
-
-
-			// axios.get(this.url + this.$apiAssunto + '/' + this.$route.params.id + '/perguntas' )
-			// .then(response => {
-			// 	this.perguntas = response.data ;
-			// })
-			// .catch(error => {
-			// 	toastErro('Não foi possivel achar as perguntas');
-			// });
+ 
 
 			acertaMenu('menu-administrador');
-
 			document.getElementById('menu-administrador-assunto').classList.add("active");
-
-			document.getElementById('li-nav-create').innerHTML = '<a href="admin#/assunto/create" class="nav-link"><i class="fa fa-plus"> </i> Cadastrar Assunto</a>' ;
-
+			document.getElementById('li-nav-create').innerHTML = '<a href="#/assunto/create" class="nav-link"><i class="fa fa-plus"></i> Cadastrar Assunto</a>'; 
 
 		},
 

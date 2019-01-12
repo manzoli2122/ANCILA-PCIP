@@ -2,13 +2,13 @@
 	<div v-if="model && disciplinas">
 		<crudHeader texto="Alterar Assunto">
 			<li class="breadcrumb-item">
-				<router-link   to="/assunto" exact><a>Assuntos </a></router-link> 
+				<router-link :to="url_retorno" exact><a>Assuntos </a></router-link> 
 			</li>
 			<li class="breadcrumb-item active">Edição</li>
 		</crudHeader>  
 		<div class="content">
 			<div class="container-fluid">
-				<Formulario :url="url + this.$apiAssunto +'/' + $route.params.id" :form="form" metodo="patch" retorno="assunto">
+				<Formulario :url="api_assunto" :form="form" metodo="patch" :retorno="url_retorno">
 					<crudFormElemento :errors="form.errors.has('nome')" :errors_texto="form.errors.get('nome')">
 						<label for="nome">Nome:</label>
 						<input type="text" id="nome" name="nome" class="form-control" v-model="form.nome" v-bind:class="{ 'is-invalid': form.errors.has('nome') }"> 
@@ -35,7 +35,7 @@
 
 <script>
 
-	import Form from '../../../../core/Form';
+	import Form from '../../../_core/formulario/Form';
 
 	import { assuntoService , disciplinaService }  from '../../../_services';
 
@@ -54,7 +54,9 @@
 					nome: '',    
 					descricao: '' ,
 					disciplina_id: ''             
-				})
+				}),
+				api_assunto: assuntoService.getUrl() + '/' + this.$route.params.id,
+				url_retorno:'/assunto',
 			}
 		},
 
@@ -71,8 +73,7 @@
 
 
 			alertProcessando();
-			assuntoService.getAssunto( this.$route.params.id ) 
-			// axios.get(this.url + this.$apiAssunto  + '/' + this.$route.params.id )
+			assuntoService.getAssunto( this.$route.params.id )  
 			.then(response => {
 				this.model = response ;
 				alertProcessandoHide();
@@ -85,43 +86,25 @@
 				}
 			});
 
+  
  
-
-
- 
-			disciplinaService.getAll()
-			// axios.get(this.url + this.$apiDisciplina + '/all'  )
+			disciplinaService.getAll() 
 			.then(response => {
 				this.disciplinas = response ;
 			})
 			.catch(error => {
 				toastErro('Não foi possivel achar as disciplinas');
 			});
- 	
-			// axios.get(this.url + this.$apiDisciplina + '/all'  )
-			// .then(response => {
-			// 	this.disciplinas = response.data ;
-			// })
-			// .catch(error => {
-			// 	toastErro('Não foi possivel achar as disciplinas');
-			// });
- 	
+ 	  
 
-
-
- 			acertaMenu('menu-administrador');
-
-			document.getElementById('menu-administrador-assunto').classList.add("active");
-
-			document.getElementById('li-nav-create').innerHTML = '<a href="admin#/assunto/create" class="nav-link"><i class="fa fa-plus"> </i> Cadastrar Assunto</a>' ;
+ 			acertaMenu('menu-administrador'); 
+			document.getElementById('menu-administrador-assunto').classList.add("active");  
+			document.getElementById('li-nav-create').innerHTML = '<a href="#/assunto/create" class="nav-link"><i class="fa fa-plus"></i> Cadastrar Assunto</a>'; 
 
 		},
-
-
-
+ 
 
 	}
 
-
-
+ 
 </script>

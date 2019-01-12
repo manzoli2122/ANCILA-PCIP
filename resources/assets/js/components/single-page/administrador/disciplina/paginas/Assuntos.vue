@@ -2,7 +2,7 @@
 	<div v-if="disciplina"> 
 		<crudHeader :texto="'Disciplina - ' + disciplina.nome">
 			<li class="breadcrumb-item">
-				<router-link   to="/disciplina" exact><a>Disciplinas </a></router-link> 
+				<router-link   :to="url_retorno" exact><a>Disciplinas </a></router-link> 
 			</li>
 			<li class="breadcrumb-item active">Assuntos</li>
 		</crudHeader> 
@@ -13,17 +13,17 @@
 						<h3 class="card-title">Assuntos</h3>  
 					</div>
 					<div class="card-body  table-responsive"> 
-						<datatableService :config="config" id="datatableAssunto"> 
+						<datatable :config="config" id="datatableAssunto"> 
 							<th style="max-width:50px">ID</th>
 							<th pesquisavel>Nome</th> 
 							<th  class="text-center"  pesquisavel style="max-width:100px">Nº Perguntas</th> 
 							<th>Status</th>  
 							<th class="text-center" style="min-width:100px">Ações</th>
-						</datatableService>  
+						</datatable>  
 					</div>
 
 					<div class="card-footer text-right">
-						<crudBotaoVoltar url="/disciplina" />   
+						<crudBotaoVoltar :url="url_retorno" />   
 					</div>        
 				</crudCard>  
 			</div> 
@@ -34,6 +34,7 @@
 
 <script>
 	
+	import { assuntoService , disciplinaService }  from '../../../_services';
 
 	export default {
 
@@ -46,17 +47,17 @@
 				disciplina:'', 
 				config: {
 					ativacao:{
-						url:this.url + this.$apiAssunto  , 
+						url: assuntoService.getUrl()  , 
 						item:'Assuntos',
 					},
 					exclusao:{
-						url:this.url + this.$apiAssunto ,
+						url: assuntoService.getUrl() ,
 						evento:'assuntoRemovida',
 						item:'Assunto',
 					},
 					order: [[ 1, "asc" ]],
 					ajax: { 
-						url: this.url + this.$apiDisciplina + '/' + this.$route.params.id + '/assuntos/datatable'
+						url: disciplinaService.getUrl() + '/' + this.$route.params.id + '/assuntos/datatable'
 					},
 					columns: [
 					{ data: 'id', name: 'id'  },
@@ -66,6 +67,8 @@
 					{ data: 'action', name: 'action', orderable: false, searchable: false, class: 'text-center'} 
 					],
 				} , 
+				url_retorno:'/disciplina',
+
 			}
 		},
 
@@ -74,24 +77,24 @@
 
 
 		created() { 
+			
 			alertProcessando();
-			axios.get(this.url + this.$apiDisciplina + '/' + this.$route.params.id )
+
+			disciplinaService.getDisciplina(this.$route.params.id)  
 			.then(response => {
-				this.disciplina = response.data ;
+				this.disciplina = response ;
 				alertProcessandoHide();
 			})
 			.catch(error => { 
-				toastErro('Não foi possivel achar a Disciplina' , error.response.data); 
+				toastErro('Não foi possivel achar a Disciplina' , error.data); 
 				alertProcessandoHide();
-				this.$router.push('/');
+				this.$router.push(this.url_retorno);
 			});   
 
 
 			acertaMenu('menu-administrador');
-
 			document.getElementById('menu-administrador-disciplina').classList.add("active");
-
-			document.getElementById('li-nav-create').innerHTML = '<a href="admin#/disciplina/create" class="nav-link"><i class="fa fa-plus"></i> Cadastrar Disciplina</a>'; 
+			document.getElementById('li-nav-create').innerHTML = '<a href="#/disciplina/create" class="nav-link"><i class="fa fa-plus"></i> Cadastrar Disciplina</a>'; 
 			
 		}, 
 		

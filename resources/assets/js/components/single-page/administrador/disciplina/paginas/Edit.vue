@@ -2,13 +2,13 @@
 	<div>
 		<crudHeader texto="Alterar Disciplina">
 			<li class="breadcrumb-item">
-				<router-link   to="/disciplina" exact><a>Disciplinas </a></router-link> 
+				<router-link   :to="url_retorno" exact><a>Disciplinas </a></router-link> 
 			</li>
 			<li class="breadcrumb-item active">Edição</li>
 		</crudHeader>  
 		<div class="content">
 			<div class="container-fluid">
-				<Formulario :url="url + this.$apiDisciplina +'/' + $route.params.id" :form="form" metodo="patch" retorno="disciplina">
+				<Formulario :url="api_url" :form="form" metodo="patch" :retorno="url_retorno">
 					<crudFormElemento :errors="form.errors.has('nome')" :errors_texto="form.errors.get('nome')">
 						<label for="nome">Nome:</label>
 						<input type="text" id="nome" name="nome" class="form-control" v-model="form.nome" v-bind:class="{ 'is-invalid': form.errors.has('nome') }"> 
@@ -34,7 +34,9 @@
 
 <script>
 
-	import Form from '../../../../core/Form';
+	import Form from '../../../_core/formulario/Form';
+
+	import { disciplinaService }  from '../../../_services';
 
 	export default {
 
@@ -49,7 +51,9 @@
 					nome: '',    
 					descricao: '',            
 					nivel: ''               
-				})
+				}),
+				api_url: disciplinaService.getUrl() + '/' + this.$route.params.id,
+				url_retorno:'/disciplina',
 			}
 		},
 
@@ -64,22 +68,24 @@
 
 		created() {
 			alertProcessando();
-			axios.get(this.url + this.$apiDisciplina + '/' + this.$route.params.id )
+			
+			disciplinaService.getDisciplina(this.$route.params.id) 
 			.then(response => {
-				this.model = response.data ;
+				this.model = response ;
 				alertProcessandoHide();
 			})
 			.catch(error => {
 				toastErro('Não foi possivel achar a Disciplina', error.response.data);
 				alertProcessandoHide();
+				if ( error.status === 401) {
+					this.$store.dispatch('authentication/logout');			
+				}
 			});
 
 
 			acertaMenu('menu-administrador');
-
 			document.getElementById('menu-administrador-disciplina').classList.add("active");
-
-			document.getElementById('li-nav-create').innerHTML = '<a href="admin#/disciplina/create" class="nav-link"><i class="fa fa-plus"></i> Cadastrar Disciplina</a>'; 
+			document.getElementById('li-nav-create').innerHTML = '<a href="#/disciplina/create" class="nav-link"><i class="fa fa-plus"></i> Cadastrar Disciplina</a>'; 
 		},
 
 	}
