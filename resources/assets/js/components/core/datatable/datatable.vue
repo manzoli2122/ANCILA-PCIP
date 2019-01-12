@@ -146,7 +146,7 @@
 
 			montarDatatable(   lengthMenu = [ [ 10, 20, 30, 40, 50, 70, 100, 150, -1],   [ 10, 20, 30, 40, 50, 70, 100, 150, "Todos"]  ]) { 
 				var seletorTabela = '#' + this.id ;  
-				var csrf_token = document.head.querySelector('meta[name="csrf-token"]').content; 
+				// var csrf_token = document.head.querySelector('meta[name="csrf-token"]').content; 
 				var configPadrao = {
 					processing: true,
 					serverSide: true,
@@ -177,7 +177,7 @@
 							
 							}
 					},
-					ajax: { type: 'post',	data: { '_token': csrf_token }, headers: { 'Authorization': 'Bearer ' + token_api.content }}, 
+					ajax: { type: 'post',	data: { }, headers: { 'Authorization': 'Bearer ' + JSON.parse( localStorage.getItem('user') ) }}, 
 			        
 			        initComplete:function(){//Retira a busca a cada caractere digitado. Pesquisando apenas com Enter  
 			        	var $searchInput = $(seletorTabela  +'_filter input'); 

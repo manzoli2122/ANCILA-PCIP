@@ -328,9 +328,7 @@ class UsuarioService extends VueService  implements UsuarioServiceInterface
     {        
 
     	$usuario = $this->model->find($userId);
-    	
-
-
+    	 
         $perfil = $this->perfil->find( $perfilId );
     	if( $perfil->nome == 'Admin' and !Auth::user()->hasPerfil('Admin')){
     		abort(403, 'Você não tem permissão para adicionar o perfil Admin.');
@@ -481,8 +479,8 @@ class UsuarioService extends VueService  implements UsuarioServiceInterface
 
         $pdf = new NewPdf();
          
-        $pdf ::SetTitle("Batalhao Online da Policia Militar do ES");
-        $pdf ::SetSubject("DTIC Sempre Presente, contruindo o seu futuro.");
+        $pdf::SetTitle("Batalhao Online da Policia Militar do ES");
+        $pdf::SetSubject("DTIC Sempre Presente, contruindo o seu futuro.");
         // $pdf ::SetAuthor('bruno'); 
         // $pdf ::SetKeywords('baon cco desempenho individual ');
         //Seta a posicao vertical e horizontal  

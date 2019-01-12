@@ -26,13 +26,13 @@ class PerguntaController extends VueCrudController
         $this->route = 'pergunta';
         
         $this->middleware('auth:api', ['except' => ['Ativar' ] ]);
-        // $this->middleware('auth')->except('respostas' ,'destroy');  
-
-        // $this->middleware('permissao:pergunta')->except('respostas', 'destroy') ;
         
-        // $this->middleware('permissao:pergunta-editar')->only('update') ;
 
-        // $this->middleware('perfil:Admin')->only( 'destroy');
+        $this->middleware('permissao:pergunta')->except('respostas', 'destroy') ;
+        
+        $this->middleware('permissao:pergunta-editar')->only('update') ;
+
+        $this->middleware('perfil:Admin')->only( 'destroy');
 
     }
 

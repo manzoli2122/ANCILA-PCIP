@@ -26,13 +26,13 @@ class RespostaController extends VueCrudController
 
         $this->middleware('auth:api', ['except' => ['Ativar' ] ]);
         
-        // $this->middleware('auth'); 
-
-        // $this->middleware('permissao:resposta') ; 
-
-        // $this->middleware('permissao:resposta-editar')->only('update') ;   
         
-        // $this->middleware('perfil:Admin')->only('destroy');
+
+        $this->middleware('permissao:resposta') ; 
+
+        $this->middleware('permissao:resposta-editar')->only('update') ;   
+        
+        $this->middleware('perfil:Admin')->only('destroy');
 
     }
 

@@ -1,8 +1,8 @@
   
 window.Vue = require('vue');
-  
+
 Vue.component('datatableService', require('./components/core/datatable/datatable.vue'));
- 
+
 Vue.component('crudCard', require('./components/core/crud/card.vue')); 
 Vue.component('crudHeader', require('./components/core/crud/header.vue')); 
 Vue.component('crudBotaoExcluir', require('./components/core/crud/botaoExcluir.vue')); 
@@ -14,13 +14,83 @@ Vue.component('select2', require('./components/core/crud/SelectComponente.vue'))
 
 Vue.component('notifications', require('./components/notification/Notifications'));
 Vue.component('notification', require('./components/notification/Notification'));
- 
 
-window.headerVue = new Vue({
-    el: '#header',     
-});
- 
- 
+
+
+
+
+
+
+
+
+window.acertaMenu = function( nome ) {
+
+    var principal = document.getElementById('menu'); 
+
+    Array.from(principal.childNodes).filter(function (value) {
+
+        if(value.className){  
+
+            if( value.className.search('has-treeview') != -1 ){  
+
+                if( value.id != nome ) {
+                    value.classList.remove("menu-open");
+                }
+                else{
+                    value.classList.add("menu-open");
+                } 
+                
+                Array.from(value.childNodes).filter(function (value) { 
+                    if(value.nodeName=="A"){
+                        value.classList.remove("active");  
+                    } 
+                    if(value.nodeName=="UL"  ){ 
+                        Array.from(value.childNodes).filter(function (value) {
+                            if(value.className == 'nav-item')
+                                Array.from(value.childNodes).filter(function (value) { 
+                                    if(value.nodeName=="A"){
+                                        value.classList.remove("active");  
+                                    } 
+                                })  
+                            return value  ;
+                        })  ; 
+                        if(value.id != nome + "-treeview"){
+                            value.style.display = "none";
+                        } 
+                    } 
+                })  
+            }
+
+            else{
+                Array.from(value.childNodes).filter(function (value) { 
+                    if(value.nodeName=="A"){
+                        value.classList.remove("active");  
+                    } 
+                    // if(value.nodeName=="UL"  ){ 
+                    //     Array.from(value.childNodes).filter(function (value) {
+                    //         if(value.className == 'nav-item')
+                    //             Array.from(value.childNodes).filter(function (value) { 
+                    //                 if(value.nodeName=="A"){
+                    //                     value.classList.remove("active");  
+                    //                 } 
+                    //             })  
+                    //         return value  ;
+                    //     })  ; 
+                    //     if(value.id != nome + "-treeview"){
+                    //         value.style.display = "none";
+                    //     } 
+                    // } 
+                }) 
+            }
+        }
+        return value  ;
+    })  ;
+    document.getElementById( nome + '-link').classList.add("active");
+}
+
+
+
+
 
 //=========================================================================================================
 //                            ALERTA PROCESSAMENTO
@@ -32,7 +102,7 @@ window.alertProcessando = function() {
 window.alertProcessandoHide = function() {
     $('body').removeClass('loading');
 }
- 
+
 window.alertErro = function(titulo, texto = "", posicao = "center", funcao = function() {}) {
     iziToast.show({
         theme: 'dark',
@@ -54,7 +124,7 @@ window.alertErro = function(titulo, texto = "", posicao = "center", funcao = fun
 window.toastErro = function(titulo, texto = "", funcao = function() {}) {
     alertErro(titulo, texto, 'bottomRight', funcao);
 }
- 
+
 window.alertSucesso = function(titulo, texto = "", posicao = "center", funcao = function() {} , timeout = 10000 ) {
     iziToast.show({
         theme: 'dark',
@@ -77,7 +147,7 @@ window.alertSucesso = function(titulo, texto = "", posicao = "center", funcao = 
 window.toastSucesso = function(titulo, texto = "", funcao = function() {} ,  timeout = 10000   ) {
     alertSucesso(titulo, texto, 'bottomRight', funcao , timeout );
 }
- 
+
 window.alertConfimacao = function( titulo , texto , funcaoSIM  ) {
     iziToast.show({
         theme: 'dark',
@@ -113,4 +183,3 @@ window.alertConfimacao = function( titulo , texto , funcaoSIM  ) {
         id: 'iziToastConfirmacao'
     });
 }
- 

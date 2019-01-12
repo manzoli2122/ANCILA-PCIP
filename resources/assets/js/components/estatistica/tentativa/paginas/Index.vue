@@ -1,6 +1,6 @@
 <template>  
 	<div>  
-		<crudHeader texto="Disciplinas Cadastradas">
+		<crudHeader texto="Tentativas Cadastradas">
 			<li class="breadcrumb-item">Tentativa</li>
 		</crudHeader> 
 		<div class="content">

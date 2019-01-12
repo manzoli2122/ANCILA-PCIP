@@ -9,7 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use App\User;
 
 
-class LoginSuccessMail extends Mailable implements ShouldQueue
+class LoginSuccessMail extends Mailable //implements ShouldQueue
 {
 
 
@@ -49,7 +49,7 @@ class LoginSuccessMail extends Mailable implements ShouldQueue
 
 
 
-    public $tries = 1 ;
+    // public $tries = 1 ;
 
 
 

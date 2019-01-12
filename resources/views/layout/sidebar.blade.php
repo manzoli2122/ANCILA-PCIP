@@ -29,7 +29,7 @@
 			<ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
 
 				<li class="nav-item">
-					<a href="/" class="nav-link">
+					<a href="/single" class="nav-link">
 						<i class="nav-icon fa fa-home  "></i>
 						<p>Principal</p>
 					</a>
@@ -57,6 +57,11 @@
 
 
 
+
+
+{{-- 
+
+
 				@if( Auth::user() )
 				@perfil('Admin')
 				<li class="nav-item has-treeview" id="menu-seguranca">
@@ -66,10 +71,7 @@
 							<i class="right fa fa-angle-left"></i>
 						</p>
 					</a>
-					<ul class="nav nav-treeview">
-						
-						
-
+					<ul class="nav nav-treeview"> 
 						@if(Route::getRoutes()->hasNamedRoute('permissao.index'))
 						<li class="nav-item">
 							<a href="{{ route('permissao.index')}}" class="nav-link " id="menu-seguranca-permissao">
@@ -98,27 +100,86 @@
 							</a>
 						</li>
 						@endif
-						
-						
-
-						
-						
-
-
+						 
 					</ul>
 				</li>
 				@endperfil
 				@endif
 				
 
+ --}}
+
+
+
+
+
+
+
+
 
 
 
 
 				@if( Auth::user() )
+				@perfil('Admin')
 				
-				@permissao([ 'pergunta' ,'assunto'] ) 
-				
+				<li class="nav-item" id="menu-seguranca-temp">
+					<a href="{{ route('seguranca')}}" class="nav-link">
+						<i class="nav-icon fa fa-briefcase  fa-lg fa-2x"></i>
+						<p>Segurança</p>
+					</a>
+				</li>
+
+
+
+				<li class="nav-item has-treeview" id="menu-seguranca" hidden>
+					<a href="#" class="nav-link active">
+						<i class="nav-icon fa-lg fa-2x fa fa-lock"></i>
+						<p>Segurança
+							<i class="right fa fa-angle-left"></i>
+						</p>
+					</a>
+					<ul class="nav nav-treeview" id="menu-seguranca-treeview">
+						  
+						<li class="nav-item">
+							<a href="/seguranca#/usuario" class="nav-link " id="menu-seguranca-usuario" >
+								<i class="nav-icon fa fa-users fa-lg fa-2x text-info "></i>
+								<p>Usuário</p>
+							</a>
+						</li>
+						 
+						<li class="nav-item">
+							<a href="/seguranca#/perfil" class="nav-link " id="menu-seguranca-perfil">
+								<i class="nav-icon fa fa-id-card fa-lg fa-2x text-success"></i>
+								<p>Perfil</p>
+							</a>
+						</li>
+						   
+						<li class="nav-item">
+							<a href="/seguranca#/permissao" class="nav-link " id="menu-seguranca-permissao">
+								<i class="nav-icon fa fa-unlock fa-lg fa-2x  text-danger"></i>
+								<p>Permissão </p>
+							</a>
+						</li>
+
+						<li class="nav-item">
+							<a href="/seguranca#/loginlog" class="nav-link " id="menu-seguranca-loginlog">
+								<i class="nav-icon fa fa-lock fa-lg fa-2x  text-warning"></i>
+								<p>Log Login
+									<span class="right badge badge-warning">New</span>
+								</p>
+							</a>
+						</li>
+						 
+					</ul>
+				</li>
+
+
+
+
+
+
+
 				<li class="nav-item" id="menu-estatistica-temp">
 					<a href="{{ route('estatistica')}}" class="nav-link">
 						<i class="nav-icon fa fa-briefcase  fa-lg fa-2x"></i>
@@ -134,32 +195,30 @@
 						</p>
 					</a>
 					<ul class="nav nav-treeview" id="menu-estatistica-treeview">
-						 
-						
-						@permissao('tentativa')  
+ 
 						<li class="nav-item">
 							<a href="/estatistica#/tentativa" class="nav-link " id="menu-estatistica-tentativa">
 								<i class="nav-icon fa fa-book fa-lg fa-2x  "></i>
 								<p>Tentativas </p>
 							</a>
 						</li> 
-						@endpermissao
-
-						@perfil('Admin')  
+						 
 						<li class="nav-item">
 							<a href="/estatistica#/comentario" class="nav-link " id="menu-estatistica-comentario">
 								<i class="nav-icon fa fa-book fa-lg fa-2x  "></i>
 								<p>Comentário </p>
 							</a>
 						</li> 
-						@endperfil
-
-
-						
+						 
 					</ul>
 				</li>
-				@endpermissao
+ 
+				@endperfil
 				@endif
+				
+
+
+ 
 				
 
 				

@@ -24,9 +24,8 @@ class TentativaController extends VueCrudController
 		$this->route = 'tentativa';    
 
         $this->middleware('auth:api', ['except' => ['Ativar' ] ]);
-        
-        // $this->middleware('auth')  ;
-        // $this->middleware('perfil:Admin')->only( 'destroy');       
+         
+        $this->middleware('perfil:Admin') ;       
 	}
 
 

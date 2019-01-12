@@ -1,5 +1,10 @@
 @extends('layout.master')
 
+@push(  'styles')  
+ <meta http-equiv="refresh"   content="0; single#/" >
+@endpush
+
+
 @section('content') 
 
 <div class="content"> 

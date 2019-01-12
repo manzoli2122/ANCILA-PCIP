@@ -10,10 +10,21 @@
 
 Route::get('/estatistica', function () {    return view('estatistica.index');})->name('estatistica');
 
+Route::get('/seguranca', function () {    return view('seguranca.index');})->name('seguranca');
+
 
 Route::get('/admin', function () {    return view('administrador.index');})->name('admin');
 
-Route::get('/', function () {    return view('welcome');})->name('inicio');
+
+Route::get('/single', function () {    return view('single.index'); } ) ;
+
+
+
+// Route::get('/', function () {    return view('welcome');})->name('inicio');
+Route::get('/', function () {    return redirect('single'); })->name('inicio');
+
+
+
 Route::get('/desenvolvedor', function () {    return view('desenvolvedor');})->name('desenvolvedor');
 
   
@@ -78,9 +89,7 @@ Route::post('treinamento', 'TreinamentoController@responder')->name('treinamento
 Route::get('treinamento/proximo', 'TreinamentoController@proximo')->name('treinamento.proximo');
 Route::get('treinamento/placar', 'TreinamentoController@placar')->name('treinamento.placar');
 Route::get('treinamento/historico', 'TreinamentoController@historico')->name('treinamento.historico');
-
-
-
+ 
 Route::post('treinamento/criar/comentario',   'Administrador\ComentarioPerguntaController@store') ; 
 
 Route::get('treinamento/meu/rank',   'Administrador\TentativaController@MeuRank') ; 

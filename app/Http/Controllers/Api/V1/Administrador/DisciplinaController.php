@@ -20,17 +20,17 @@ class DisciplinaController extends VueCrudController
 
 
     public function __construct( Disciplina $disciplina , DataTables $dataTable ){
-       $this->model = $disciplina ;
-       $this->dataTable = $dataTable ; 
-       $this->route = 'disciplina';
+        $this->model = $disciplina ;
+        $this->dataTable = $dataTable ; 
+        $this->route = 'disciplina';
 
-       $this->middleware('auth:api', ['except' => ['Ativar' ] ]);
-       
-        // $this->middleware('auth')->only('BuscarTodos');
-        // $this->middleware('permissao:disciplina')->except('BuscarTodos');
-        // $this->middleware('permissao:disciplina-editar')->only('update');
-        // $this->middleware('perfil:Admin')->only( 'destroy');       
-   }
+        $this->middleware('auth:api', ['except' => ['BuscarTodos' ] ]);
+
+
+        $this->middleware('permissao:disciplina')->except('BuscarTodos');
+        $this->middleware('permissao:disciplina-editar')->only('update');
+        $this->middleware('perfil:Admin')->only( 'destroy');       
+    }
 
 
 

@@ -32,7 +32,7 @@
 		 
  
 		<!-- Content Wrapper. Contains page content -->
-		<div class="content-wrapper" style="margin-left: 0px !important;"> 
+		<div class="content-wrapper" style="margin-left: 0px !important;" id="contentwrapper"> 
 
 
 			@yield('content') 

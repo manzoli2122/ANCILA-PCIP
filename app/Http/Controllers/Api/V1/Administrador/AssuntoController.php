@@ -22,13 +22,13 @@ class AssuntoController extends VueCrudController
 		$this->dataTable = $dataTable ; 
         $this->route = 'assunto';
 
-        $this->middleware('auth:api', ['except' => ['Ativar' ] ]);
+        $this->middleware('auth:api', ['except' => ['' ] ]);
 
         
-		// $this->middleware('auth');
-        // $this->middleware('permissao:assunto');
-        // $this->middleware('permissao:assunto-editar')->only('update');
-        // $this->middleware('perfil:Admin')->only( 'destroy');   
+		 
+        $this->middleware('permissao:assunto');
+        $this->middleware('permissao:assunto-editar')->only('update');
+        $this->middleware('perfil:Admin')->only( 'destroy');   
 	}
 
 

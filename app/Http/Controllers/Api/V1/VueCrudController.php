@@ -43,6 +43,66 @@ class VueCrudController extends Controller
 
         
 
+     /**
+    * Função para excluir um model
+    *
+    * @param Request $request
+    *   
+    * @param int  $id
+    *    
+    * @return json
+    */
+    public function destroy( Request $request, $id)
+    { 
+         
+        try{  
+            if( !$model = $this->model->find($id) ){
+                return response()->json( 'Item não encontrado' , 404);
+            }
+            if( !$delete = $model->delete() ){
+                return response()->json([ 'message' => 'Erro ao excluir o registro!' ], 500);
+            }
+             
+            return response()->json( 'Exclusão realizada com sucesso' , 200); 
+        } 
+         
+        catch(QueryException $e){
+            return response()->json([ 'message' => 'Erro de conexao com o banco' ] , 500 );
+        } 
+        catch(Exception $e){
+            return response()->json([ 'message' => $e->getMessage() ], 500);
+        }  
+    }
+
+
+
+    
+    /**
+    * Função para buscar models para datatable
+    *
+    * @param Request $request
+    *   
+    * @return json
+    */
+    public function getDatatable( Request $request ){
+        try {  
+            
+            $models = $this->model->getDatatable();
+            return $this->dataTable->eloquent($models)
+            ->addColumn('action', function($linha) {
+                return  '<a href="#/'. $this->route . '/edit/'.$linha->id.'" btn-edit class="btn btn-success btn-sm" title="Editar"><i class="fa fa-pencil"></i></a>'
+                .'<a href="#/'. $this->route . '/show/'.$linha->id.'" class="btn btn-primary btn-sm" title="Visualizar"><i class="fa fa-search"></i></a>';
+            })
+            ->make(true);   
+
+            // return  $this->service->BuscarDataTable( $request);
+
+        }         
+        catch (Exception $e) {           
+            return response()->json( $e->getMessage() , 500);
+        } 
+    }
+
 
 
 
@@ -66,10 +126,35 @@ class VueCrudController extends Controller
             return response()->json( 'Erro interno'  , 500);    
         }
     }
+ 
 
 
 
+     /**
+    * Função para criar um model
+    *
+    * @param Request $request
+    *   
+    * @return json
+    */
+    public function store(Request $request)
+    {    
+        $validator = Validator::make( $request->all(), $this->model->rules() );
 
+        if ($validator->fails()) {
+            return response()->json(['message' =>  (string) $validator->errors() , 'error' => $validator->errors() ] , 422); 
+        }  
+         
+        try{ 
+            if( !$insert  = $this->model->create( $request->all() ) ){
+                return response()->json('Não foi possível cadastrar!' , 500);
+            } 
+        }  
+        catch(Exception $e){
+            return response()->json( $e->getMessage() , 500);
+        }   
+        return response()->json( 'Cadastro realizado com sucesso' , 200); 
+    }
 
 
 
@@ -117,31 +202,7 @@ class VueCrudController extends Controller
 
 
 
-    /**
-    * Função para criar um model
-    *
-    * @param Request $request
-    *   
-    * @return json
-    */
-    public function store(Request $request)
-    {	 
-    	$validator = Validator::make( $request->all(), $this->model->rules() );
-
-        if ($validator->fails()) {
-            return response()->json(['message' =>  (string) $validator->errors() , 'error' => $validator->errors() ] , 422); 
-        }  
-         
-        try{ 
-        	if( !$insert  = $this->model->create( $request->all() ) ){
-        		return response()->json('Não foi possível cadastrar!' , 500);
-        	} 
-        }  
-        catch(Exception $e){
-            return response()->json( $e->getMessage() , 500);
-        }   
-        return response()->json( 'Cadastro realizado com sucesso' , 200); 
-    }
+   
 
 
 
@@ -151,71 +212,13 @@ class VueCrudController extends Controller
 
 
 
-
-    /**
-    * Função para excluir um model
-    *
-    * @param Request $request
-    *   
-    * @param int  $id
-    *    
-    * @return json
-    */
-    public function destroy( Request $request, $id)
-    { 
-         
-        try{  
-        	if( !$model = $this->model->find($id) ){
-        		return response()->json( 'Item não encontrado' , 404);
-        	}
-        	if( !$delete = $model->delete() ){
-        		return response()->json([ 'message' => 'Erro ao excluir o registro!' ], 500);
-        	}
-             
-            return response()->json( 'Exclusão realizada com sucesso' , 200); 
-        } 
-         
-        catch(QueryException $e){
-            return response()->json([ 'message' => 'Erro de conexao com o banco' ] , 500 );
-        } 
-        catch(Exception $e){
-            return response()->json([ 'message' => $e->getMessage() ], 500);
-        }  
-    }
+   
 
 
 
 
 
 
-
-
-
-    /**
-    * Função para buscar models para datatable
-    *
-    * @param Request $request
-    *   
-    * @return json
-    */
-    public function getDatatable( Request $request ){
-    	try {  
-    		
-    		$models = $this->model->getDatatable();
-    		return $this->dataTable->eloquent($models)
-    		->addColumn('action', function($linha) {
-    			return  '<a href="#/'. $this->route . '/edit/'.$linha->id.'" btn-edit class="btn btn-success btn-sm" title="Editar"><i class="fa fa-pencil"></i></a>'
-    			.'<a href="#/'. $this->route . '/show/'.$linha->id.'" class="btn btn-primary btn-sm" title="Visualizar"><i class="fa fa-search"></i></a>';
-    		})
-    		->make(true);   
-
-    		// return  $this->service->BuscarDataTable( $request);
-
-    	}         
-    	catch (Exception $e) {           
-    		return response()->json( $e->getMessage() , 500);
-    	} 
-    }
 
 
 

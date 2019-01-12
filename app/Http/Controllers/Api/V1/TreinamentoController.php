@@ -23,7 +23,7 @@ class TreinamentoController extends Controller
 
     public function __construct(Pergunta $pergunta){
     	$this->model = $pergunta;
-        $this->middleware('auth:api')->only('proximoPost' ,'responder');
+        $this->middleware('auth:api'); //->only('proximoPost' ,'responder');
         // $this->middleware('auth');
     }
 
@@ -127,6 +127,42 @@ class TreinamentoController extends Controller
 
 
 
+    public function todas(Request $request )
+    {
+        try { 
+            
+            $disciplina = $request->input('disciplina_id'); 
+            
+ 
+            $status =  [  'Validada' , 'Finalizada' , 'Restrita'] ;
+
+            if( !$models = $this->model->ativo()  
+                ->whereIn( 'pergunta.status' , $status  ) 
+                ->whereHas('assunto', function ($query) use ($disciplina) {
+                    $query->whereIn('disciplina_id',  $disciplina  );
+                }) 
+                ->with('resposta')
+                ->with('assunto')->get()    )
+            {       
+                return response()->json(  'pergunta nao encontrada' , 404);             
+            } 
+  
+            if( $models->count() < 1 ){ 
+                return response()->json(  'pergunta nao encontrada' , 404);
+            }
+ 
+            // $model = $models->random();
+            // $model->resposta = $model->resposta->shuffle();
+
+            // return response()->json(  $model->only( 'id' , 'texto' , 'resposta_certa_id' , 'resumo' , 'assunto' ,'resposta' , 'dificuldade') , 200);      
+            return response()->json(  $models , 200);      
+ 
+        }   
+
+        catch(Exception $e) {        
+            return response()->json(  'pergunta nao encontrada' , 500);  ;
+        }
+    }
 
 
 
@@ -135,6 +171,18 @@ class TreinamentoController extends Controller
 
 
 
+    public function historico(Request $request){ 
+        
+        // $disciplina = session('disciplina' , [] );
+
+        $disciplina = $request->input('disciplina');
+
+        $id = Auth::guard('api')->user()->id;
+
+        $resposta = Tentativa::where('user_id', $id)->whereIn('disciplina_id' , $disciplina )->select('acerto', 'pergunta_id')->get();
+
+        return response()->json(  $resposta    , 200); 
+    }
 
 
 
@@ -237,16 +285,7 @@ class TreinamentoController extends Controller
 
 
 
-    public function historico(Request $request){ 
-        
-        $disciplina = session('disciplina' , [] );
-
-        $id = Auth::user()->id;
-
-        $resposta = Tentativa::where('user_id', $id)->whereIn('disciplina_id' , $disciplina )->select('acerto', 'pergunta_id')->get();
-
-        return response()->json(  $resposta    , 200); 
-    }
+    
 
 
 
@@ -255,14 +294,14 @@ class TreinamentoController extends Controller
 
 
 
-    public function placar(Request $request){ 
-        return response()->json( [  
-            'certas' =>  session('certas' , 0 ) , 
-            'erradas' =>  session('erradas' , 0 )  ,  
-            // 'realizadas' => session('perguntas.id' , 0 ),
-            // 'disciplina' =>  session('disciplina' , [] ) 
-              ]   , 200); 
-    }
+    // public function placar(Request $request){ 
+    //     return response()->json( [  
+    //         'certas' =>  session('certas' , 0 ) , 
+    //         'erradas' =>  session('erradas' , 0 )  ,  
+    //         // 'realizadas' => session('perguntas.id' , 0 ),
+    //         // 'disciplina' =>  session('disciplina' , [] ) 
+    //           ]   , 200); 
+    // }
 
 
 
