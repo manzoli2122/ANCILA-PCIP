@@ -17,13 +17,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-
-
-
-
-
-
-
+ 
 
 Route::namespace('Api\V1\Estatistica')->prefix('v1')->group(function () {
     /*
@@ -44,7 +38,7 @@ Route::namespace('Api\V1\Estatistica')->prefix('v1')->group(function () {
     |--------------------------------------------------------------------------
     | 
     */ 
-    Route::delete('comentario/desativacao/{comentarioId}',  'ComentarioController@destroy') ; 
+    Route::delete('comentario/desativacao/{comentarioId}','ComentarioController@destroy');
     Route::post('comentario/ativacao/{comentarioId}', 'ComentarioController@Ativar') ;  
     Route::post('comentario/datatable', 'ComentarioController@getDatatable');
     Route::resource('comentario', 'ComentarioController')->except(['create', 'edit']);
@@ -52,13 +46,7 @@ Route::namespace('Api\V1\Estatistica')->prefix('v1')->group(function () {
 
 });
 
-
-
-
-
-
-
-
+ 
 
 
 
@@ -71,13 +59,12 @@ Route::namespace('Api\V1\Seguranca')->prefix('v1')->group(function () {
     | 
     */  
     
-    Route::get('usuario/datatable/pdf', 'UsuarioController@pdf'); 
+    // Route::get('usuario/datatable/pdf', 'UsuarioController@pdf'); 
     Route::get('usuario/{userId}/perfil/adicionar','UsuarioController@BuscarPerfisParaAdicionar') ; 
     Route::post('usuario/{userId}/adicionar/perfil','UsuarioController@adicionarPerfilAoUsuario') ;
     Route::delete('usuario/{userId}/delete/perfil/{perfilId}','UsuarioController@excluirPerfilDoUsuario') ;  
     Route::post('usuario/{userId}/perfil/datatable','UsuarioController@BuscarPerfilDataTable') ; 
     Route::post('usuario/{userId}/perfil/log/datatable','UsuarioController@BuscarPerfilDataTableLog');  
-
     Route::post('usuario/ativacao/{userId}',   'UsuarioController@Ativar') ; 
     Route::get('usuario/resetarSenha/{userId}','UsuarioController@ResetarSenha') ;  
     Route::delete('usuario/desativacao/{userId}','UsuarioController@Desativar') ;  
@@ -93,7 +80,7 @@ Route::namespace('Api\V1\Seguranca')->prefix('v1')->group(function () {
     |--------------------------------------------------------------------------
     | 
     */  
-    Route::post('perfil/{perfilId}/adicionar/permissao','PerfilController@adicionarPermissaoAoPerfil') ; 
+    Route::post('perfil/{perfilId}/adicionar/permissao','PerfilController@adicionarPermissaoAoPerfil');
     Route::get('perfil/{perfilId}/permissao/adicionar','PerfilController@BuscarPermissoesParaAdicionar') ; 
     Route::delete('perfil/{perfilId}/delete/permissao/{permissaoId}', 'PerfilController@excluirPermissaoDoPerfil') ; 
     Route::post('perfil/{perfilId}/permissao/datatable','PerfilController@BuscarPermissaoDataTable') ;
@@ -111,30 +98,22 @@ Route::namespace('Api\V1\Seguranca')->prefix('v1')->group(function () {
     Route::post('permissao/{permissaoId}/perfis/datatable','PermissaoController@BuscarPerfisDataTable');
     Route::post('permissao/datatable', 'PermissaoController@getDatatable')->name('permissao.datatable');
     Route::resource('permissao','PermissaoController')->except(['create', 'edit', 'index']); 
-
-
-
+ 
     /*
     |--------------------------------------------------------------------------
     | LoginLog
     |--------------------------------------------------------------------------
     | 
-    */  
-    
+    */   
     Route::get('loginlog/all', 'LoginLogController@BuscarTodos') ;
     Route::post('loginlog/datatable', 'LoginLogController@getDatatable');
     Route::resource('loginlog','LoginLogController')->only(['show']); 
 
-
-
-
+ 
 
 });
 
-
-
-
-
+ 
 
 
 
@@ -147,15 +126,13 @@ Route::namespace('Api\V1\Administrador')->prefix('v1')->group(function () {
     | 
     */  
     Route::get('disciplina/all', 'DisciplinaController@BuscarTodos') ;
-    Route::delete('disciplina/desativacao/{disciplinaId}',                  'DisciplinaController@destroy') ;
+    Route::delete('disciplina/desativacao/{disciplinaId}', 'DisciplinaController@destroy') ;
     Route::post('disciplina/ativacao/{disciplinaId}', 'DisciplinaController@Ativar') ;   
     Route::post('disciplina/{disciplinaId}/assuntos/datatable', 'DisciplinaController@BuscarAssuntosDataTable'); 
     Route::post('disciplina/datatable', 'DisciplinaController@getDatatable');
     Route::resource('disciplina', 'DisciplinaController')->except(['create', 'edit', 'index']); 
 
 	// Route::get('disciplina/all', 'DisciplinaController@BuscarTodos') ;
-
-
 
     /*
     |--------------------------------------------------------------------------
@@ -169,8 +146,7 @@ Route::namespace('Api\V1\Administrador')->prefix('v1')->group(function () {
     Route::post('assunto/ativacao/{assuntoId}',   'AssuntoController@Ativar') ;  
     Route::post('assunto/datatable', 'AssuntoController@getDatatable');
     Route::resource('assunto',  'AssuntoController')->except(['create', 'edit' , 'index']); 
-
-
+ 
 
     /*
     |--------------------------------------------------------------------------
@@ -180,8 +156,8 @@ Route::namespace('Api\V1\Administrador')->prefix('v1')->group(function () {
     */  
 
     Route::post('pergunta/alterar/resposta/{perguntaId}', 'PerguntaController@AlterarResposta') ;   
-    Route::post('pergunta/criar/resposta', 'RespostaController@store') ; 
-    Route::patch('pergunta/editar/resposta/{id}',   'RespostaController@update') ;  
+    // Route::post('pergunta/criar/resposta', 'RespostaController@store') ; 
+    // Route::patch('pergunta/editar/resposta/{id}',   'RespostaController@update') ;  
     Route::get('pergunta/datatable/pdf', 'PerguntaController@pdf');
     Route::get('pergunta/all', 'PerguntaController@BuscarTodos') ;
     Route::get('pergunta/all/criada', 'PerguntaController@BuscarCriada') ;
@@ -189,9 +165,7 @@ Route::namespace('Api\V1\Administrador')->prefix('v1')->group(function () {
     Route::post('pergunta/ativacao/{perguntaId}',   'PerguntaController@Ativar') ; 
     Route::post('pergunta/datatable', 'PerguntaController@getDatatable') ;
     Route::resource('pergunta', 'PerguntaController')->except(['create', 'edit', 'index']);
-
-
-
+ 
     /*
     |--------------------------------------------------------------------------
     | Respostas
@@ -202,9 +176,7 @@ Route::namespace('Api\V1\Administrador')->prefix('v1')->group(function () {
     Route::post('resposta/ativacao/{respostaId}',   'RespostaController@Ativar') ;  
     Route::post('resposta/datatable', 'RespostaController@getDatatable');
     Route::resource('resposta', 'RespostaController')->except(['create', 'edit', 'index']);
-
-
-
+ 
 
 });
 
@@ -218,10 +190,8 @@ Route::namespace('Api\V1')->prefix('v1')->group(function () {
 
   Route::get('treinamento/proximo', 'TreinamentoController@proximo') ;
   Route::post('treinamento', 'TreinamentoController@responder') ;
-  Route::post('treinamento/proximo', 'TreinamentoController@proximoPost') ;
-  
+  Route::post('treinamento/proximo', 'TreinamentoController@proximoPost') ;  
   Route::post('treinamento/todas', 'TreinamentoController@todas') ;
-
   Route::post('treinamento/disciplina', 'TreinamentoController@alterarDisciplina');
   Route::get('treinamento/disciplina', 'TreinamentoController@getDisciplina');
   Route::post('treinamento/dificuldade', 'TreinamentoController@alterarDificuldade');
@@ -229,12 +199,8 @@ Route::namespace('Api\V1')->prefix('v1')->group(function () {
   Route::get('treinamento/proximo', 'TreinamentoController@proximo') ;
   // Route::get('treinamento/placar', 'TreinamentoController@placar') ;
   Route::post('treinamento/historico', 'TreinamentoController@historico') ;
-
-  Route::post('treinamento/criar/comentario',   'Administrador\ComentarioPerguntaController@store') ; 
-
+  Route::post('treinamento/criar/comentario','Estatistica\ComentarioController@store') ; 
   Route::get('treinamento/meu/rank',   'Estatistica\TentativaController@MeuRank') ; 
-
-
 
 });
 
@@ -253,7 +219,6 @@ Route::group([
     Route::post('refresh', 'AuthController@refresh');
     Route::post('me', 'AuthController@me');
     Route::get('me', 'AuthController@me');
-
     Route::post('update/senha', 'AuthController@updateSenha') ;
     Route::post('cadastro', 'AuthController@salvarCadastro') ;
     Route::post('reset/senha', 'AuthController@resetarSenha') ;

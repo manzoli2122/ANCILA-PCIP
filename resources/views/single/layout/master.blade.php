@@ -17,8 +17,6 @@
 	
 	<!-- Google Font: Source Sans Pro -->
 	<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet"> 
-	@stack('styles')
-
 </head>
 <body class="hold-transition sidebar-mini sidebar-collapse1">
 	
@@ -35,8 +33,8 @@
 
 		<!-- Main Footer -->
 		<footer class="main-footer"> 
-			<div class="float-right d-none d-sm-inline"> Versão 0.0.2 </div> 
-			<strong>Copyright &copy; 2018 <a href="#">{{env('APP_NAME')}}</a>.</strong> Todos Direitos Reservados.
+			<div class="float-right d-none d-sm-inline"> Versão 0.0.3 </div> 
+			<strong>Copyright &copy; 2019 <a href="#">{{env('APP_NAME')}}</a>.</strong> Todos Direitos Reservados.
 		</footer>
 	</div>
 

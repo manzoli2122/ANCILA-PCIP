@@ -11,13 +11,13 @@
 						<h2 class="card-title">Perfis</h2>  
 					</div>
 					<div class="card-body  table-responsive"> 
-						<datatableService :config="config" id="datatableUsuariosPerfis" :reload="reloadDatatable" v-on:perfilRemovido="perfilRemovido($event)"> 
+						<datatable :config="config" id="datatableUsuariosPerfis" :reload="reloadDatatable" v-on:perfilRemovido="perfilRemovido($event)"> 
 							<th style="max-width:30px">ID</th>
 							<th pesquisavel>Nome</th>
 							<th pesquisavel>Descrição</th>
 							<th pesquisavel>Responsável</th>  
 							<th class="text-center">Ações</th>
-						</datatableService> 
+						</datatable> 
 					</div>    
 					<div class="card-footer text-right">
 						<crudBotaoVoltar :url="url_retorno" />   

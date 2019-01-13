@@ -9,7 +9,7 @@ use App\Models\Administrador\Tentativa;
 use Yajra\DataTables\DataTables;
 use Validator;
 use App\Models\Administrador\Comentario_Pergunta;
-     
+use Auth;     
 
 class ComentarioController extends VueCrudController
 {

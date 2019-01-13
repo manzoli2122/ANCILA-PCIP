@@ -55,7 +55,7 @@ class PerfilController extends VueCrudController
 
 
     /**
-    * Função para Adicionar uma Permissao a um Perfil atraves do PerfilServiceInterface
+    * Função para Adicionar uma Permissao a um Perfil 
     *
     * @param Request $request
     *  
@@ -237,7 +237,7 @@ class PerfilController extends VueCrudController
 
 
     /**
-    * Função para retirar um Permissao de um Perfil  atraves do PerfilServiceInterface
+    * Função para retirar um Permissao de um Perfil 
     *
     * @param Request $request
     * 
@@ -260,7 +260,7 @@ class PerfilController extends VueCrudController
     	$perfil->detachPermissao($permissao);  
     	$this->Log( $perfilId  , $permissaoId , $permissao->nome ,  Auth::guard('api')->user()->id , 'Excluir'  ); 
 
-    	return   $this->service->BuscarPermissoesParaAdicionar( $perfilId )   ;  
+    	return   $this->BuscarPermissoesParaAdicionar( $perfilId )   ;  
     }
 
 

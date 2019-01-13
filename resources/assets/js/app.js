@@ -1,24 +1,6 @@
   
 window.Vue = require('vue');
-
  
-
-// Vue.component('crudCard', require('./components/core/crud/card.vue')); 
-// Vue.component('crudHeader', require('./components/core/crud/header.vue')); 
-// Vue.component('crudBotaoExcluir', require('./components/core/crud/botaoExcluir.vue')); 
-// Vue.component('crudBotaoVoltar', require('./components/core/crud/botaoVoltar.vue')); 
-// Vue.component('crudBotaoSalvar', require('./components/core/crud/botaoSalvar.vue')); 
-// Vue.component('crudFormElemento', require('./components/core/crud/ElementoForm.vue')); 
-// Vue.component('Formulario', require('./components/core/crud/Formulario.vue'));  
-// Vue.component('select2', require('./components/core/crud/SelectComponente.vue'));  
- 
-
- 
-
-
-
-
-
 
 window.acertaMenu = function( nome ) {
 

@@ -15,22 +15,22 @@ use Illuminate\Support\Facades\Mail;
 
 use Illuminate\Http\Request;
 
-use App\Service\Seguranca\UsuarioServiceInterface;
+// use App\Service\Seguranca\UsuarioServiceInterface;
 use App\Models\Seguranca\Perfil;
 
 class AuthController extends Controller
 {
 
-    protected $usuarioService; 
+    // protected $usuarioService; 
 
     /**
      * Create a new AuthController instance.
      *
      * @return void
      */
-    public function __construct(UsuarioServiceInterface $service)
+    public function __construct()
     {
-        $this->usuarioService = $service ;
+        // $this->usuarioService = $service ;
         $this->middleware('auth:api', ['except' => ['login' , 'salvarCadastro' , 'resetarSenha' ]]);
     }
 
@@ -139,7 +139,8 @@ class AuthController extends Controller
             $perfil = Perfil::where('nome', 'UsuarioRestrita')->first();
             
             if($perfil &&  $insert->id ){ 
-                $this->usuarioService->adicionarPerfilAoUsuario( $perfil->id, $data['id'], $request );
+                $insert->attachPerfil($perfil, '00000000001' );
+                // $this->usuarioService->adicionarPerfilAoUsuario( $perfil->id, $data['id'], $request );
             }
              
             return response()->json(['message' => 'Usuário cadastrado com sucesso!!!']);

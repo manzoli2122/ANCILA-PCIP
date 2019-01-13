@@ -347,7 +347,7 @@ class UsuarioController extends VueCrudController
     			} 
     			return '<a href="#/'. $this->route . '/'.$linha->id.'/perfil" class="btn btn-primary btn-sm" title="Perfis"><i class="fa fa-id-card"></i></a> ' 
 
-    			.'<a href="'. route('resetar.senha',$linha->id).'" class="btn btn-warning btn-sm" title="Resetar Senha"><i class="fa fa-key"></i></a>'
+    			.'<a href="#" class="btn btn-warning btn-sm" title="Resetar Senha"><i class="fa fa-key"></i></a>'
     			.'<a href="#/'. $this->route . '/edit/'.$linha->id.'" class="btn btn-success btn-sm" title="Editar"><i class="fa fa-pencil"></i></a>'
 
     			.'<button data-id="'.$linha->id.'" btn-desativar class="btn btn-danger btn-sm" title="Destivar"><i class="fa fa-lock"></i></button>' ; 

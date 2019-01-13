@@ -5,34 +5,8 @@ mix.js('resources/assets/js/vendor.js', 'public/js');
     
 mix.js('resources/assets/js/app.js', 'public/js');
   
-// mix.js('resources/assets/js/components/seguranca/permissao/rotas.js', 'public/js/permissao.js');
-
-// mix.js('resources/assets/js/components/seguranca/perfil/rotas.js', 'public/js/perfil.js');
-
-// mix.js('resources/assets/js/components/seguranca/usuario/rotas.js', 'public/js/usuario.js');
-
-// mix.js('resources/assets/js/components/profile/rotas.js', 'public/js/profile.js');
-
-// mix.js('resources/assets/js/components/administrador/disciplina/rotas.js', 'public/js/disciplina.js');
-
-// mix.js('resources/assets/js/components/administrador/assunto/rotas.js', 'public/js/assunto.js');
-
-// mix.js('resources/assets/js/components/administrador/pergunta/rotas.js', 'public/js/pergunta.js');
-
-// mix.js('resources/assets/js/components/administrador/resposta/rotas.js', 'public/js/resposta.js');
-
-// mix.js('resources/assets/js/components/administrador/comentarioPergunta/rotas.js', 'public/js/comentario.js');
-
-// mix.js('resources/assets/js/components/administrador/tentativa/rotas.js', 'public/js/tentativa.js');
-
-
-// mix.js('resources/assets/js/components/administrador/core/rotas.js', 'public/js/administrador.js');
-// mix.js('resources/assets/js/components/estatistica/rotas.js', 'public/js/estatistica.js');
-// mix.js('resources/assets/js/components/api-seguranca/rotas.js', 'public/js/seguranca.js');
 mix.js('resources/assets/js/components/single-page/rotas.js', 'public/js/single.js');
 
-
-// mix.js('resources/assets/js/components/treinamento/treinamento.js', 'public/js/treinamento.js');
  
 /*
 ==========================================================================================================
