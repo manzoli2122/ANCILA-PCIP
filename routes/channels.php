@@ -18,4 +18,4 @@ Broadcast::channel( env('APP_NAME') . '.App.User.{id}', function ($user, $id) {
 });
 
 
-Broadcast::channel( env('APP_NAME') . '.login' , LoginChannel::class);
+// Broadcast::channel( env('APP_NAME') . '.login' , LoginChannel::class);

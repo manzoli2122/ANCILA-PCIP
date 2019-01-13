@@ -19,6 +19,20 @@ export const router = new VueRouter({
 		component: require('../outras/login/Login')
 	},
 	{
+		path: '/cadastro',
+		component: require('../outras/paginas/Cadastro')
+	},
+	{
+		path: '/profile',
+		component: require('../outras/profile/paginas/Index') , 
+		meta: { requiresAuth: true}
+	},
+	{
+		path: '/alterar/senha',
+		component: require('../outras/profile/paginas/alterarSenha') , 
+		meta: { requiresAuth: true}
+	},
+	{
 		path: '/desenvolvedor',
 		component: require('../outras/paginas/Desenvolvedor') , 
 		meta: { requiresAuth: true}

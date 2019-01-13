@@ -1,6 +1,6 @@
  <template>   
  	<aside class="main-sidebar sidebar-light-warning elevation-4" id="sidebar"> 
- 		<a href="/single#/" class="bg-white brand-link ">
+ 		<a href="#/" class="bg-white brand-link ">
  			<img src="/img/ancila.png" alt="SGPM-TEMPLATE" class="brand-image">
  			<span class="brand-text font-weight-light">
  				<b>Teste</b>
@@ -15,7 +15,7 @@
  					<img src="/img/dare.gif" class="img-circle elevation-2" alt="User Image">
  				</div>
  				<div class="info">
- 					<a href="#" class="d-block">{{usuario}}</a>
+ 					<a href="#/profile" class="d-block">{{usuario}}</a>
  				</div>
  			</div> 
  			
@@ -24,21 +24,21 @@
  				<ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" id="menu">
 
  					<li class="nav-item">
- 						<a href="single#/" class="nav-link" id="menu-principal-link">
+ 						<a href="#/" class="nav-link" id="menu-principal-link">
  							<i class="nav-icon fa fa-home"></i>
  							<p>Principal</p>
  						</a>
  					</li>
  					
  					<li class="nav-item" v-if="loggingIn">
- 						<a href="/single#/treinamento" class="nav-link" id="menu-treinamento">
+ 						<a href="#/treinamento" class="nav-link" id="menu-treinamento">
  							<i class="nav-icon fa fa-gamepad text-danger"></i>
  							<p>Treinamento</p>
  						</a>
  					</li>
  					
  					<li class="nav-item" v-if="loggingIn">
- 						<a href="single#/desenvolvedor" class="nav-link" id="menu-desenvolvedor-link">
+ 						<a href="#/desenvolvedor" class="nav-link" id="menu-desenvolvedor-link">
  							<i class="nav-icon fa fa-user"></i>
  							<p>Desenvolvedor</p>
  						</a>

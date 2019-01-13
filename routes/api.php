@@ -108,8 +108,8 @@ Route::namespace('Api\V1\Seguranca')->prefix('v1')->group(function () {
     |--------------------------------------------------------------------------
     | 
     */ 
-    Route::post('permissao/{permissaoId}/perfis/datatable','PermissaoController@BuscarPerfisDataTable'); 
-    Route::post('permissao/datatable', 'PermissaoController@getDatatable')->name('permissao.datatable');  
+    Route::post('permissao/{permissaoId}/perfis/datatable','PermissaoController@BuscarPerfisDataTable');
+    Route::post('permissao/datatable', 'PermissaoController@getDatatable')->name('permissao.datatable');
     Route::resource('permissao','PermissaoController')->except(['create', 'edit', 'index']); 
 
 
