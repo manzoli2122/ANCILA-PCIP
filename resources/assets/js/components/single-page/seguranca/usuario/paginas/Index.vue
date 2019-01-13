@@ -7,14 +7,14 @@
 			<div class="container-fluid"> 
 				<crudCard>
 					<div class="card-body  table-responsive"> 
-						<datatableService :config="config" id="datatableUsuarios"> 
+						<datatable :config="config" id="datatableUsuarios"> 
 							<th pesquisavel style="max-width:90px">CPF</th>
 							<th pesquisavel>Nome</th> 
 							<th pesquisavel>Email</th> 
 							<th pesquisavel>created_at</th> 
 							<th pesquisavel style="max-width:60px">Status</th>
 							<th style="min-width:200px" class="text-center">Ações</th> 
-						</datatableService> 
+						</datatable> 
 					</div>    
 				</crudCard> 
 			</div> 
@@ -23,6 +23,8 @@
 </template>
 
 <script>
+
+	import { userService  }  from '../../../_services';
 
 	export default {
 
@@ -34,20 +36,20 @@
 			return {                
 				config: { 
 					// pdf:{
-					// 	url:this.url + this.$apiUsuario ,  
+					// 	url:userService.getUrl() ,  
 					// },
 					ativacao:{
-						url:this.url + this.$apiUsuario , 
+						url: userService.getUrl() , 
 						item:'Usuário',
 					},
 					exclusao:{
-						url:this.url + this.$apiUsuario,
+						url: userService.getUrl() ,
 						evento:'usuarioRemovido',
 						item:'Usuario',
 					},
 					order: [[ 3, "desc" ]],
 					ajax: { 
-						url: this.url + this.$apiUsuario + '/datatable'
+						url: userService.getUrl() + '/datatable'
 					},
 					columns: [
 					{ data: 'id', name: 'id'  },
@@ -62,17 +64,10 @@
 		},
 
 		created() {
-
 			acertaMenu('menu-seguranca');
-
 			document.getElementById('menu-seguranca-usuario').classList.add("active");
-
-			document.getElementById('li-nav-create').innerHTML = '';   
-			 
+			document.getElementById('li-nav-create').innerHTML = '';   			 
 		},
-
-
-
 
 	}
 

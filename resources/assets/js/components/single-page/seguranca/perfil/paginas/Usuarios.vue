@@ -2,7 +2,7 @@
 	<div v-if="perfil"> 
 		<crudHeader :texto="'Perfil - ' + perfil.nome">
 			<li class="breadcrumb-item">
-				<router-link   to="/perfil" exact><a>Perfis </a></router-link> 
+				<router-link   :to="url_retorno" exact><a>Perfis </a></router-link> 
 			</li> 
 			<li class="breadcrumb-item active">Usuários</li>
 		</crudHeader> 
@@ -13,13 +13,13 @@
 						<h3 class="card-title">Usuários</h3>  
 					</div>
 					<div class="card-body  table-responsive">  
-						<datatableService :config="config" id="datatableUsuarios">  
+						<datatable :config="config" id="datatableUsuarios">  
 							<th pesquisavel style="max-width:90px">CPF</th> 
 							<th pesquisavel>Nome</th> 
-						</datatableService>  
+						</datatable>  
 					</div> 
 					<div class="card-footer text-right">
-						<crudBotaoVoltar url="/perfil" />   
+						<crudBotaoVoltar :url="url_retorno" />   
 					</div>        
 				</crudCard>  
 			</div> 
@@ -30,6 +30,7 @@
 
 <script>
 	
+	import { perfilService  }  from '../../../_services';
 
 	export default {
 
@@ -43,13 +44,14 @@
 				config: {
 					order: [[ 1, "asc" ]],
 					ajax: { 
-						url: this.url + this.$apiPerfil+ '/' + this.$route.params.id + '/usuarios/datatable'
+						url: perfilService.getUrl() + '/' + this.$route.params.id + '/usuarios/datatable'
 					},
 					columns: [
 					{ data: 'user_id', name: 'id'  }, 
 					{ data: 'nome', name: 'nome' }, 
 					],
 				} , 
+				url_retorno:'/perfil',
 			}
 		},
 
@@ -59,22 +61,20 @@
 
 		created() {
 			alertProcessando();
-			axios.get(this.url + this.$apiPerfil + '/' + this.$route.params.id )
+			perfilService.getPerfil( this.$route.params.id) 
 			.then(response => {
-				this.perfil = response.data ;
+				this.perfil = response ;
 				alertProcessandoHide();
 			})
 			.catch(error => { 
 				alertProcessandoHide();
-				toastErro('Não foi possivel achar a Perfil' , error.response.data);
+				toastErro('Não foi possivel achar a Perfil' , error.data);
 				this.$router.push('/perfil'); 
 			});   
 
 			acertaMenu('menu-seguranca');
-
 			document.getElementById('menu-seguranca-perfil').classList.add("active");
-
-			document.getElementById('li-nav-create').innerHTML = '<a href="seguranca#/perfil/create" class="nav-link"><i class="fa fa-plus"></i> Cadastrar Perfil</a>'; 
+			document.getElementById('li-nav-create').innerHTML = '<a href="#/perfil/create" class="nav-link"><i class="fa fa-plus"></i> Cadastrar Perfil</a>'; 
 		}, 
 		
 		

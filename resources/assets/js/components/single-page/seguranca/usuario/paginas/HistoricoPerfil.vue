@@ -1,9 +1,9 @@
 <template>             
 	<div>  
 		<crudHeader :texto="'Usuário - ' + usuario.nome ">
-			<li class="breadcrumb-item"><router-link to="/usuario" exact><a>Usuários</a></router-link></li> 
+			<li class="breadcrumb-item"><router-link :to="url_retorno" exact><a>Usuários</a></router-link></li> 
 			<li class="breadcrumb-item">
-				<router-link :to="'/usuario/' + this.$route.params.id + '/perfil'" exact><a>Perfis</a></router-link>
+				<router-link :to="url_retorno + '/' + this.$route.params.id + '/perfil'" exact><a>Perfis</a></router-link>
 			</li>
 			<li class="breadcrumb-item">Histórico</li>
 		</crudHeader> 
@@ -14,17 +14,17 @@
 						<h3 class="card-title">Histórico de Perfis</h3>  
 					</div>
 					<div class="card-body  table-responsive"> 
-						<datatableService :config="config" id="datatableUsuariosPerfisLog">  
+						<datatable :config="config" id="datatableUsuariosPerfisLog">  
 							<th pesquisavel>Responsável</th>
 							<th pesquisavel>Ação</th>
 							<th pesquisavel>Perfil</th> 
 							<th pesquisavel>Data</th>
 							<th pesquisavel>IP</th>
 							<th pesquisavel>Host</th>
-						</datatableService> 
+						</datatable> 
 					</div>  
 					<div class="card-footer text-right">
-						<crudBotaoVoltar :url="'/usuario/' + this.$route.params.id + '/perfil'" />   
+						<crudBotaoVoltar :url="url_retorno + '/' + this.$route.params.id + '/perfil'" />   
 					</div>  
 				</crudCard > 
 				
@@ -36,6 +36,8 @@
 
 <script>
 	
+	import { userService  }  from '../../../_services';
+
 	export default {
 		
 		props:[ 
@@ -50,7 +52,7 @@
 				config: { 
 					order: [[ 4, "desc" ]],
 					ajax: { 
-						url: this.url + this.$apiUsuario + '/' + this.$route.params.id + '/perfil/log/datatable'
+						url: userService.getUrl() + '/' + this.$route.params.id + '/perfil/log/datatable'
 					},
 					columns: [ 
 					{ data: 'autor.nome', name: 'autor.nome'  },
@@ -61,32 +63,29 @@
 					{ data: 'host', name: 'host'  }, 
 					],
 				} ,   
+				url_retorno:'/usuario',
 			}
 		},
 		
 
 		created() { 
 			alertProcessando();
-			axios.get(this.url + this.$apiUsuario + '/' + this.$route.params.id)
+			userService.getUsuario( this.$route.params.id ) 
 			.then(response => {
-				this.usuario = response.data;
+				this.usuario = response;
 				alertProcessandoHide();
 			})
 			.catch(error => {
-				toastErro('Não foi possivel achar o Usuário', error.response.data);
+				toastErro('Não foi possivel achar o Usuário', error.data);
 				alertProcessandoHide();
 			});  
 
 			acertaMenu('menu-seguranca');
-
 			document.getElementById('menu-seguranca-usuario').classList.add("active");
-
-			document.getElementById('li-nav-create').innerHTML = ''; 
-			
+			document.getElementById('li-nav-create').innerHTML = '';			
 		}, 
 
 		
-
 	}
 	
 </script>

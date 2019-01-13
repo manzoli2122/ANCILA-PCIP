@@ -2,7 +2,7 @@
 	<div v-if="perfil"> 
 		<crudHeader :texto="'Perfil - ' + perfil.nome">
 			<li class="breadcrumb-item">
-				<router-link   to="/perfil" exact><a>Perfis </a></router-link> 
+				<router-link   :to="url_retorno" exact><a>Perfis </a></router-link> 
 			</li> 
 			<li class="breadcrumb-item active">Permissões</li>
 		</crudHeader> 
@@ -13,21 +13,21 @@
 						<h2 class="card-title">Permissões</h2>  
 					</div>
 					<div class="card-body  table-responsive"> 
-						<datatableService :config="config" id="datatablePerfisPermissao" :reload="reloadDatatable" v-on:permissaoRemovida="permissaoRemovida($event)"> 
+						<datatable :config="config" id="datatablePerfisPermissao" :reload="reloadDatatable" v-on:permissaoRemovida="permissaoRemovida($event)"> 
 							<th style="max-width:30px">ID</th>
 							<th pesquisavel>Nome</th>
 							<th pesquisavel>Descrição</th>  
 							<th class="text-center">Ações</th>
-						</datatableService> 
+						</datatable> 
 					</div>    
 					<div class="card-footer text-right">  
-						<crudBotaoVoltar url="/perfil" />   
-						<router-link :to="'/perfil/' + this.$route.params.id + '/permissao/historico'" exact  class="btn btn-warning">
+						<crudBotaoVoltar :url="url_retorno" />   
+						<router-link :to="url_retorno +'/' + this.$route.params.id + '/permissao/historico'" exact  class="btn btn-warning">
 							<i class="fa fa-database"></i> Historico
 						</router-link>
 					</div>  
 				</crudCard> 
-				<formAdicionarPermissao v-if="permissoes.length > 0" v-on:permissaoAdicionada="permissaoAdicionada($event)" :permissoes="permissoes" :url="url + this.$apiPerfil"> </formAdicionarPermissao>  
+				<formAdicionarPermissao v-if="permissoes.length > 0" v-on:permissaoAdicionada="permissaoAdicionada($event)" :permissoes="permissoes" :url="api_url"> </formAdicionarPermissao>  
 			</div> 
 		</div>   
 	</div>
@@ -37,6 +37,7 @@
 <script>
 
 	Vue.component('formAdicionarPermissao', require('./_PermissaoFormAdicionar.vue'));
+	import { perfilService  }  from '../../../_services';
 
 	export default {
 
@@ -52,13 +53,13 @@
 				reloadDatatableLog: false ,
 				config: {
 					exclusao:{
-						url:this.url + this.$apiPerfil + '/' + this.$route.params.id + '/delete/permissao'  ,
+						url: perfilService.getUrl() + '/' + this.$route.params.id + '/delete/permissao'  ,
 						evento:'permissaoRemovida',
 						item:'Permissão',
 					},
 					order: [[ 1, "asc" ]],
 					ajax: { 
-						url: this.url + this.$apiPerfil + '/' + this.$route.params.id + '/permissao/datatable'
+						url: perfilService.getUrl() + '/' + this.$route.params.id + '/permissao/datatable'
 					},
 					columns: [
 					{ data: 'id', name: 'id'  },
@@ -67,7 +68,8 @@
 					{ data: 'action', name: 'action', orderable: false, searchable: false, class: 'text-center'}
 					],
 				} ,
-
+				url_retorno:'/perfil',
+				api_url: perfilService.getUrl() ,
 			}
 		},
 
@@ -81,22 +83,20 @@
 
 		created() {
 			alertProcessando();
-			axios.get(this.url + this.$apiPerfil + '/' + this.$route.params.id )
+			perfilService.getPerfil(this.$route.params.id ) 
 			.then(response => {
 				alertProcessandoHide();
-				this.perfil = response.data ;  
+				this.perfil = response ;  
 			})
 			.catch(error => { 
 				alertProcessandoHide();
-				toastErro('Não foi possivel achar a Perfil' , error.response.data);
-				this.$router.push('/perfil');
+				toastErro('Não foi possivel achar a Perfil' , error.data);
+				this.$router.push(this.url_retorno);
 			});  
 
 			acertaMenu('menu-seguranca');
-
 			document.getElementById('menu-seguranca-perfil').classList.add("active");
-
-			document.getElementById('li-nav-create').innerHTML = '<a href="seguranca#/perfil/create" class="nav-link"><i class="fa fa-plus"></i> Cadastrar Perfil</a>';  
+			document.getElementById('li-nav-create').innerHTML = '<a href="#/perfil/create" class="nav-link"><i class="fa fa-plus"></i> Cadastrar Perfil</a>';  
 
 		}, 
 
@@ -116,13 +116,13 @@
 
 			buscarPermissoes() {
 				alertProcessando();
-				axios.get(this.url + this.$apiPerfil + '/' + this.$route.params.id +'/permissao/adicionar')
+				perfilService.buscarPermissoes(this.$route.params.id )
 				.then(response => {
-					this.permissoes = response.data ;
+					this.permissoes = response ;
 					alertProcessandoHide();
 				})
 				.catch(error => {
-					toastErro('Não foi possivel achar a Permissoes' , error.response.data);
+					toastErro('Não foi possivel achar a Permissoes' , error.data);
 					alertProcessandoHide();
 				});
  

@@ -7,12 +7,12 @@
 			<div class="container-fluid"> 
 				<crudCard>
 					<div class="card-body  table-responsive"> 
-						<datatableService :config="config" id="datatableLogins"> 
+						<datatable :config="config" id="datatableLogins"> 
 							<th pesquisavel style="max-width:20px">ID</th>
 							<th pesquisavel>Nome</th>  
 							<th pesquisavel>navegador</th>  
 							<th pesquisavel   class="text-center">created_at</th> 
-						</datatableService> 
+						</datatable> 
 					</div>    
 				</crudCard> 
 			</div> 
@@ -34,7 +34,7 @@
 
 					order: [[ 3, "desc" ]],
 					ajax: { 
-						url: this.url + this.$apiLogin + '/datatable'
+						url: '/api/v1/loginlog' + '/datatable'
 					},
 					columns: [
 					{ data: 'id', name: 'id'  },
@@ -48,9 +48,7 @@
 
 		created() {
 			acertaMenu('menu-seguranca');
-
-			document.getElementById('menu-seguranca-loginlog').classList.add("active");
-			
+			document.getElementById('menu-seguranca-loginlog').classList.add("active");			
 			document.getElementById('li-nav-create').innerHTML = '';  
 		},
 

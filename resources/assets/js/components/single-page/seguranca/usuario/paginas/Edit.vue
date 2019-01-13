@@ -1,14 +1,14 @@
 <template>             
 	<div> 
-		<crudHeader texto="Adicionar Usuário">
+		<crudHeader texto="Editar Usuário">
 			<li class="breadcrumb-item">
-				<router-link to="/usuario" exact><a>Usuário </a></router-link> 
+				<router-link :to="url_retorno" exact><a>Usuário </a></router-link> 
 			</li>
 			<li class="breadcrumb-item active">Criação</li>
 		</crudHeader>  
 		<div class="content">
 			<div class="container-fluid">   
-				<Formulario :url="url + this.$apiUsuario + '/' + $route.params.id" :form="form" metodo="patch" retorno="usuario">
+				<Formulario :url="api_url" :form="form" metodo="patch" :retorno="url_retorno">
 					
 					<crudFormElemento :errors="form.errors.has('nome')" :errors_texto="form.errors.get('nome')">
 						<label for="nome">Nome:</label>
@@ -19,16 +19,12 @@
 						<label for="apelido">Apelido:</label>
 						<input type="text" id="apelido" name="apelido" class="form-control" v-model="form.apelido" v-bind:class="{ 'is-invalid': form.errors.has('apelido') }"> 
 					</crudFormElemento>
- 
-
+  
 					<crudFormElemento :errors="form.errors.has('email')" :errors_texto="form.errors.get('email')">
 						<label for="email">Email:</label>
 						<input type="text" id="email" name="email" class="form-control" v-model="form.email" v-bind:class="{ 'is-invalid': form.errors.has('email') }">
 					</crudFormElemento> 
-
-
-
-
+ 
 				</Formulario> 
 			</div> 
 		</div>   
@@ -37,7 +33,11 @@
 
 
 <script> 
-	import Form from '../../../../core/Form'; 
+	
+	import Form from '../../../_core/formulario/Form';
+
+	import { userService  }  from '../../../_services';
+
 	export default {
 
 		props:[
@@ -52,7 +52,9 @@
 					apelido: '',       
 					id: '',       
 					email: ''               
-				})
+				}),
+				api_url: userService.getUrl() + '/' + this.$route.params.id,
+				url_retorno:'/usuario',
 			}
 		}, 
 
@@ -68,20 +70,18 @@
 
 		created() {
 			alertProcessando();
-			axios.get(this.url + this.$apiUsuario + '/' + this.$route.params.id )
+			userService.getUsuario( this.$route.params.id ) 
 			.then(response => {
-				this.model = response.data ;
+				this.model = response ;
 				alertProcessandoHide();
 			})
 			.catch(error => {
-				toastErro('Não foi possivel achar o usuario', error.response.data);
+				toastErro('Não foi possivel achar o usuario', error.data);
 				alertProcessandoHide();
 			});
 
 			acertaMenu('menu-seguranca');
-
 			document.getElementById('menu-seguranca-usuario').classList.add("active");
-
 			document.getElementById('li-nav-create').innerHTML = ''; 
 		},
 

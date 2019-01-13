@@ -7,12 +7,12 @@
 			<div class="container-fluid">
 				<crudCard>
 					<div class="card-body  table-responsive"> 
-						<datatableService :config="config"  id="datatablePerfis"> 
+						<datatable :config="config"  id="datatablePerfis"> 
 							<th style="max-width:30px">ID</th>
 							<th pesquisavel>Nome</th>
 							<th pesquisavel>Descrição</th>  
 							<th class="text-center">Ações</th>
-						</datatableService> 
+						</datatable> 
 					</div>    
 				</crudCard> 
 			</div> 
@@ -21,6 +21,8 @@
 </template>
 
 <script>
+	
+	import { perfilService  }  from '../../../_services';
 
 	export default {
 
@@ -32,13 +34,13 @@
 			return {                
 				config: {
 					exclusao:{
-						url:this.url + this.$apiPerfil,
+						url: perfilService.getUrl(),
 						evento:'perfilRemovido',
 						item:'Perfil',
 					},
 					order: [[ 1, "asc" ]],
 					ajax: { 
-						url: this.url + this.$apiPerfil + '/datatable'
+						url: perfilService.getUrl() + '/datatable'
 					},
 					columns: [
 					{ data: 'id', name: 'id'  },
@@ -54,14 +56,10 @@
 
 		created() {
 			acertaMenu('menu-seguranca');
-
 			document.getElementById('menu-seguranca-perfil').classList.add("active");
-
-			document.getElementById('li-nav-create').innerHTML = '<a href="seguranca#/perfil/create" class="nav-link"><i class="fa fa-plus"></i> Cadastrar Perfil</a>';  
+			document.getElementById('li-nav-create').innerHTML = '<a href="#/perfil/create" class="nav-link"><i class="fa fa-plus"></i> Cadastrar Perfil</a>';  
 
 		},
-
- 
 
 	}
 

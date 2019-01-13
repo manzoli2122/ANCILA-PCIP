@@ -18,7 +18,7 @@
 
 <script>
 
-	import Form from "../../../../core/Form";
+	import Form from '../../../_core/formulario/Form';
 
 	export default {
 

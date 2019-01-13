@@ -2,7 +2,7 @@
 	<div v-if="permissao"> 
 		<crudHeader :texto="'Permissão - ' + permissao.nome">
 			<li class="breadcrumb-item">
-				<router-link   to="/permissao" exact><a>Permissões </a></router-link> 
+				<router-link   :to="url_retorno" exact><a>Permissões </a></router-link> 
 			</li>
 			<li class="breadcrumb-item active">Perfis</li>
 		</crudHeader> 
@@ -13,15 +13,15 @@
 						<h3 class="card-title">Perfis</h3>  
 					</div>
 					<div class="card-body  table-responsive"> 
-						<datatableService :config="config" id="datatablePerfis"> 
+						<datatable :config="config" id="datatablePerfis"> 
 							<th style="max-width:50px">ID</th>
 							<th pesquisavel>Nome</th>
 							<th pesquisavel>Descrição</th>  
-						</datatableService>  
+						</datatable>  
 					</div>
 
 					<div class="card-footer text-right">
-						<crudBotaoVoltar url="/permissao" />   
+						<crudBotaoVoltar :url="url_retorno" />   
 					</div>        
 				</crudCard>  
 			</div> 
@@ -32,6 +32,7 @@
 
 <script>
 	
+	import { permissaoService  }  from '../../../_services';
 
 	export default {
 
@@ -45,14 +46,15 @@
 				config: {
 					order: [[ 1, "asc" ]],
 					ajax: { 
-						url: this.url + this.$apiPermissao + '/' + this.$route.params.id + '/perfis/datatable'
+						url: permissaoService.getUrl() + '/' + this.$route.params.id + '/perfis/datatable'
 					},
 					columns: [
 					{ data: 'id', name: 'id'  },
 					{ data: 'nome', name: 'nome' },
 					{ data: 'descricao', name: 'descricao' },  
 					],
-				} , 
+				} ,  
+				url_retorno:'/permissao',
 			}
 		},
 
@@ -62,23 +64,21 @@
 
 		created() { 
 			alertProcessando();
-			axios.get(this.url + this.$apiPermissao + '/' + this.$route.params.id )
+			permissaoService.getPermissao(this.$route.params.id)  
 			.then(response => {
-				this.permissao = response.data ;
+				this.permissao = response ;
 				alertProcessandoHide();
 			})
 			.catch(error => { 
-				toastErro('Não foi possivel achar a Permissão' , error.response.data); 
+				toastErro('Não foi possivel achar a Permissão' , error.data); 
 				alertProcessandoHide();
-				this.$router.push('/permissao');
+				this.$router.push( this.url_retorno );
 			});   
 			
 
 			acertaMenu('menu-seguranca');
-
 			document.getElementById('menu-seguranca-permissao').classList.add("active");
-
-			document.getElementById('li-nav-create').innerHTML = '<a href="seguranca#/permissao/create" class="nav-link"><i class="fa fa-plus"></i> Cadastrar Permissão</a>';
+			document.getElementById('li-nav-create').innerHTML = '<a href="#/permissao/create" class="nav-link"><i class="fa fa-plus"></i> Cadastrar Permissão</a>';
 		}, 
 		
 

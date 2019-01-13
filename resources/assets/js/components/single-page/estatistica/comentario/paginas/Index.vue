@@ -7,14 +7,14 @@
 			<div class="container-fluid">
 				<crudCard>
 					<div class="card-body  table-responsive"> 
-						<datatableService :config="config" id="datatableResposta"> 
+						<datatable :config="config" id="datatableResposta"> 
 							<th pesquisavel style="max-width:35px">ID</th>
 							<th pesquisavel>Texto</th> 
 							<th pesquisavel>Pergunta</th>  
 							<th pesquisavel>Status</th>  
 							<th pesquisavel>Usuario</th>  
 							<th class="align-center" style="width:140px">Ações</th>
-						</datatableService> 
+						</datatable> 
 					</div>    
 				</crudCard> 
 			</div> 
@@ -23,63 +23,59 @@
 </template>
 
 <script>
+	
+	import { comentarioService  }  from '../../../_services';
 
-export default {
+	export default {
 
-	props:[
-	'url' 
-	],  
+		props:[
+		'url' 
+		],  
 
-	data() {
-		return {                
-			config: {
-				ativacao:{
-						url:this.url + this.$apiComentario, 
+		data() {
+			return {                
+				config: {
+					ativacao:{
+						url: comentarioService.getUrl(), 
 						item:'Comentarios',
-				},
-				exclusao:{
-					url:this.url  + this.$apiComentario ,
-					evento:'ComentarioRemovido',
-					item:'Comentarios',
-				},
-				order: [[ 0, "desc" ]],
-				ajax: { 
-					url: this.url  + this.$apiComentario + '/datatable'
-				},
-				columns: [
+					},
+					exclusao:{
+						url: comentarioService.getUrl() ,
+						evento:'ComentarioRemovido',
+						item:'Comentarios',
+					},
+					order: [[ 0, "desc" ]],
+					ajax: { 
+						url: comentarioService.getUrl() + '/datatable'
+					},
+					columns: [
 					{ data: 'id', name: 'id'  },
 					{ data: 'texto', name: 'texto' }, 
 					{ data: 'pergunta_id', name: 'pergunta_id' },  
 					{ data: 'status', name: 'status' },  
 					{ data: 'usuario.nome', name: 'usuario.nome' },  
 					{ data: 'action', name: 'action', orderable: false, searchable: false, class: 'align-center'}
-				],
-			} , 
-			reload:'',
-		}
-	}, 
+					],
+				} , 
+				reload:'',
+			}
+		}, 
 
 
-	created() {
-			
+		created() {			
 			acertaMenu('menu-estatistica');
-
-			document.getElementById('menu-estatistica-comentario').classList.add("active");
-			
-			document.getElementById('li-nav-create').innerHTML = '';  
- 
+			document.getElementById('menu-estatistica-comentario').classList.add("active");		
+			document.getElementById('li-nav-create').innerHTML = ''; 
 		},
 
 
- 
 
-
-}
+	}
 
 </script>
- 
+
 <style > 
 .btn-sm{
-	 margin-left: 10px; 
+	margin-left: 10px; 
 }
 </style>

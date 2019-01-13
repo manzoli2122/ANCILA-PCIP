@@ -1,7 +1,7 @@
 <template>
 	<div>   
 		<div class="content">
-			<div class="container-fluid"   > 
+			<div class="container-fluid"> 
 
 				<info v-if="disciplina_id_atual && pergunta" :pergunta="pergunta" :rank="rank" :disciplina_atual="disciplina_atual"></info> 
 				
@@ -56,8 +56,7 @@
 						</div>
 					</div> 
 				</crudCard> 
-
-
+ 
 
 				<crudCard  v-show="respondido" color="card-danger" v-if="pergunta">
 					<div class="card-header with-border text-center">
@@ -73,11 +72,7 @@
 						<button style="width: 90%" class="btn btn-success  " v-on:click="criarComentario()"><i class="fa fa-check"></i> Enviar</button>
 					</div> 
 				</crudCard> 
-
-
-
-
-				
+  
 
 				<div class="row" > 
 					<div class="col-12 col-md-6 col-lg-6" v-if="disciplina_id_atual"> 
@@ -112,8 +107,10 @@
 
 
 <script>
+	
+	import { disciplinaService , treinamentoService  }  from '../../_services';
 
-	Vue.component('formDificuldade', require('./dificuldade.vue'));
+	// Vue.component('formDificuldade', require('./dificuldade.vue'));
 	Vue.component('formDisciplina', require('./disciplina.vue'));
 	Vue.component('tabelaDificuldade', require('./TabelaDificuldade.vue'));
 	Vue.component('historico', require('./Historico.vue'));
@@ -203,18 +200,18 @@
 					this.disciplinas = JSON.parse( localStorage.getItem('disciplinas') ) ; 
 				}
 				else{
-					alertProcessando(); 			
-					axios.get(this.url + this.$apiDisciplina + '/all'  )
+					alertProcessando(); 	
+					disciplinaService.getAll()	 
 					.then(response => {
-						this.disciplinas = response.data ; 
-						localStorage.setItem('disciplinas', JSON.stringify( response.data ) );
+						this.disciplinas = response ; 
+						localStorage.setItem('disciplinas', JSON.stringify( response ) );
 						alertProcessandoHide();
 					})
 					.catch(error => {
 						toastErro('Não foi possivel achar as disciplinas todas'); 
 						alertProcessandoHide();
-						if( error.response.status == 401 ){ 
-							this.logout();
+						if( error.status == 401 ){ 
+							this.$store.dispatch('authentication/logout');
 						} 
 					});
 				} 
@@ -251,18 +248,19 @@
 					let data = {};  
 					data['disciplina_id'] = [ this.disciplina_id_atual  ];  
 					alertProcessando(); 
-					axios.post(this.url + this.$apiTreinamento + '/todas' , data  )
+
+					treinamentoService.getTodasPerguntas(data) 
 					.then(response => {
-						this.todas = response.data ; 
-						localStorage.setItem('todas', JSON.stringify( response.data ) );
+						this.todas = response ; 
+						localStorage.setItem('todas', JSON.stringify( response ) );
 						this.proximaPergunta(); 
 						alertProcessandoHide();
 					})
 					.catch(error => {
 						toastErro('Não foi possivel achar as   todas perguntas'); 
 						alertProcessandoHide();
-						if( error.response.status == 401 ){ 
-							this.logout();
+						if( error.status == 401 ){ 
+							this.$store.dispatch('authentication/logout');
 						} 
 					});
 				} 
@@ -271,10 +269,10 @@
 
 
 
-			logout(){ 
-				localStorage.clear( ); 
-				window.location = window.location.protocol+ '//' + window.location.host + '/login';
-			},
+			// logout(){ 
+			// 	localStorage.clear( ); 
+			// 	window.location = window.location.protocol+ '//' + window.location.host + '/login';
+			// },
 
 
 
@@ -295,10 +293,8 @@
 						this.pergunta = '' ;
 						this.respondido = true ;
 						this.concluido = true ;
-					}
-					
-				}
-
+					} 
+				} 
 			},
 
 
@@ -326,12 +322,13 @@
 				data['pergunta_id'] = this.pergunta.id ; 
 				data['selected'] = this.selected ;  
 				data['latitude'] = this.latitude  ; 
-				data['longitude'] = this.longitude  ; 
-				axios.post( this.url + this.$apiTreinamento , data  )
+				data['longitude'] = this.longitude  ;
+
+				treinamentoService.responder(data)  
 				.then(response => { })
 				.catch(error => { 
-					if( error.response.status == 401 ){ 
-						this.logout();
+					if( error.status == 401 ){ 
+						this.$store.dispatch('authentication/logout');
 					} 
 				});
 
@@ -350,16 +347,16 @@
 				data['pergunta_id'] = this.pergunta.id ; 
 				data['status'] = 'Criada' ;  
 				alertProcessando();
-				axios.post(this.url + this.$apiTreinamento + '/criar/comentario'  , data  )
+				treinamentoService.criarComentario(data)  
 				.then(response => {  
 					alertProcessandoHide();
-					toastSucesso(response.data); 
+					toastSucesso(response); 
 					this.comentario = '';  
 				})
 				.catch(error => { 
 					alertProcessandoHide(); 
 					toastErro('Não foi Possivel Cadastrar o comentário.');
-					toastErro(error.response.data.message);
+					toastErro(error.data.message);
 				});  
 			},
 
@@ -368,28 +365,28 @@
 			getHistorico(){
 				let data = {};  
 				data['disciplina'] = [ this.disciplina_id_atual  ];  
-				axios.post(  this.url + this.$apiTreinamento + '/historico' , data)
+				treinamentoService.getHistorico(data)   
 				.then(response => {
-					this.historico = response.data  ;
+					this.historico = response  ;
 				})
 				.catch(error => {
 					console.log('erro ao atualiza HISTORICO');
-					if( error.response.status == 401 ){ 
-						this.logout();
+					if( error.status == 401 ){ 
+						this.$store.dispatch('authentication/logout');
 					} 
 				});
 			},
 
 
 			getRank(){
-				axios.get(  this.url + this.$apiTreinamento + '/meu/rank' )
+				treinamentoService.getRank() 
 				.then(response => {
-					this.rank = response.data  ;
+					this.rank = response  ;
 				})
 				.catch(error => {
 					console.log('erro ao atualiza rank');
-					if( error.response.status == 401 ){ 
-						this.logout();
+					if( error.status == 401 ){ 
+						this.$store.dispatch('authentication/logout');
 					} 
 				});
 			},

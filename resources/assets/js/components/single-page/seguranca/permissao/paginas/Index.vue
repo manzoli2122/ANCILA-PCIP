@@ -7,12 +7,12 @@
 			<div class="container-fluid">
 				<crudCard>
 					<div class="card-body  table-responsive"> 
-						<datatableService :config="config" id="datatablePermissao"> 
+						<datatable :config="config" id="datatablePermissao"> 
 							<th style="max-width:50px">ID</th>
 							<th pesquisavel>Nome</th>
 							<th pesquisavel>Descrição</th>  
 							<th class="text-center">Ações</th>
-						</datatableService> 
+						</datatable> 
 					</div>    
 				</crudCard> 
 			</div> 
@@ -21,6 +21,8 @@
 </template>
 
 <script>
+	
+	import { permissaoService  }  from '../../../_services';
 
 	export default {
 
@@ -32,13 +34,13 @@
 			return {                
 				config: {
 					exclusao:{
-						url:this.url + this.$apiPermissao,
+						url: permissaoService.getUrl() ,
 						evento:'permissaoRemovida',
 						item:'Permissão',
 					},
 					order: [[ 1, "asc" ]],
 					ajax: { 
-						url: this.url + this.$apiPermissao + '/datatable'
+						url: permissaoService.getUrl() + '/datatable'
 					},
 					columns: [
 					{ data: 'id', name: 'id'  },
@@ -56,10 +58,8 @@
 		created() {
 			
 			acertaMenu('menu-seguranca');
-
 			document.getElementById('menu-seguranca-permissao').classList.add("active");
-
-			document.getElementById('li-nav-create').innerHTML = '<a href="seguranca#/permissao/create" class="nav-link"><i class="fa fa-plus"></i> Cadastrar Permissão</a>'; 
+			document.getElementById('li-nav-create').innerHTML = '<a href="#/permissao/create" class="nav-link"><i class="fa fa-plus"></i> Cadastrar Permissão</a>'; 
 		},
 
 

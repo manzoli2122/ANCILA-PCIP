@@ -116,9 +116,6 @@
 
  		created() { 
  			acertaMenu('menu-desenvolvedor');
-
-			// document.getElementById('menu-seguranca-loginlog').classList.add("active");
-
 			document.getElementById('li-nav-create').innerHTML = '';  
 		},
 

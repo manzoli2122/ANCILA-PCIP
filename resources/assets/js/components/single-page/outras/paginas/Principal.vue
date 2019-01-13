@@ -34,33 +34,10 @@
 		},
 
 		created() { 
-			acertaMenu('menu-principal'); 
-
-			document.getElementById('li-nav-create').innerHTML = ''; 
-
-			// document.getElementById('header').hidden = true ;  
-
-			// document.getElementById('sidebar').hidden = true ;  
-
-			// document.getElementById('contentwrapper').style.marginLeft = "0px" ;  
-			
-			
+			acertaMenu('menu-principal');  
+			document.getElementById('li-nav-create').innerHTML = '';   
 		},
-
-		 
-
-		// destroyed(){
-
-		// 	document.getElementById('header').hidden = false ;  
-
-		// 	document.getElementById('sidebar').hidden = false ;  
-
-		// 	document.getElementById('contentwrapper').style.marginLeft = "250px" ;  
-			
-
-		// }
-	 
-
+ 
 	}
 
 </script>
