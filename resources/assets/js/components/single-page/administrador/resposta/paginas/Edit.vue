@@ -2,15 +2,13 @@
 	<div>
 		<crudHeader texto="Alterar Resposta">
 			<li class="breadcrumb-item">
-				<router-link   to="/resposta" exact><a>Respostas </a></router-link> 
+				<router-link   :to="url_retorno" exact><a>Respostas </a></router-link> 
 			</li>
 			<li class="breadcrumb-item active">Edição</li>
 		</crudHeader>  
 		<div class="content">
 			<div class="container-fluid">
-				<Formulario :url="url + this.$apiResposta  +'/' + $route.params.id" :form="form" metodo="patch" retorno="resposta">
-					
-
+				<Formulario :url="api_url" :form="form" metodo="patch" :retorno="url_retorno">		
 					<crudFormElemento :errors="form.errors.has('texto')" :errors_texto="form.errors.get('texto')"> 
 						<label for="texto">Texto da Resposta:</label>
 						<textarea id="texto" name="texto" class="form-control" v-model="form.texto" style="height:200px" v-bind:class="{ 'is-invalid': form.errors.has('texto') }"></textarea> 
@@ -34,7 +32,9 @@
 
 <script>
 
-	import Form from '../../../../core/Form';
+	import Form from '../../../_core/formulario/Form';
+
+	import { respostaService  }  from '../../../_services';
 
 	export default {
 
@@ -48,7 +48,9 @@
 				form: new Form({
 					texto: '',                        
                     correta: 'false'             
-				})
+				}),
+				api_url: respostaService.getUrl() + '/' + this.$route.params.id,
+				url_retorno:'/resposta',
 			}
 		},
 
@@ -61,26 +63,25 @@
 
 		created() {
 			alertProcessando();
-			axios.get(this.url + this.$apiResposta + '/' + this.$route.params.id )
+			respostaService.getResposta( this.$route.params.id ) 
 			.then(response => {
-				this.model = response.data ;
+				this.model = response ;
 				alertProcessandoHide();
 			})
 			.catch(error => {
-				toastErro('Não foi possivel achar o Assunto', error.response.data);
+				toastErro('Não foi possivel achar o Assunto', error.data);
+				if ( error.status === 401) {
+					this.$store.dispatch('authentication/logout');			
+				}
 				alertProcessandoHide();
 			});
 
 			acertaMenu('menu-administrador');
-
-			document.getElementById('menu-administrador-resposta').classList.add("active");
-			
+			document.getElementById('menu-administrador-resposta').classList.add("active");		
 			document.getElementById('li-nav-create').innerHTML = '';
 			
 		},
 
 	}
-
-
 
 </script>

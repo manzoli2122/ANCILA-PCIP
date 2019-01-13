@@ -22,6 +22,8 @@
 </template>
 
 <script>
+	
+	import { respostaService  }  from '../../../_services';
 
 	export default {
 
@@ -33,17 +35,17 @@
 			return {                
 				config: {
 					ativacao:{
-						url:this.url + this.$apiResposta, 
+						url: respostaService.getUrl() , 
 						item:'Respostas',
 					},
 					exclusao:{
-						url:this.url + this.$apiResposta ,
+						url: respostaService.getUrl() ,
 						evento:'respostaRemovida',
 						item:'Respostas',
 					},
 					order: [[ 0, "desc" ]],
 					ajax: { 
-						url: this.url + this.$apiResposta + '/datatable'
+						url: respostaService.getUrl() + '/datatable'
 					},
 					columns: [
 					{ data: 'id', name: 'id'  },
@@ -61,9 +63,7 @@
 		created() {
 
 			acertaMenu('menu-administrador');
-
-			document.getElementById('menu-administrador-resposta').classList.add("active");
-			
+			document.getElementById('menu-administrador-resposta').classList.add("active");		
 			document.getElementById('li-nav-create').innerHTML = '';  
 
 

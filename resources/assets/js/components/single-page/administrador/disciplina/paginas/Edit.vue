@@ -75,7 +75,7 @@
 				alertProcessandoHide();
 			})
 			.catch(error => {
-				toastErro('Não foi possivel achar a Disciplina', error.response.data);
+				toastErro('Não foi possivel achar a Disciplina', error.data);
 				alertProcessandoHide();
 				if ( error.status === 401) {
 					this.$store.dispatch('authentication/logout');			

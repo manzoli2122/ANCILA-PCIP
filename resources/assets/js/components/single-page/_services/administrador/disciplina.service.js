@@ -1,14 +1,14 @@
-import { authHeader } from '../_helpers'; 
+import { authHeader } from '../../_helpers'; 
 
  
-export const assuntoService = {
-	getAssunto ,
-	getPerguntasPorAssunto,
+export const disciplinaService = {
+	getAll , 
 	getUrl,
+	getDisciplina,
 };
 
 
-const url = '/api/v1/assunto' ;
+const url = '/api/v1/disciplina' ;
 
 
 
@@ -18,9 +18,9 @@ function getUrl(  ) {
 
 
 
-function getAssunto( id ) { 
+function getAll(  ) { 
 	return  new Promise((resolve, reject) => {
-		axios.get( url + '/' + id  , {headers: authHeader() }  )
+		axios.get( url + '/all'  , {headers: authHeader() }  )
 		.then(response => {    
 			resolve( response.data);  
 		})
@@ -29,12 +29,12 @@ function getAssunto( id ) {
 		}) 
 	}); 
 }
- 
 
- 
-function getPerguntasPorAssunto( id ) { 
+
+
+function getDisciplina( id ) { 
 	return  new Promise((resolve, reject) => {
-		axios.get( url + '/' + id + '/perguntas'  , {headers: authHeader() }  )
+		axios.get( url + '/' + id  , {headers: authHeader() }  )
 		.then(response => {    
 			resolve( response.data);  
 		})

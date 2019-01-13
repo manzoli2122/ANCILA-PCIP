@@ -2,14 +2,14 @@
 	<div> 
 		<crudHeader texto="Adicionar Pergunta">
 			<li class="breadcrumb-item">
-				<router-link to="/pergunta" exact><a>Perguntas </a></router-link> 
+				<router-link :to="url_retorno" exact><a>Perguntas </a></router-link> 
 			</li>
 			<li class="breadcrumb-item active">Criação</li>
 		</crudHeader>  
 		<div class="content">
 			<div class="container-fluid">   
 					
-				<Formulario :url="url + this.$apiPergunta " :form="form" metodo="post" retorno="pergunta">	
+				<Formulario :url="api_url" :form="form" metodo="post" :retorno="url_retorno">	
 					<div class="row">
 						<div class="col-md-8"> 
 							<crudFormElemento :errors="form.errors.has('texto')" :errors_texto="form.errors.get('texto')">
@@ -69,7 +69,12 @@
 
 
 <script> 
-	import Form from '../../../../core/Form'; 
+
+	import Form from '../../../_core/formulario/Form';
+
+	import { perguntaService , assuntoService }  from '../../../_services';
+
+
 	export default {
 
 		props:[
@@ -87,6 +92,8 @@
 					status:'Criada',    
 
 				}),
+				api_url: perguntaService.getUrl(),
+				url_retorno:'/pergunta',
 				novaLinha:'nova linha = <br>', 
 				negrito:' =  <b>  texto </b>', 
 				vermelho:' =  <b class="text-danger"> texto </b>', 
@@ -98,9 +105,10 @@
 		}, 
 
 		created() {
-			axios.get(this.url  + this.$apiAssunto + '/all'  )
+
+			assuntoService.getAll() 
 			.then(response => {
-				this.assunto = response.data ;
+				this.assunto = response ;
 			})
 			.catch(error => {
 				toastErro('Não foi possivel achar os assunto');
@@ -108,10 +116,8 @@
 			});
 			
 			acertaMenu('menu-administrador');
-
-			document.getElementById('menu-administrador-pergunta').classList.add("active");
- 
-			document.getElementById('li-nav-create').innerHTML = '<a href="admin#/pergunta/create" class="nav-link"><i class="fa fa-plus"></i> Cadastrar Pergunta</a>';  
+			document.getElementById('menu-administrador-pergunta').classList.add("active"); 
+			document.getElementById('li-nav-create').innerHTML = '<a href="#/pergunta/create" class="nav-link"><i class="fa fa-plus"></i> Cadastrar Pergunta</a>';  
 		},
 
 	} 

@@ -2,7 +2,7 @@
 	<div v-if="model" id="inicio">
 		<crudHeader :texto="'Pergunta - ' + model.id ">
 			<li class="breadcrumb-item">
-				<router-link   to="/pergunta" exact><a>Perguntas </a></router-link> 
+				<router-link   :to="url_retorno" exact><a>Perguntas </a></router-link> 
 			</li>
 			<li class="breadcrumb-item active">Exibição</li>
 		</crudHeader>    
@@ -103,7 +103,7 @@
 				resposta_id:'',
 				visualizarResposta:false,
 				visualizarEditarResposta:false,
-
+				url_retorno:'/pergunta',
 			}
 		},
 
@@ -117,7 +117,7 @@
 			this.buscarModel(); 
 			acertaMenu('menu-administrador'); 
 			document.getElementById('menu-administrador-pergunta').classList.add("active"); 
-			document.getElementById('li-nav-create').innerHTML = '<a href="admin#/pergunta/create" class="nav-link"><i class="fa fa-plus"></i> Cadastrar Pergunta</a>';  
+			document.getElementById('li-nav-create').innerHTML = '<a href="#/pergunta/create" class="nav-link"><i class="fa fa-plus"></i> Cadastrar Pergunta</a>';  
 		},
 
 
@@ -129,8 +129,7 @@
 
 			buscarModel(){
 				alertProcessando();
-				perguntaService.getPergunta( this.$route.params.id)
-				// axios.get(this.url + this.$apiPergunta + '/' + this.$route.params.id )
+				perguntaService.getPergunta( this.$route.params.id) 
 				.then(response => {
 					this.model = response ;
 					alertProcessandoHide();
@@ -189,8 +188,7 @@
 				data['texto'] = this.resposta ;  
 
 				alertProcessando();
-				respostaService.editarResposta(this.resposta_id , data )
-				// axios.patch(this.url+this.$apiPergunta+'/editar/resposta/'+this.resposta_id,data)
+				respostaService.editarResposta(this.resposta_id , data ) 
 				.then(response => {  
 					toastSucesso(response); 
 					this.resposta = '';
@@ -220,8 +218,7 @@
 				data['correta'] = false ;
 
 				alertProcessando();
-				respostaService.criarResposta(  data )
-				// axios.post(this.url + this.$apiPergunta + '/criar/resposta'  , data  )
+				respostaService.criarResposta(  data ) 
 				.then(response => {  
 					toastSucesso(response); 
 					this.resposta = '';
@@ -238,26 +235,21 @@
 
 
 
-			alterarResposta(resposta){
-				
-				let data = {}; 
-
-				data['resposta_id'] = resposta ;
+			alterarResposta(resposta){ 
+				let data = {};  
+				data['resposta_id'] = resposta ; 
 				alertProcessando();
-				axios.post(this.url + this.$apiPergunta + '/alterar/resposta/' + this.$route.params.id , data  )
+				perguntaService.alterarResposta( this.$route.params.id , data )  
 				.then(response => {
-					this.model = response.data ;					 
+					this.model = response ;
+					alertProcessandoHide();					 
 				})
 				.catch(error => {
-					console.log(errors);
-				});
-				alertProcessandoHide();
-
+					console.log(error);
+					alertProcessandoHide();
+				}); 
 			},
-
-
-
-
+ 
 		},
 
 

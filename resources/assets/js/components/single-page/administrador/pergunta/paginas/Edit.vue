@@ -2,13 +2,13 @@
 	<div v-if="model && assunto">
 		<crudHeader texto="Alterar Pergunta">
 			<li class="breadcrumb-item">
-				<router-link   to="/pergunta" exact><a>Perguntas </a></router-link> 
+				<router-link   :to="url_retorno" exact><a>Perguntas </a></router-link> 
 			</li>
 			<li class="breadcrumb-item active">Edição</li>
 		</crudHeader>  
 		<div class="content">
 			<div class="container-fluid">
-				<Formulario :url="url + this.$apiPergunta  +'/' + $route.params.id" :form="form" metodo="patch" retorno="pergunta"> 
+				<Formulario :url="api_url" :form="form" metodo="patch" :retorno="url_retorno"> 
 					<div class="row">
 						<div class="col-md-8"> 
 							<crudFormElemento :errors="form.errors.has('texto')" :errors_texto="form.errors.get('texto')">
@@ -28,7 +28,6 @@
 									  <p> <u> sublinhado </u> {{sublinhado}} </p>
 									  <p> <i> italico </i> {{italico}} </p> 
 								</div>    
-								<!-- <div class="card-footer text-center"> 	</div>  -->
 							</crudCard>
 						</div>
 					</div>
@@ -80,7 +79,9 @@
 
 <script>
 
-	import Form from '../../../../core/Form';
+	import Form from '../../../_core/formulario/Form';
+
+	import { perguntaService , assuntoService }  from '../../../_services';
 
 	export default {
 
@@ -100,6 +101,8 @@
 					status:'',    
 
 				}),
+				api_url: perguntaService.getUrl() + '/' + this.$route.params.id,
+				url_retorno:'/pergunta',
 				novaLinha:'nova linha = <br>', 
 				negrito:' =  <b>  texto </b>', 
 				vermelho:' =  <b class="text-danger"> texto </b>', 
@@ -123,31 +126,30 @@
 
 
 			alertProcessando();
-			axios.get(this.url  + this.$apiPergunta  + '/' + this.$route.params.id )
+			perguntaService.getPergunta(this.$route.params.id) 
 			.then(response => {
-				this.model = response.data ;
+				this.model = response ;
 				alertProcessandoHide();
 			})
 			.catch(error => {
-				toastErro('Não foi possivel achar a pergunta', error.response.data);
+				toastErro('Não foi possivel achar a pergunta', error.data);
 				alertProcessandoHide();
+				if ( error.status === 401) {
+					this.$store.dispatch('authentication/logout');			
+				}
 			});
 
-
-			axios.get(this.url + this.$apiAssunto + '/all'  )
+			assuntoService.getAll() 
 			.then(response => {
-				this.assunto = response.data ;
+				this.assunto = response ;
 			})
 			.catch(error => {
 				toastErro('Não foi possivel achar os assunto');
-
 			});
 
 			acertaMenu('menu-administrador');
-
-			document.getElementById('menu-administrador-pergunta').classList.add("active");
- 
-			document.getElementById('li-nav-create').innerHTML = '<a href="admin#/pergunta/create" class="nav-link"><i class="fa fa-plus"></i> Cadastrar Pergunta</a>';  
+			document.getElementById('menu-administrador-pergunta').classList.add("active"); 
+			document.getElementById('li-nav-create').innerHTML = '<a href="#/pergunta/create" class="nav-link"><i class="fa fa-plus"></i> Cadastrar Pergunta</a>';  
 			
 		},
 

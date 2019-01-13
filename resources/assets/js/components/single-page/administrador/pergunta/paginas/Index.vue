@@ -7,7 +7,7 @@
 			<div class="container-fluid">
 				<crudCard>
 					<div class="card-body  table-responsive"> 
-						<datatableService :config="config" id="datatablePergunta"> 
+						<datatable :config="config" id="datatablePergunta"> 
 							<th pesquisavel style="max-width:35px">ID</th>
 							<th pesquisavel>Texto</th> 
 							<th pesquisavel>Assunto</th>       
@@ -15,7 +15,7 @@
 							<th pesquisavel>Status</th>       
 							<th pesquisavel>Disciplina</th> 
 							<th class="align-center" style="width:150px">Ações</th> 
-						</datatableService> 
+						</datatable> 
 					</div>    
 				</crudCard> 
 			</div> 
@@ -24,6 +24,8 @@
 </template>
 
 <script>
+	
+	import { perguntaService  }  from '../../../_services';
 
 	export default {
 
@@ -35,10 +37,10 @@
 			return {                
 				config: {
 					pdf:{
-						url:this.url  + this.$apiPergunta ,  
+						url: perguntaService.getUrl() ,  
 					},
 					ativacao:{
-						url:this.url + this.$apiPergunta , 
+						url: perguntaService.getUrl() , 
 						item:'Pergunta',
 					},
 					exclusao:{
@@ -48,7 +50,7 @@
 					},
 					order: [[ 0, "desc" ]],
 					ajax: { 
-						url: this.url + this.$apiPergunta + '/datatable'
+						url: perguntaService.getUrl() + '/datatable'
 					},
 					columns: [
 					{ data: 'id', name: 'pergunta.id'  },
@@ -65,20 +67,13 @@
 		}, 
 
 
-		created() {
-			
+		created() {			
 			acertaMenu('menu-administrador');
-
-			document.getElementById('menu-administrador-pergunta').classList.add("active");
- 
-			document.getElementById('li-nav-create').innerHTML = '<a href="admin#/pergunta/create" class="nav-link"><i class="fa fa-plus"></i> Cadastrar Pergunta</a>';  
-			 
+			document.getElementById('menu-administrador-pergunta').classList.add("active"); 
+			document.getElementById('li-nav-create').innerHTML = '<a href="#/pergunta/create" class="nav-link"><i class="fa fa-plus"></i> Cadastrar Pergunta</a>'; 	 
 		},
 
-
-
-		 
-
+ 
 	}
 
 </script>

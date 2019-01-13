@@ -1,14 +1,36 @@
-import { authHeader } from '../_helpers'; 
+import { authHeader } from '../../_helpers'; 
 
  
 export const respostaService = {
 	editarResposta,
 	criarResposta,
-	
+	getUrl,
+	getResposta,
 };
 
 
 const url = '/api/v1/resposta' ;
+
+
+
+function getUrl(  ) { 
+	return  url; 
+}
+
+
+
+function getResposta( id ) { 
+	return  new Promise((resolve, reject) => {
+		axios.get( url + '/' + id  , {headers: authHeader() }  )
+		.then(response => {    
+			resolve( response.data);  
+		})
+		.catch(error => {  
+			reject(error.response);
+		}) 
+	}); 
+}
+ 
 
 
 
