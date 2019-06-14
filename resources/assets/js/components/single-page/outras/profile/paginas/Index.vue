@@ -48,23 +48,23 @@
 				usuario:'',
 			}
 		},
-
-		 
+ 
 
 		computed: {
- 			 
-
+ 			  
  			user () {
  				if(this.$store.state.authentication.user){
  					return this.$store.state.authentication.user ; 
  				}
  				return'' ; 
  			},
-
- 			 
- 			 
-
+ 
  		},
+
+ 		created() { 
+			acertaMenu('menu-principal');  
+			document.getElementById('li-nav-create').innerHTML = '';   
+		},
 
 	}
 

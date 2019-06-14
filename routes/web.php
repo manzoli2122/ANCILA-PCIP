@@ -11,10 +11,12 @@
 // Route::get('/seguranca', function () {   return view('seguranca.index');})->name('seguranca');
 // Route::get('/admin', function () {    return view('administrador.index');})->name('admin');
 
-Route::get('/single', function () {    return view('single.index'); } ) ;
+// Route::get('/single', function () {    return view('single.index'); } ) ;
+Route::get('/single', 'HomeController@home') ;
  
 // Route::get('/', function () {    return view('welcome');})->name('inicio');
-Route::get('/', function () {    return redirect('single'); })->name('inicio');
+// Route::get('/', function () {    return redirect('single'); })->name('inicio');
+Route::get('/','HomeController@home')->name('inicio');
  
 // Route::get('/desenvolvedor',function(){return view('desenvolvedor');})->name('desenvolvedor');
 

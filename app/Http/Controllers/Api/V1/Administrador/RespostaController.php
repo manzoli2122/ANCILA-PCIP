@@ -24,7 +24,7 @@ class RespostaController extends VueCrudController
         $this->route = 'resposta';
         
 
-        $this->middleware('auth:api', ['except' => ['Ativar' ] ]);
+        $this->middleware('auth:api');
         
         
 

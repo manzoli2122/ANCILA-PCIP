@@ -7,30 +7,29 @@ use App\Http\Controllers\Controller;
 use App\User;
 use Exception;
 use Validator;
-use App\Models\Seguranca\LogLogin; 
+
 use App\Mail\ResetSenhaMail; 
-use App\Mail\LoginSuccessMail; 
 use Illuminate\Support\Facades\Mail; 
 
 
 use Illuminate\Http\Request;
 
-// use App\Service\Seguranca\UsuarioServiceInterface;
+use App\Service\Seguranca\UsuarioServiceInterface;
 use App\Models\Seguranca\Perfil;
 
 class AuthController extends Controller
 {
 
-    // protected $usuarioService; 
+    protected $usuarioService; 
 
     /**
      * Create a new AuthController instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(UsuarioServiceInterface $service)
     {
-        // $this->usuarioService = $service ;
+        $this->usuarioService = $service ;
         $this->middleware('auth:api', ['except' => ['login' , 'salvarCadastro' , 'resetarSenha' ]]);
     }
 
@@ -139,8 +138,7 @@ class AuthController extends Controller
             $perfil = Perfil::where('nome', 'UsuarioRestrita')->first();
             
             if($perfil &&  $insert->id ){ 
-                $insert->attachPerfil($perfil, '00000000001' );
-                // $this->usuarioService->adicionarPerfilAoUsuario( $perfil->id, $data['id'], $request );
+                $this->usuarioService->adicionarPerfilAoUsuario( $perfil->id, $data['id'], $request );
             }
              
             return response()->json(['message' => 'Usuário cadastrado com sucesso!!!']);
@@ -179,23 +177,11 @@ class AuthController extends Controller
             return response()->json(['error' => 'Usuário não encontrado'], 404);
         }
 
-        $data = request()->all( );
-
-        $data['ip_v4']      = getenv("REMOTE_ADDR");
-        // $data['host']       = gethostbyaddr(getenv("REMOTE_ADDR")); 
-        $data['user_id']    = request('id') ; 
-        $data['password']   = bcrypt(request('password'))  ;
-        $data['navegador']  = request()->server()['HTTP_USER_AGENT']; 
-
-        LogLogin::create($data);
-
         $credentials = request(['id', 'password']);
 
-        if (! $token = Auth::guard('api')->claims(['user' => $user->only(['nome' , 'email', 'apelido'  ]) , 'perfis' =>json_decode($user->cachedPerfis())->perfis ])->attempt($credentials)) {
+        if (! $token = Auth::guard('api')->attempt($credentials)) {
             return response()->json(['error' => 'Senha Incorreta'], 400);
         }
-
-        Mail::to( 'manzoli2122@gmail.com' )->send(new LoginSuccessMail(  $user ));
 
         return $this->respondWithToken($token);
     }

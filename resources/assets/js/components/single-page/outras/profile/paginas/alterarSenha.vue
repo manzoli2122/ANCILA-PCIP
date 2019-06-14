@@ -46,7 +46,12 @@
 				})
 			}
 		}, 
- 
+ 		
+ 		created() { 
+			acertaMenu('menu-principal');  
+			document.getElementById('li-nav-create').innerHTML = '';   
+		},
+		
 	}
 
 </script>

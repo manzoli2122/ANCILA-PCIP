@@ -39,7 +39,7 @@
 
 		computed:{
 			url_pdf : function(){
-				return this.config.ajax.url + '/pdf?' + jQuery.param( this.datatable.ajax.params() )   ;
+				return this.config.ajax.url + '/pdf?token=' + JSON.parse(localStorage.getItem('user')) + '&' + jQuery.param( this.datatable.ajax.params() )   ; // b=1&
 			}
 		},
 			
@@ -191,7 +191,12 @@
 			        }
 			        
 			    }; 
-			    var config = _.merge( configPadrao , this.config ); 		    
+			    
+			     	
+			    var config = jQuery.extend(true, {}, configPadrao , this.config ); 	
+			    // var config = _.merge( configPadrao , this.config ); 	
+			    
+			  
 			    $(seletorTabela + ' thead th[pesquisavel]').each(function() {
 			    // Adiciona os campos para busca individual das colunas
 			    	var title = $(seletorTabela + ' thead th').eq($(this).index()).text();

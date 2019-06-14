@@ -3,7 +3,7 @@
  		<a href="#/" class="bg-white brand-link ">
  			<img src="/img/ancila.png" alt="SGPM-TEMPLATE" class="brand-image">
  			<span class="brand-text font-weight-light">
- 				<b>Teste</b>
+ 				<b>Treinamento</b>
  			</span>
  		</a>
 
@@ -61,28 +61,28 @@
  						<ul class="nav nav-treeview" id="menu-seguranca-treeview">
  							
  							<li class="nav-item">
- 								<a href="/single#/usuario" class="nav-link " id="menu-seguranca-usuario" >
+ 								<a href="#/usuario" class="nav-link " id="menu-seguranca-usuario" >
  									<i class="nav-icon fa fa-users fa-lg fa-2x text-info "></i>
  									<p>Usuário</p>
  								</a>
  							</li>
  							
  							<li class="nav-item">
- 								<a href="/single#/perfil" class="nav-link " id="menu-seguranca-perfil">
+ 								<a href="#/perfil" class="nav-link " id="menu-seguranca-perfil">
  									<i class="nav-icon fa fa-id-card fa-lg fa-2x text-success"></i>
  									<p>Perfil</p>
  								</a>
  							</li>
  							
  							<li class="nav-item">
- 								<a href="/single#/permissao" class="nav-link " id="menu-seguranca-permissao">
+ 								<a href="#/permissao" class="nav-link " id="menu-seguranca-permissao">
  									<i class="nav-icon fa fa-unlock fa-lg fa-2x  text-danger"></i>
  									<p>Permissão </p>
  								</a>
  							</li>
 
  							<li class="nav-item">
- 								<a href="/single#/loginlog" class="nav-link " id="menu-seguranca-loginlog">
+ 								<a href="#/loginlog" class="nav-link " id="menu-seguranca-loginlog">
  									<i class="nav-icon fa fa-lock fa-lg fa-2x  text-warning"></i>
  									<p>Log Login
  										<span class="right badge badge-warning">New</span>
@@ -111,14 +111,14 @@
  						<ul class="nav nav-treeview" id="menu-estatistica-treeview">
  							
  							<li class="nav-item">
- 								<a href="/single#/tentativa" class="nav-link " id="menu-estatistica-tentativa">
+ 								<a href="#/tentativa" class="nav-link " id="menu-estatistica-tentativa">
  									<i class="nav-icon fa fa-book fa-lg fa-2x  "></i>
  									<p>Tentativas </p>
  								</a>
  							</li> 
  							
  							<li class="nav-item">
- 								<a href="/single#/comentario" class="nav-link " id="menu-estatistica-comentario">
+ 								<a href="#/comentario" class="nav-link " id="menu-estatistica-comentario">
  									<i class="nav-icon fa fa-book fa-lg fa-2x  "></i>
  									<p>Comentário </p>
  								</a>
@@ -147,28 +147,28 @@
  							
  							
  							<li class="nav-item">		
- 								<a href="/single#/disciplina" class="nav-link " id="menu-administrador-disciplina">			
+ 								<a href="#/disciplina" class="nav-link " id="menu-administrador-disciplina">			
  									<i class="nav-icon fa fa-book fa-lg fa-2x  "></i>	
  									<p> Disciplina </p>							
  								</a>			
  							</li>     
  							
  							<li class="nav-item" >				
- 								<a href="/single#/assunto" class="nav-link " id="menu-administrador-assunto">					
+ 								<a href="#/assunto" class="nav-link " id="menu-administrador-assunto">					
  									<i class="nav-icon fa fa-comments fa-lg fa-2x text-warning"></i>
  									<p> Assunto </p>						
  								</a>			
  							</li>	
  							
  							<li class="nav-item">
- 								<a href="/single#/pergunta" class="nav-link" id="menu-administrador-pergunta">
+ 								<a href="#/pergunta" class="nav-link" id="menu-administrador-pergunta">
  									<i class="nav-icon fa fa-question fa-lg fa-2x text-info"></i>
  									<p> Pergunta </p>
  								</a>
  							</li> 
  							
  							<li class="nav-item">
- 								<a href="/single#/resposta" class="nav-link " id="menu-administrador-resposta">
+ 								<a href="#/resposta" class="nav-link " id="menu-administrador-resposta">
  									<i class="nav-icon fa  fa-bullhorn fa-lg fa-2x text-success"></i>
  									<p> Resposta </p>
  								</a>

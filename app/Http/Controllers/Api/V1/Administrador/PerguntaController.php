@@ -11,7 +11,7 @@ use App\Models\Administrador\Resposta;
 use Yajra\DataTables\DataTables;
 use Fpdf;
 use Validator;
-
+use Auth;
 
 class PerguntaController extends VueCrudController
 {
@@ -293,7 +293,7 @@ class PerguntaController extends VueCrudController
                 if($data->deleted_at == ''){
                     
 
-                    if($data->status === 'Validada'  || $data->status === 'Finalizada' || ($request->user()->can('Admin') && $data->status === 'Restrita') ){
+                    if($data->status === 'Validada'  || $data->status === 'Finalizada' || (Auth::guard('api')->user()->can('Admin') && $data->status === 'Restrita') ){
                         
                         $pdf->SetFont('arial', '', 10);
 
@@ -338,7 +338,7 @@ class PerguntaController extends VueCrudController
             foreach ($datas as $data) {
 
                 if($data->deleted_at == ''){
-                    if($data->status === 'Validada'  || $data->status === 'Finalizada' || ($request->user()->can('Admin') && $data->status === 'Restrita') ){
+                    if($data->status === 'Validada'  || $data->status === 'Finalizada' || (Auth::guard('api')->user()->can('Admin') && $data->status === 'Restrita') ){
                         
                         if( $data->resposta_correta){
                             $pdf->SetFont('arial', '', 15);
@@ -569,7 +569,10 @@ class NewPdf extends Fpdf {
         // $texto = utf8_decode('Solidários, seremos união. Separados uns dos outros seremos pontos de vista. Juntos, alcançaremos a realização de nossos propósitos.'); 
         // $autor = utf8_decode('"Bezerra de Menezes"!!');
         
-        $texto = utf8_decode('"Ubuntu, tio, como poderia um de nós ficar feliz se todos os outros estivessem tristes?"'); 
+        // $texto = utf8_decode('"Ubuntu, tio, como poderia um de nós ficar feliz se todos os outros estivessem tristes?"'); 
+        // $texto = utf8_decode('"Deus dá as batalhas mais difíceis aos seus melhores soldados." (Papa Francisco) -  "O Inimigo Agora É Outro"'); 
+        $texto = utf8_decode('"Welcome to the jungle we take it day by day ... Welcome to the jungle, it gets worse here every day"'); 
+        
         $autor = utf8_decode('');
 
         // $texto = utf8_decode('A união do rebanho obriga o leão a deitar-se com fome.');

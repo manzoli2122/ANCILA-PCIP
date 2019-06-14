@@ -11,6 +11,7 @@ use App\Models\Administrador\Disciplina;
 use App\Models\Administrador\Resposta;
 use App\Models\Administrador\Tentativa;
 use App\Models\Administrador\Assunto;
+use DB;
 
 
 
@@ -73,15 +74,96 @@ class TreinamentoController extends Controller
     }
 
 
-
-
-
-
-
-
-
-
     public function proximoPost(Request $request )
+    {
+        try { 
+            
+            $disciplina = $request->input('disciplina_id'); 
+            $perguntas = $request->input('perguntas'); 
+ 
+            $status =  [  'Validada' , 'Finalizada' , 'Restrita'] ;
+
+            if( !$models = $this->model->ativo()
+            
+                // ->whereNotIn( 'id' , session('perguntas.id' , [] ) )
+                ->whereNotIn( 'id' , $perguntas )
+
+                // ->whereIn( 'pergunta.dificuldade' , $dificuldade ) 
+
+                ->whereIn( 'pergunta.status' , $status  )
+
+                ->whereHas('assunto', function ($query) use ($disciplina) {
+                    $query->whereIn('disciplina_id',  $disciplina  );
+                })
+
+                ->with('resposta')->get()    )
+            {       
+                return response()->json(  'pergunta nao encontrada - 1' , 404);             
+            } 
+  
+            if( $models->count() < 1 ){
+                // $request->session()->forget('perguntas.id');
+                return response()->json(  'pergunta nao encontrada - 2' , 404);
+            }
+            
+
+
+
+            $realizadas = Tentativa::select('pergunta_id' , DB::raw('count(*) as total')    )
+
+                ->groupBy('pergunta_id') 
+                ->where('user_id' , Auth::guard('api')->user()->id ) 
+                ->where('disciplina_id' , $disciplina ) 
+                ->whereNotIn( 'pergunta_id' , $perguntas )
+                ->orderBy('total', 'asc')
+                ->get();   
+
+            $plucked = $realizadas->pluck('pergunta_id');
+
+            $filtered = $models->whereNotIn('id',$plucked );
+            
+            if( $filtered->count() < 1 ){ 
+
+                if($realizadas->count() > 0){
+                    //return response()->json(  $realizadas->first()->pergunta_id  , 500); 
+                    //
+                    //$model = $models->where('id' , $realizadas->first()->pergunta_id)->first();
+                    
+                    $model = $models->where('id' , $realizadas->where('total' , $realizadas->first()->total)->random()->pergunta_id )->first();
+
+                    $model->resposta = $model->resposta->shuffle();
+                    return response()->json(  $model->only( 'id' , 'texto' , 'resposta_certa_id' , 'resumo' , 'assunto' ,'resposta' , 'dificuldade') , 200); 
+                } 
+                else{
+                    return response()->json(  'pergunta nao encontrada - 3' , 404);
+                }
+            }
+            else{
+
+                $model = $filtered->random();
+                $model->resposta = $model->resposta->shuffle();
+
+                return response()->json(  $model->only( 'id' , 'texto' , 'resposta_certa_id' , 'resumo' , 'assunto' ,'resposta' , 'dificuldade') , 200);  
+            }
+
+
+
+                
+ 
+        }   
+
+        catch(Exception $e) {        
+            return response()->json(  'pergunta nao encontrada' , 500);  ;
+        }
+    }
+
+
+
+
+
+
+
+    public function proximoPostAntiga(Request $request )
     {
         try { 
             

@@ -1,6 +1,22 @@
 <p align="center"><img src="https://laravel.com/assets/img/components/logo-laravel.svg"></p>
 
 
+"guzzlehttp/guzzle": "^6.3",
+"predis/predis": "^1.1",
+"laravel/tinker": "^1.0",  
+
+
+"mockery/mockery": "^1.0",
+"nunomaduro/collision": "^2.0",
+"phpunit/phpunit": "^7.0",
+"fzaninotto/faker": "^1.4",
+"filp/whoops": "^2.0", 
+
+
+
+"Tests\\": "tests/"
+
+
 # Sobre o SGPM-TEMPLATE
 
 
