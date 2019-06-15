@@ -6,8 +6,7 @@ namespace  App\Http\Controllers\Api\V1\Administrador;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Api\V1\VueCrudController;   
 use App\Models\Administrador\Assunto;  
-use Yajra\DataTables\DataTables;
- 
+use Yajra\DataTables\DataTables; 
 use Validator;
 
 
@@ -22,9 +21,7 @@ class AssuntoController extends VueCrudController
 		$this->dataTable = $dataTable ; 
         $this->route = 'assunto';
 
-        $this->middleware('auth:api', ['except' => ['' ] ]);
-
-        
+        $this->middleware('auth:api', ['except' => [''] ]);        
 		 
         $this->middleware('permissao:assunto');
         $this->middleware('permissao:assunto-editar')->only('update');
@@ -92,7 +89,6 @@ class AssuntoController extends VueCrudController
  			return response()->json('Item não encontrado.', 404 );
  		}
  		$model->restore(); 
-
  		return response()->json( 'Ativado' , 200 );
  	}
 
@@ -113,26 +109,21 @@ class AssuntoController extends VueCrudController
     */
      public function destroy( Request $request, $id)
      { 
-
      	try{  
-
      		if( $model = $this->model->find($id) ){
      			if( !$delete = $model->delete() ){
      				return response()->json([ 'message' => 'Erro ao excluir o registro!' ], 500);
      			}
      			return response()->json( 'Exclusão realizada com sucesso' , 200);  
      		}
-
      		if( $model = $this->model->onlyTrashed()->find($id)){
      			if( !$delete = $model->forceDelete() ){
      				return response()->json([ 'message' => 'Erro ao excluir o registro!' ], 500);
      			}
      			return response()->json( 'Exclusão realizada com sucesso' , 200);  
      		}
-
      		return response()->json( 'Item não encontrado' , 404); 
      	} 
-
      	catch(QueryException $e){
      		return response()->json([ 'message' => 'Erro de conexao com o banco' ] , 500 );
      	} 
@@ -153,12 +144,10 @@ class AssuntoController extends VueCrudController
     * @return json
     */
     public function getDatatable( Request $request ){
-    	try {  
-    		
+    	try {      		
     		$models = $this->model->getDatatable();
     		return $this->dataTable->eloquent($models)
     		->addColumn('action', function($linha) {
-
     			if($linha->deleted_at != ''){
     				return '<button data-id="'.$linha->id.'" btn-ativar class="btn btn-success btn-sm" title="Ativar"><i class="fa fa-thumbs-up"></i> </button>' 
     				.'<button data-id="'.$linha->id.'" btn-excluir class="btn btn-danger btn-sm" title="Excluir Definitivamente"><i class="fa fa-trash"></i></button>';
@@ -197,16 +186,7 @@ class AssuntoController extends VueCrudController
     		return response()->json( 'Item não encontrado' , 404); 
     	} 
     	return response()->json(   $model->perguntas()->with('resposta')->get() , 200);
-
     }
-
-
-
-
-
-
-
-
 
 
 

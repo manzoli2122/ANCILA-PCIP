@@ -23,11 +23,10 @@ class TentativaController extends VueCrudController
 		$this->dataTable = $dataTable ; 
 		$this->route = 'tentativa';    
 
-        $this->middleware('auth:api', ['except' => ['Ativar' ] ]);
+        $this->middleware('auth:api', ['except' => [''] ]);
 
         $this->middleware('perfil:Admin') ;       
     }
-
 
 
 
@@ -44,7 +43,6 @@ class TentativaController extends VueCrudController
     {  
     	return response()->json( 'Item não encontrado' , 404); 
     }
-
 
 
 

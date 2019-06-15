@@ -21,9 +21,8 @@ class LoginLogController extends VueCrudController
 		$this->dataTable = $dataTable ; 
 		$this->route = 'loginlog';    
 
-        $this->middleware('auth:api', ['except' => ['Ativar' ] ]);
-        
-        // $this->middleware('auth')  ;
+        $this->middleware('auth:api', ['except' => [''] ]);
+               
         // $this->middleware('perfil:Admin')->only( 'destroy');       
 	}
 

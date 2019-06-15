@@ -2,7 +2,6 @@
 
 namespace  App\Http\Controllers\Api\V1\Administrador;
 
-
 use Illuminate\Http\Request;
 use App\Http\Controllers\Api\V1\VueCrudController;   
 use App\Models\Administrador\Disciplina; 
@@ -11,12 +10,8 @@ use Validator;
 use Auth;
 
 
-
-
-
 class DisciplinaController extends VueCrudController
 {
-
 
 
     public function __construct( Disciplina $disciplina , DataTables $dataTable ){
@@ -25,7 +20,6 @@ class DisciplinaController extends VueCrudController
         $this->route = 'disciplina';
 
         $this->middleware('auth:api', ['except' => ['BuscarTodos' ] ]);
-
 
         $this->middleware('permissao:disciplina')->except('BuscarTodos');
         $this->middleware('permissao:disciplina-editar')->only('update');
@@ -44,7 +38,6 @@ class DisciplinaController extends VueCrudController
     */
     public function  BuscarTodos( Request $request  ){
         $model = null ;
-
         if( Auth::guard('api')->user() && Auth::guard('api')->user()->can('DisciplinaNivelRestrita') ){
             $model =  $this->model->select('id' , 'nome')->orderBy('nome' , 'asc')->get();
         }
@@ -52,11 +45,10 @@ class DisciplinaController extends VueCrudController
             $model =  $this->model->select('id' , 'nome')->orderBy('nome' , 'asc')->get();
         }
         else{
-         $model =  $this->model->where('nivel' , 'Validada')->select('id' , 'nome')->orderBy('nome' , 'asc')->get();
-     }
-
-     return response()->json( $model , 200); 
- }
+           $model =  $this->model->where('nivel' , 'Validada')->select('id' , 'nome')->orderBy('nome' , 'asc')->get();
+       }
+       return response()->json( $model , 200); 
+   }
 
 
 
@@ -82,7 +74,6 @@ class DisciplinaController extends VueCrudController
         foreach ( $model->assuntos()->withTrashed()->get() as $assunto ) {
             $assunto->restore();
         } 
-
         return response()->json(  'Ativado' , 200 );
     }
 
@@ -90,7 +81,7 @@ class DisciplinaController extends VueCrudController
 
 
 
-     /**
+    /**
     * Função para excluir um model
     *
     * @param Request $request
@@ -99,11 +90,9 @@ class DisciplinaController extends VueCrudController
     *    
     * @return json
     */
-     public function destroy( Request $request, $id)
-     { 
-
+    public function destroy( Request $request, $id)
+    { 
         try{  
-
             if( $model = $this->model->find($id) ){
                 foreach ( $model->assuntos as $assunto ) {
                     $assunto->delete();
@@ -113,17 +102,14 @@ class DisciplinaController extends VueCrudController
                 }
                 return response()->json( 'Exclusão realizada com sucesso' , 200);  
             }
-
             if( $model = $this->model->onlyTrashed()->find($id)){
                 if( !$delete = $model->forceDelete() ){
                     return response()->json([ 'message' => 'Erro ao excluir o registro!' ], 500);
                 }
                 return response()->json( 'Exclusão realizada com sucesso' , 200);  
             }
-
             return response()->json( 'Item não encontrado' , 404); 
         } 
-
         catch(QueryException $e){
             return response()->json([ 'message' => 'Erro de conexao com o banco' ] , 500 );
         } 

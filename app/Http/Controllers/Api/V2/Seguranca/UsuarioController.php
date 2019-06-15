@@ -34,7 +34,7 @@ class UsuarioController extends VueCrudController
 		$this->dataTable = $dataTable ; 
 		$this->route = 'usuario';  
 
-		$this->middleware('auth:api', ['except' => ['Ativar' ] ]);
+		$this->middleware('auth:api', ['except' => [''] ]);
 
         // $this->middleware('permissao:usuarios');  
         // $this->middleware('perfil:Admin')->only('update', 'destroy' , 'excluirPerfilDoUsuario' , 'adicionarPerfilAoUsuario' , 'ResetarSenha'); 

@@ -15,13 +15,12 @@ use Illuminate\Support\Facades\Mail;
 
 use Illuminate\Http\Request;
 
-// use App\Service\Seguranca\UsuarioServiceInterface;
 use App\Models\Seguranca\Perfil;
 
 class AuthController extends Controller
 {
 
-    // protected $usuarioService; 
+    
 
     /**
      * Create a new AuthController instance.
@@ -29,9 +28,8 @@ class AuthController extends Controller
      * @return void
      */
     public function __construct()
-    {
-        // $this->usuarioService = $service ;
-        $this->middleware('auth:api', ['except' => ['login' , 'salvarCadastro' , 'resetarSenha' ]]);
+    {        
+        $this->middleware('auth:api', ['except' =>['login', 'salvarCadastro', 'resetarSenha']]);
     }
 
 
@@ -43,8 +41,7 @@ class AuthController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function resetarSenha(Request $request)
-    {
-          
+    {       
 
         if($usuario = User::find( request('cpf'))){
             $random = str_random(6);
@@ -65,7 +62,6 @@ class AuthController extends Controller
                 $prefix[6]= '*'; 
                 $prefix[7]= '*'; 
             }
-
             return response()->json(['message' => 'Senha Alterada com sucesso!!! Nova senha enviada para ' . $prefix . '@' . str_after($usuario->email, '@') ]);
         }
         return response()->json(['message' => 'Usuario não encontrado!!!'], 404);
@@ -75,8 +71,7 @@ class AuthController extends Controller
 
 
     public function updateSenha(Request $request)
-    {
-        
+    {        
         if( !$user = Auth::guard('api')->user() ){
             return response()->json( 'Não foi Possível atualizar a sua senha!' , 404 );
         }  
@@ -84,8 +79,6 @@ class AuthController extends Controller
         $senha = $dataUser['password'];
         $confirm = $dataUser['passwordConfirm'];
         
-
-
         $validator = Validator::make($request->all(), [ 
             'password' => 'min:3',
             'passwordConfirm' => 'required_with:password|same:password|min:3'
@@ -94,15 +87,9 @@ class AuthController extends Controller
         if ($validator->fails()) {
             return response()->json(['message' =>  (string) $validator->errors() , 'error' => $validator->errors() ] , 422); 
         } 
-
-        // $this->validate($request, [ 
-        //     'password' => 'min:3',
-        //     'passwordConfirm' => 'required_with:password|same:password|min:3'
-        // ]); 
-
+       
         $dataUser['password'] = bcrypt($senha); 
-             
-        
+                     
         if($update = $user->update($dataUser)){
            return response()->json( 'Senha alterada com sucesso!' , 200 );
         }        
@@ -114,37 +101,21 @@ class AuthController extends Controller
 
 
 
-
-
-
     public function salvarCadastro(Request $request){  
-
         $validator = Validator::make($request->all(), User::rulesCadastro()  );
-
         if ($validator->fails()) {
             return response()->json(['message' =>  (string) $validator->errors() , 'error' => $validator->errors() ] , 422); 
         } 
-
-        // $request->validate( User::rulesCadastro()); 
-        // $this->validate( $request  , User::rulesCadastro() );  
-         
         $data = $request->all() ;
         $data['password'] =  bcrypt(  $data['password'] );
         $data['status'] =  'A' ;
-
         try{ 
-
             throw_if( !$insert  = User::create( $data ) , Exception::class); 
-
-            $perfil = Perfil::where('nome', 'UsuarioRestrita')->first();
-            
+            $perfil = Perfil::where('nome', 'UsuarioRestrita')->first();            
             if($perfil &&  $insert->id ){ 
-                $insert->attachPerfil($perfil, '00000000001' );
-                // $this->usuarioService->adicionarPerfilAoUsuario( $perfil->id, $data['id'], $request );
-            }
-             
-            return response()->json(['message' => 'Usuário cadastrado com sucesso!!!']);
-            
+                $insert->attachPerfil($perfil, '00000000001' );               
+            }             
+            return response()->json(['message' => 'Usuário cadastrado com sucesso!!!']);         
         }  
         catch(Exception $e){
             $data['cpf'] =  $data['id'] ;
@@ -154,12 +125,8 @@ class AuthController extends Controller
             }
             $messagem .= ' ' .   'Possiveis problemas:'  ;
             $messagem .= ' ' .   'CPF ja Cadastrado'  ;
-            $messagem .= ' ' .   'Email ja Cadastrado'  ;
-            // $messagem .= ' ' .   $e->getMessage()  ;
-
-
-            return response()->json(['message'=>  utf8_encode(  $messagem ) ] , 500 );
-             
+            $messagem .= ' ' .   'Email ja Cadastrado'  ;           
+            return response()->json(['message'=>  utf8_encode(  $messagem ) ] , 500 );           
         }    
     }
     
@@ -195,7 +162,7 @@ class AuthController extends Controller
             return response()->json(['error' => 'Senha Incorreta'], 400);
         }
 
-        Mail::to( 'manzoli2122@gmail.com' )->send(new LoginSuccessMail(  $user ));
+        //Mail::to( 'manzoli2122@gmail.com' )->send(new LoginSuccessMail(  $user ));
 
         return $this->respondWithToken($token);
     }

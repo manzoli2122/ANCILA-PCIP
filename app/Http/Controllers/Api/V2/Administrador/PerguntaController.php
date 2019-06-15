@@ -3,7 +3,6 @@
 namespace  App\Http\Controllers\Api\V1\Administrador;
 
 
-
 use Illuminate\Http\Request;
 use App\Http\Controllers\Api\V1\VueCrudController;   
 use App\Models\Administrador\Pergunta;  
@@ -17,16 +16,13 @@ class PerguntaController extends VueCrudController
 {
 
 
-
-
     public function __construct( Pergunta $pergunta , DataTables $dataTable){     
 
         $this->model = $pergunta ;    
         $this->dataTable = $dataTable ; 
         $this->route = 'pergunta';
         
-        $this->middleware('auth:api', ['except' => ['Ativar' ] ]);
-        
+        $this->middleware('auth:api', ['except' => [''] ]);
 
         $this->middleware('permissao:pergunta')->except('respostas', 'destroy') ;
         
@@ -75,19 +71,14 @@ class PerguntaController extends VueCrudController
     * @return void
     */
     public function  AlterarResposta( Request $request , $perguntaId  ){
-
         if( !$model = $this->model->with('assunto')->with('resposta')->find($perguntaId)){
             return response()->json('Item não encontrado.', 404 ); 
-        }
-        
+        }        
         if( !$resposta = Resposta::find( $request->input('resposta_id')) ){
             return response()->json('Item não encontrado.', 404 ); 
         } 
-
         $model->resposta_correta()->associate($resposta) ;
-
         $model->save(); 
-
         return response()->json( $model , 200 ); 
 
     }
@@ -99,20 +90,16 @@ class PerguntaController extends VueCrudController
 
 
 
-     /**
+    /**
     * Busca   registros de um model 
     *
     * @param Request $request
     *
     * @return $model
     */
-     public function  BuscarCriada( Request $request  ){
+    public function  BuscarCriada( Request $request  ){
         return response()->json( $this->model->where('status', 'Criada')->get() , 200); 
     }
-
-
-
-
 
 
 
@@ -142,13 +129,6 @@ class PerguntaController extends VueCrudController
 
 
 
-
-
-
-
-
-
-
     /**
     * Função para buscar models para datatable
     *
@@ -158,11 +138,9 @@ class PerguntaController extends VueCrudController
     */
     public function getDatatable( Request $request ){
         try {  
-
             $models = $this->model->getDatatable();
             return $this->dataTable->eloquent($models)
             ->addColumn('action', function($linha) {
-
                 if($linha->deleted_at != ''){
                     return '<button data-id="'.$linha->id.'" btn-ativar class="btn btn-success btn-sm" title="Ativar"><i class="fa fa-thumbs-up"></i> </button>' 
                     .'<button data-id="'.$linha->id.'" btn-excluir class="btn btn-danger btn-sm" title="Excluir Definitivamente"><i class="fa fa-trash"></i></button>';
@@ -182,15 +160,10 @@ class PerguntaController extends VueCrudController
              } 
              return $class;
          })
-
             ->addColumn('disciplina', function ($pergunta) {
                 return $pergunta->assunto->disciplina->nome ;
             })
-
-
-
             ->make(true); 
-
         }         
         catch (Exception $e) {           
             return response()->json( $e->getMessage() , 500);
@@ -200,12 +173,7 @@ class PerguntaController extends VueCrudController
 
 
 
-
-
-
-
-
-     /**
+    /**
     * Função para excluir um model
     *
     * @param Request $request
@@ -216,7 +184,6 @@ class PerguntaController extends VueCrudController
     */
     public function destroy( Request $request, $id)
     { 
-         
         try{  
             if( $model = $this->model->find($id) ){
                 if( !$delete = $model->delete() ){
@@ -224,17 +191,14 @@ class PerguntaController extends VueCrudController
                 }
                 return response()->json( 'Exclusão realizada com sucesso' , 200);  
             }
-
             if( $model = $this->model->onlyTrashed()->find($id)){
                 if( !$delete = $model->forceDelete() ){
                     return response()->json([ 'message' => 'Erro ao excluir o registro!' ], 500);
                 }
                 return response()->json( 'Exclusão realizada com sucesso' , 200);  
             }
-
-             return response()->json( 'Item não encontrado' , 404);  
+            return response()->json( 'Item não encontrado' , 404);  
         } 
-         
         catch(QueryException $e){
             return response()->json([ 'message' => 'Erro de conexao com o banco' ] , 500 );
         } 
@@ -256,13 +220,9 @@ class PerguntaController extends VueCrudController
     * @return pdf
     */
     public function  Pdf( Request $request ){
-        $models = $this->model->getDatatable();
-        
-        $dados = $this->dataTable->eloquent($models)->make(true); 
-        
-        $datas = $dados->getData()->data;
-
-        
+        $models = $this->model->getDatatable();        
+        $dados = $this->dataTable->eloquent($models)->make(true);         
+        $datas = $dados->getData()->data;        
 
         $pdf = new NewPdf();
         $texto = utf8_decode('Questões para Estudo'); 
@@ -277,24 +237,16 @@ class PerguntaController extends VueCrudController
         //$pdf->Header();
         $pdf->AliasNbPages();
         // $pdf::SetAutoPageBreak(10, 10);
-
         $pdf->SetFont('Arial', 'u', 11);
-
-        // Fpdf::Write(5,"To find out what's new in this tutorial, click ");
+        // Fpdf::Write(5,"To find out wha's new in this tutorial, click ");
         
-
         if (count($datas) >= 1) {
-
-           
-
             foreach ($datas as $data) {
 
-
                 if($data->deleted_at == ''){
-                    
 
                     if($data->status === 'Validada'  || $data->status === 'Finalizada' || (Auth::guard('api')->user()->can('Admin') && $data->status === 'Restrita') ){
-                        
+
                         $pdf->SetFont('arial', '', 10);
 
                         $html = html_entity_decode( $data->id . ') ' . $data->texto);
@@ -322,9 +274,6 @@ class PerguntaController extends VueCrudController
                     }
                 }
                 
-
-
-
             }
             // Muda o tamanho da fonte
             $pdf->SetFont('arial', 'B', 15);
@@ -334,12 +283,11 @@ class PerguntaController extends VueCrudController
             // Fpdf::Write( 5 , 'GABARITO' );
             $pdf->Ln();
 
-
             foreach ($datas as $data) {
 
                 if($data->deleted_at == ''){
                     if($data->status === 'Validada'  || $data->status === 'Finalizada' || (Auth::guard('api')->user()->can('Admin') && $data->status === 'Restrita') ){
-                        
+
                         if( $data->resposta_correta){
                             $pdf->SetFont('arial', '', 15);
                             $pdf->MultiCell( 0,5,'Pergunta ' . $data->id,0,'C' ); 
@@ -364,23 +312,18 @@ class PerguntaController extends VueCrudController
                             $html = str_replace(['”' , '“'], '"' ,$html );
                             $html = str_replace(['‘' , '’'], '"' ,$html );
                             $html = str_replace('…', '. . .' ,$html );
-                             
+
                             $html = utf8_decode($html); 
                             $pdf->WriteHTML( $html ); 
                             $pdf->Ln();
                             $pdf->Ln();
 
-
-
-
                         }
-
                         
                     }
                 }   
 
             }
-
 
         } else {
 
@@ -390,7 +333,6 @@ class PerguntaController extends VueCrudController
         exit;
         // return  $this->service->Pdf( $request   ) ;
     }
-
 
 
 

@@ -3,14 +3,12 @@
 namespace App\Http\Controllers\Api\V1 ;
 
 
-
 use Illuminate\Http\Request;  
 use Exception ;
 use App\Exceptions\ModelNotFoundException;
 use Illuminate\Database\QueryException;  
 use App\Http\Controllers\Controller;
 use Validator;
-
 
 
 
@@ -24,8 +22,6 @@ class VueCrudController extends Controller
     protected $route;   
 
      
- 
-
 
 
 
@@ -61,11 +57,9 @@ class VueCrudController extends Controller
             }
             if( !$delete = $model->delete() ){
                 return response()->json([ 'message' => 'Erro ao excluir o registro!' ], 500);
-            }
-             
+            }             
             return response()->json( 'Exclusão realizada com sucesso' , 200); 
-        } 
-         
+        }          
         catch(QueryException $e){
             return response()->json([ 'message' => 'Erro de conexao com o banco' ] , 500 );
         } 
@@ -85,8 +79,7 @@ class VueCrudController extends Controller
     * @return json
     */
     public function getDatatable( Request $request ){
-        try {  
-            
+        try {              
             $models = $this->model->getDatatable();
             return $this->dataTable->eloquent($models)
             ->addColumn('action', function($linha) {
@@ -94,9 +87,6 @@ class VueCrudController extends Controller
                 .'<a href="#/'. $this->route . '/show/'.$linha->id.'" class="btn btn-primary btn-sm" title="Visualizar"><i class="fa fa-search"></i></a>';
             })
             ->make(true);   
-
-            // return  $this->service->BuscarDataTable( $request);
-
         }         
         catch (Exception $e) {           
             return response()->json( $e->getMessage() , 500);
@@ -143,8 +133,7 @@ class VueCrudController extends Controller
 
         if ($validator->fails()) {
             return response()->json(['message' =>  (string) $validator->errors() , 'error' => $validator->errors() ] , 422); 
-        }  
-         
+        }           
         try{ 
             if( !$insert  = $this->model->create( $request->all() ) ){
                 return response()->json('Não foi possível cadastrar!' , 500);
@@ -171,22 +160,17 @@ class VueCrudController extends Controller
     */
     public function update(Request $request ,  $id )
     {       
-
     	$validator = Validator::make( $request->all(), $this->model->rules() );
-
         if ($validator->fails()) {
             return response()->json(['message' =>  (string) $validator->errors() , 'error' => $validator->errors() ] , 422); 
         }  
-
         try{ 
         	if( !$model =  $this->model->find($id)   ){       
                 return response()->json('Item não encontrado.', 404 );    
             }         	 
         	if( !$update = $model->update($request->all())  ){
         		return response()->json('Nãp foi possivel atualizar.', 500 ); 
-        	}
-
-            
+        	}            
         }  
         catch(Exception $e){
             return response()->json( $e->getMessage() , 500);
@@ -194,30 +178,6 @@ class VueCrudController extends Controller
         return response()->json( 'Atualização realizada com sucesso' , 200); 
     }
     
-
-
-
-
-
-
-
-
-   
-
-
-
-
-
-
-
-
-
-   
-
-
-
-
-
 
 
 

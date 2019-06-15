@@ -2,19 +2,14 @@
 
 namespace  App\Http\Controllers\Api\V1\Administrador;
 
-
 use Illuminate\Http\Request;
 use App\Http\Controllers\Api\V1\VueCrudController;   
 use App\Models\Administrador\Resposta;
 use Yajra\DataTables\DataTables;
 use Validator;
 
-
-
 class RespostaController extends VueCrudController
 {
-
-
 
 
     public function __construct(Resposta $resposta , DataTables $dataTable){
@@ -23,11 +18,8 @@ class RespostaController extends VueCrudController
         $this->dataTable = $dataTable ; 
         $this->route = 'resposta';
         
-
         $this->middleware('auth:api');
-        
-        
-
+         
         $this->middleware('permissao:resposta') ; 
 
         $this->middleware('permissao:resposta-editar')->only('update') ;   
@@ -35,9 +27,6 @@ class RespostaController extends VueCrudController
         $this->middleware('perfil:Admin')->only('destroy');
 
     }
-
-
-
 
 
 
@@ -51,8 +40,8 @@ class RespostaController extends VueCrudController
     *    
     * @return void
     */
-    public function  Ativar( Request $request , $perguntaId ){
-
+    public function  Ativar( Request $request , $perguntaId )
+    {
         if(!$model = $this->model->withTrashed()->find($perguntaId) ){
             return response()->json('Item não encontrado.', 404 ); 
         }
@@ -71,7 +60,6 @@ class RespostaController extends VueCrudController
     */
     public function getDatatable( Request $request ){
         try {  
-
             $models = $this->model->getDatatable();
             return $this->dataTable->eloquent($models)
             ->addColumn('action', function($linha) {
@@ -114,7 +102,6 @@ class RespostaController extends VueCrudController
     */
     public function destroy( Request $request, $id)
     { 
-
         try{  
             if( $model = $this->model->find($id) ){
                 if( !$delete = $model->delete() ){
@@ -122,17 +109,14 @@ class RespostaController extends VueCrudController
                 }
                 return response()->json( 'Exclusão realizada com sucesso' , 200);  
             }
-
             if( $model = $this->model->onlyTrashed()->find($id)){
                 if( !$delete = $model->forceDelete() ){
                     return response()->json([ 'message' => 'Erro ao excluir o registro!' ], 500);
                 }
                 return response()->json( 'Exclusão realizada com sucesso' , 200);  
             }
-
             return response()->json( 'Item não encontrado' , 404);  
         } 
-
         catch(QueryException $e){
             return response()->json([ 'message' => 'Erro de conexao com o banco' ] , 500 );
         } 
@@ -155,28 +139,21 @@ class RespostaController extends VueCrudController
     */
     public function update(Request $request ,  $id )
     {       
-
         $validator = Validator::make( $request->all(), $this->model->rules() );
-
         if ($validator->fails()) {
             return response()->json(['message' =>  (string) $validator->errors() , 'error' => $validator->errors() ] , 422); 
         }  
-
         try{ 
             if( !$model =  $this->model->find($id)   ){       
                 return response()->json('Item não encontrado.', 404 );    
             }     
-
             if( $request->input('correta') == 'true' ){
                 $model->pergunta->resposta_correta()->associate($model) ;
                 $model->pergunta->save();
             } 
-
             if( !$update = $model->update($request->all())  ){
                 return response()->json('Nãp foi possivel atualizar.', 500 ); 
-            }
-
-            
+            }            
         }  
         catch(Exception $e){
             return response()->json( $e->getMessage() , 500);
@@ -197,11 +174,9 @@ class RespostaController extends VueCrudController
     public function store(Request $request)
     {    
         $validator = Validator::make( $request->all(), $this->model->rules() );
-
         if ($validator->fails()) {
             return response()->json(['message' =>  (string) $validator->errors() , 'error' => $validator->errors() ] , 422); 
         }  
-
         try{ 
             if( !$insert  = $this->model->create( $request->all() ) ){
                 return response()->json('Não foi possível cadastrar!' , 500);
