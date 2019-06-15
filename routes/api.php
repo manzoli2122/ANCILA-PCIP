@@ -2,20 +2,55 @@
 
 use Illuminate\Http\Request;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
 
-// Route::middleware('auth:api')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
+
+
+Route::namespace('Api\V2\Estatistica')->prefix('v2')->group(function () {
+    /*
+    |--------------------------------------------------------------------------
+    | TENTATIVA
+    |--------------------------------------------------------------------------
+    */   
+    Route::get('tentativa/rank',   'TentativaController@Rank') ;
+    Route::post('tentativa/datatable', 'TentativaController@getDatatable');
+    Route::resource('tentativa','TentativaController')->only(['show', 'index']); 
+
+    /*
+    |--------------------------------------------------------------------------
+    | Comentario
+    |--------------------------------------------------------------------------
+    */ 
+    Route::delete('comentario/desativacao/{comentarioId}','ComentarioController@destroy');
+    Route::post('comentario/ativacao/{comentarioId}', 'ComentarioController@Ativar') ;  
+    Route::post('comentario/datatable', 'ComentarioController@getDatatable');
+    Route::resource('comentario', 'ComentarioController')->except(['create', 'edit']);
+
+    // 
+
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
  
 
@@ -25,8 +60,7 @@ Route::namespace('Api\V1\Estatistica')->prefix('v1')->group(function () {
     | Tentativa
     |--------------------------------------------------------------------------
     | 
-    */  
-    // Route::get('tentativa/ranking', 'TentativaController@Rankiar') ;
+    */      
     Route::get('tentativa/all', 'TentativaController@BuscarTodos') ;
     Route::post('tentativa/datatable', 'TentativaController@getDatatable');
     Route::resource('tentativa','TentativaController')->except(['create', 'edit' , 'update' , 'store' , 'destroy']); 
@@ -109,14 +143,9 @@ Route::namespace('Api\V1\Seguranca')->prefix('v1')->group(function () {
     Route::post('loginlog/datatable', 'LoginLogController@getDatatable');
     Route::resource('loginlog','LoginLogController')->only(['show']); 
 
- 
-
 });
 
  
-
-
-
 Route::namespace('Api\V1\Administrador')->prefix('v1')->group(function () {
 
     /*
@@ -199,7 +228,7 @@ Route::namespace('Api\V1')->prefix('v1')->group(function () {
   Route::get('treinamento/proximo', 'TreinamentoController@proximo') ;
   // Route::get('treinamento/placar', 'TreinamentoController@placar') ;
   Route::post('treinamento/historico', 'TreinamentoController@historico') ;
-  Route::post('treinamento/criar/comentario','Estatistica\ComentarioController@store') ; 
+  Route::post('treinamento/criar/comentario','Estatistica\ComentarioController@store') ;  
   Route::get('treinamento/meu/rank',   'Estatistica\TentativaController@MeuRank') ; 
 
 });

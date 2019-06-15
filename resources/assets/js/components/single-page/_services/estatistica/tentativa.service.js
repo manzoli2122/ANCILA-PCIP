@@ -3,11 +3,11 @@ import { authHeader } from '../../_helpers';
  
 export const tentativaService = { 
 	getUrl, 
+	getRank,
 };
 
 
-const url = '/api/v1/tentativa' ;
-
+const url = '/api/v2/tentativa' ;
 
 
 function getUrl(  ) { 
@@ -15,30 +15,14 @@ function getUrl(  ) {
 }
 
 
-
-// function getAll(  ) { 
-// 	return  new Promise((resolve, reject) => {
-// 		axios.get( url + '/all'  , {headers: authHeader() }  )
-// 		.then(response => {    
-// 			resolve( response.data);  
-// 		})
-// 		.catch(error => {  
-// 			reject(error.response);
-// 		}) 
-// 	}); 
-// }
-
-
-// function getAssunto( id ) { 
-// 	return  new Promise((resolve, reject) => {
-// 		axios.get( url + '/' + id  , {headers: authHeader() }  )
-// 		.then(response => {    
-// 			resolve( response.data);  
-// 		})
-// 		.catch(error => {  
-// 			reject(error.response);
-// 		}) 
-// 	}); 
-// }
- 
- 
+function getRank(  ) { 
+	return  new Promise((resolve, reject) => {
+		axios.get( url + '/rank'     , {headers: authHeader() }  )
+		.then(response => {    
+			resolve( response.data);  
+		})
+		.catch(error => {  
+			reject(error.response);
+		}) 
+	}); 
+}

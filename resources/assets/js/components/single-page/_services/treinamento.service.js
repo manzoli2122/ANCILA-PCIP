@@ -5,9 +5,7 @@ export const treinamentoService = {
 	getUrl,
 	getTodasPerguntas, 
 	responder,
-	criarComentario,
-	getHistorico,
-	getRank,
+	getHistorico,	
 };
 
 
@@ -47,17 +45,17 @@ function responder( data ) {
 }
 
  
-function criarComentario( data ) { 
-	return  new Promise((resolve, reject) => {
-		axios.post( url + '/criar/comentario'   , data  , {headers: authHeader() }  )
-		.then(response => {    
-			resolve( response.data);  
-		})
-		.catch(error => {  
-			reject(error.response);
-		}) 
-	}); 
-}
+// function criarComentario( data ) { 
+// 	return  new Promise((resolve, reject) => {
+// 		axios.post( url + '/criar/comentario'   , data  , {headers: authHeader() }  )
+// 		.then(response => {    
+// 			resolve( response.data);  
+// 		})
+// 		.catch(error => {  
+// 			reject(error.response);
+// 		}) 
+// 	}); 
+// }
  
  
 function getHistorico( data ) { 
@@ -74,17 +72,17 @@ function getHistorico( data ) {
  
 
  
-function getRank(  ) { 
-	return  new Promise((resolve, reject) => {
-		axios.get( url + '/meu/rank'     , {headers: authHeader() }  )
-		.then(response => {    
-			resolve( response.data);  
-		})
-		.catch(error => {  
-			reject(error.response);
-		}) 
-	}); 
-}
+// function getRank(  ) { 
+// 	return  new Promise((resolve, reject) => {
+// 		axios.get( url + '/meu/rank'     , {headers: authHeader() }  )
+// 		.then(response => {    
+// 			resolve( response.data);  
+// 		})
+// 		.catch(error => {  
+// 			reject(error.response);
+// 		}) 
+// 	}); 
+// }
   
  
 // function buscarPerfis( id ) { 

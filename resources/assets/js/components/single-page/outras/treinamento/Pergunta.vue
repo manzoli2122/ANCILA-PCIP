@@ -108,7 +108,7 @@
 
 <script>
 	
-	import { disciplinaService , treinamentoService  }  from '../../_services';
+	import { tentativaService, disciplinaService , treinamentoService , comentarioService  }  from '../../_services';
 
 	// Vue.component('formDificuldade', require('./dificuldade.vue'));
 	Vue.component('formDisciplina', require('./disciplina.vue'));
@@ -347,7 +347,7 @@
 				data['pergunta_id'] = this.pergunta.id ; 
 				data['status'] = 'Criada' ;  
 				alertProcessando();
-				treinamentoService.criarComentario(data)  
+				comentarioService.criarComentario(data)  
 				.then(response => {  
 					alertProcessandoHide();
 					toastSucesso(response); 
@@ -379,7 +379,7 @@
 
 
 			getRank(){
-				treinamentoService.getRank() 
+				tentativaService.getRank() 
 				.then(response => {
 					this.rank = response  ;
 				})

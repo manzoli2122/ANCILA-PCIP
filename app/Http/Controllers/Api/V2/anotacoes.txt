@@ -1,0 +1,7 @@
+
+1 -> rota para criar comentário -> api/v2/comentario
+
+
+1 -> rota para criar rank -> api/v2/tentativa/rank
+
+

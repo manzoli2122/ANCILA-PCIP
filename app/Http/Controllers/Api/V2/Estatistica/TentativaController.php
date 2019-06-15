@@ -1,6 +1,6 @@
 <?php
 
-namespace  App\Http\Controllers\Api\V1\Estatistica;
+namespace  App\Http\Controllers\Api\V2\Estatistica;
 
 
 use Illuminate\Http\Request;
@@ -23,7 +23,7 @@ class TentativaController extends VueCrudController
 		$this->dataTable = $dataTable ; 
 		$this->route = 'tentativa';    
 
-        $this->middleware('auth:api', ['except' => [''] ]);
+        $this->middleware('auth:api');
 
         $this->middleware('perfil:Admin') ;       
     }
@@ -75,205 +75,82 @@ class TentativaController extends VueCrudController
 
 
 
-
-    public function  Rankiar( Request $request  ){
-
-    	$model = $this->model->select('user_id'  ,   
-            DB::raw('count(*) as total') , 
-            DB::raw('DENSE_RANK() OVER( ORDER BY count(CASE WHEN acerto THEN 1 END) / cast(count(*) AS NUMERIC(15,3)) desc) as rank') ,                                 
-            DB::raw('count(CASE WHEN acerto THEN 1 END) as positivo')  ,   
-            DB::raw('count(CASE WHEN acerto THEN 1 END) / cast(count(*) AS NUMERIC(15,3)) * 100    as porcentagem ')   )
-
-        ->groupBy('user_id')
-                 // ->orderBy('total' , 'desc')
-        ->havingRaw('count(*) > ?', [10]) 
-                // ->where('user_id' , '07819403705') 
-        ->with('usuario')   
-        ->get();  
-
-        // $model = $model->where('user_id', '07895101706');
-
-        return response()->json($model , 200); 
+    // DEPENDE DA CRIAÇÃO DA VIEW COLOCACAO
+    public function  ClassificaçãoQuery(    ){
+        $model = DB::select('select @row_number:=@row_number + 1 AS colocacao, rendimento ,  total, user_id  from classificacao ,(SELECT @row_number:=0) AS t'); 
+        $collection = collect($model);
+        return $collection;
     }
 
 
 
 
-
-
-
-
-
-    public function  MeuRank1( Request $request  ){
-
-    	$model = $this->model->select('user_id'  ,   
-            DB::raw('count(*) as total') , 
-            DB::raw('DENSE_RANK() OVER( ORDER BY count(CASE WHEN acerto THEN 1 END) / cast(  count(*) AS NUMERIC(15,3)) desc)  as rank') ,                                 
+    public function  RendimentoGeralQuery(    ){
+        $model = $this->model
+        ->select(   
+            DB::raw('count(*) as total') ,
             DB::raw('count(CASE WHEN acerto THEN 1 END) as positivo')  ,   
-            DB::raw('count(CASE WHEN acerto THEN 1 END) / cast(count(*) AS NUMERIC(15,3)) * 100    as porcentagem ')   )
+            DB::raw('format(count(CASE WHEN acerto THEN 1 END)/cast(count(*) AS SIGNED),3) * 100 as porcentagem')   
+        ) 
+        ->first();  
+        return $model;
+    }
 
-        ->groupBy('user_id')
-        ->havingRaw('count(*) > ?', [10])  
-        ->get();  
 
-        $model = $model->where('user_id', Auth::guard('api')->user()->id );
-        
-        return response()->json( $model->first() , 200); 
+    public function  RendimentoDisciplinaQuery(    ){
+
+
+        $discSub = $this->model 
+        ->select(  'users_resposta_pergunta.disciplina_id',
+            DB::raw('format(count(CASE WHEN acerto THEN 1 END) / cast(  count(*) AS  SIGNED) , 4 ) * 100 as porcentagem ') ,
+            DB::raw('count(CASE acerto WHEN 0 THEN 1 END) as erros ')   ,
+            DB::raw('count(CASE acerto WHEN 1 THEN 1 END) as acertos ')   
+        )
+        ->groupBy('users_resposta_pergunta.disciplina_id' )
+        ->where('users_resposta_pergunta.user_id' , Auth::guard('api')->user()->id ) 
+        ->orderBy('porcentagem' ,'desc') ;
+
+
+
+        $discGeral = $this->model
+        ->join('disciplina', 'disciplina_id', '=', 'disciplina.id')
+        ->joinSub($discSub, 'discSub', function ($join) {
+            $join->on('users_resposta_pergunta.disciplina_id', '=', 'discSub.disciplina_id');
+        })
+        ->select( 
+            DB::raw('discSub.porcentagem as minha')  , 
+            'discSub.erros' , 
+            'discSub.acertos' , 
+            'users_resposta_pergunta.disciplina_id'  , 
+            'disciplina.nome',
+            DB::raw('format(count(CASE WHEN acerto THEN 1 END) / cast(  count(*) AS  SIGNED) , 4 ) * 100 as porcentagem '),
+            DB::raw('count(*)  as total ')    
+        )
+        ->groupBy('discSub.acertos' , 'discSub.erros' , 'discSub.porcentagem' , 'users_resposta_pergunta.disciplina_id', 'disciplina.nome')
+        ->orderBy('porcentagem' ,'desc') 
+        ->get(); 
+
+        return $discGeral;
     }
 
 
 
-    public function  ClassificaçãoQuery1(    ){
-     $model =   $this->model
-     ->select('user_id'  ,   
-        DB::raw('count(*) as total') , 
-        DB::raw('count(CASE WHEN acerto THEN 1 END) / cast(  count(*) AS  SIGNED)  as rank1') ,                                 
-        DB::raw('count(CASE WHEN acerto THEN 1 END) as positivo')  ,   
-        DB::raw('count(CASE WHEN acerto THEN 1 END) / cast(  count(*) AS  SIGNED) * 100 as porcentagem ')   
-    )
+    public function  Rank( Request $request  ){
 
-     ->groupBy('user_id')
-     ->havingRaw('count(*) > ?', [10])  
-     ->orderBy('rank1' ,'desc') 
-     ->get();  
+        $classificacao = $this->ClassificaçãoQuery();
 
-     $model->each(function ($item, $key) {
-        $item['rank'] = $key + 1; 
-    });
+        $model = $classificacao->where('user_id', Auth::guard('api')->user()->id );
 
-     return $model;
+        $rendimentoGeral  = $this->RendimentoGeralQuery();
 
- }
+        $discGeral = $this->RendimentoDisciplinaQuery();
 
+        $estatistica = $model->first(); 
+        $estatistica->rendimentoGeral =  $rendimentoGeral ; 
+        $estatistica->disciplinasGeral = $discGeral; 
 
+        return response()->json( $estatistica , 200); 
+    }
 
-
-
-
- public function  ClassificaçãoQuery(    ){
-    $model = DB::select('select @row_number:=@row_number + 1 AS colocacao, rendimento ,  total, user_id  from classificacao ,(SELECT @row_number:=0) AS t'); 
-    $collection = collect($model);
-    return $collection;
-}
-
-
-
-
-public function  RendimentoGeralQuery(    ){
-    $model = $this->model
-    ->select(   
-        DB::raw('count(*) as total') ,
-        DB::raw('count(CASE WHEN acerto THEN 1 END) as positivo')  ,   
-        DB::raw('format(count(CASE WHEN acerto THEN 1 END)/cast(count(*) AS SIGNED),3) * 100 as porcentagem')   
-    ) 
-    ->first();  
-    return $model;
-}
-
-
-
-
-
-
-
-public function  RendimentoDisciplinaQuery(    ){
-
-
-  $discSub = $this->model 
-  ->select(  'users_resposta_pergunta.disciplina_id',
-    DB::raw('format(count(CASE WHEN acerto THEN 1 END) / cast(  count(*) AS  SIGNED) , 4 ) * 100 as porcentagem ') ,
-    DB::raw('count(CASE acerto WHEN 0 THEN 1 END) as erros ')   ,
-    DB::raw('count(CASE acerto WHEN 1 THEN 1 END) as acertos ')   
-)
-
-  ->groupBy('users_resposta_pergunta.disciplina_id' )
-  ->where('users_resposta_pergunta.user_id' , Auth::guard('api')->user()->id ) 
-  ->orderBy('porcentagem' ,'desc') ;
-
-
-
-  $discGeral = $this->model
-  ->join('disciplina', 'disciplina_id', '=', 'disciplina.id')
-  ->joinSub($discSub, 'discSub', function ($join) {
-    $join->on('users_resposta_pergunta.disciplina_id', '=', 'discSub.disciplina_id');
-})
-
-  ->select( 
-    DB::raw('discSub.porcentagem as minha')  , 
-    'discSub.erros' , 
-    'discSub.acertos' , 
-    'users_resposta_pergunta.disciplina_id'  , 
-    'disciplina.nome',
-    DB::raw('format(count(CASE WHEN acerto THEN 1 END) / cast(  count(*) AS  SIGNED) , 4 ) * 100 as porcentagem '),
-    DB::raw('count(*)  as total ')    
-)
-
-  ->groupBy('discSub.acertos' , 'discSub.erros' , 'discSub.porcentagem' , 'users_resposta_pergunta.disciplina_id', 'disciplina.nome')
-
-  ->orderBy('porcentagem' ,'desc') 
-  ->get(); 
-
-  return $discGeral;
-}
-
-
-
-
-
-
-
-
-public function  MeuRank( Request $request  ){
-
-    // RANK DOS USUÁRIOS       
-    $classificacao = $this->ClassificaçãoQuery();
-
-    $model = $classificacao->where('user_id', Auth::guard('api')->user()->id );
-
-    $rendimentoGeral  = $this->RendimentoGeralQuery();
-
-    $discGeral = $this->RendimentoDisciplinaQuery();
-
-
-
-    // $disc = $this->model
-    // ->join('disciplina', 'disciplina_id', '=', 'disciplina.id') 
-    // ->select(  'users_resposta_pergunta.disciplina_id'  , 'disciplina.nome',
-    //     DB::raw('count(CASE WHEN acerto THEN 1 END) / cast(  count(*) AS  SIGNED) * 100 as porcentagem ')   ) 
-    // ->groupBy('users_resposta_pergunta.disciplina_id', 'disciplina.nome')
-    // ->where('users_resposta_pergunta.user_id' , Auth::guard('api')->user()->id ) 
-    // ->orderBy('porcentagem' ,'desc') 
-    // ->get(); 
-
-
-
-
-    // $discGeral1 = $this->model
-    // ->join('disciplina', 'disciplina_id', '=', 'disciplina.id')
-    //            // ->select('users.*', 'contacts.phone', 'orders.price')
-    // ->select(  'users_resposta_pergunta.disciplina_id'  , 'disciplina.nome',
-    //     DB::raw('count(CASE WHEN acerto THEN 1 END) / cast(  count(*) AS  SIGNED) * 100 as porcentagem '),
-    //     DB::raw('count(*)  as total ')    )
-
-    // ->groupBy('users_resposta_pergunta.disciplina_id', 'disciplina.nome')
-
-    // ->orderBy('porcentagem' ,'desc') 
-    // ->get(); 
-
-
-
-    $estatistica = $model->first();
-    // $estatistica = head($model);
-    // $estatistica->disciplinas = $disc;
-    $estatistica->rendimentoGeral =  $rendimentoGeral ;
-    // $estatistica['disciplinas'] = $disc;
-    $estatistica->disciplinasGeral = $discGeral;
-    // $estatistica['disciplinasGeral'] = $discGeral;
-
-    return response()->json( $estatistica , 200); 
-}
-
-
-
-
+ 
 }

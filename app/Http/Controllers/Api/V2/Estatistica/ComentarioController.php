@@ -1,6 +1,6 @@
 <?php
 
-namespace  App\Http\Controllers\Api\V1\Estatistica;
+namespace  App\Http\Controllers\Api\V2\Estatistica;
 
 
 use Illuminate\Http\Request;

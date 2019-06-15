@@ -4,10 +4,11 @@ import { authHeader } from '../../_helpers';
 export const comentarioService = { 
 	getUrl, 
 	getComentario,
+	criarComentario,
 };
 
 
-const url = '/api/v1/comentario' ;
+const url = '/api/v2/comentario' ;
 
 
 
@@ -29,18 +30,17 @@ function getComentario( id ) {
 	}); 
 }
 
-// function getAll(  ) { 
-// 	return  new Promise((resolve, reject) => {
-// 		axios.get( url + '/all'  , {headers: authHeader() }  )
-// 		.then(response => {    
-// 			resolve( response.data);  
-// 		})
-// 		.catch(error => {  
-// 			reject(error.response);
-// 		}) 
-// 	}); 
-// }
 
-
+function criarComentario( data ) { 
+	return  new Promise((resolve, reject) => {
+		axios.post( url  , data  , {headers: authHeader() }  )
+		.then(response => {    
+			resolve( response.data);  
+		})
+		.catch(error => {  
+			reject(error.response);
+		}) 
+	}); 
+}
  
  
