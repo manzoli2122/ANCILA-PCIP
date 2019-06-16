@@ -1,6 +1,6 @@
 <?php
 
-namespace  App\Http\Controllers\Api\V1\Seguranca;
+namespace  App\Http\Controllers\Api\V2\Seguranca;
 
 
 use Illuminate\Http\Request;
@@ -21,9 +21,8 @@ class LoginLogController extends VueCrudController
 		$this->dataTable = $dataTable ; 
 		$this->route = 'loginlog';    
 
-        $this->middleware('auth:api', ['except' => [''] ]);
-               
-        // $this->middleware('perfil:Admin')->only( 'destroy');       
+        $this->middleware('auth:api');
+                  
 	}
 
 

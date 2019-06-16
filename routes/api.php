@@ -24,10 +24,86 @@ Route::namespace('Api\V2\Estatistica')->prefix('v2')->group(function () {
     Route::post('comentario/ativacao/{comentarioId}', 'ComentarioController@Ativar') ;  
     Route::post('comentario/datatable', 'ComentarioController@getDatatable');
     Route::resource('comentario', 'ComentarioController')->except(['create', 'edit']);
+ 
+});
+    
 
-    // 
+
+
+
+
+
+
+Route::namespace('Api\V2\Seguranca')->prefix('v2')->group(function () {
+    /*
+    |--------------------------------------------------------------------------
+    | SEGURANCA USUARIO
+    |--------------------------------------------------------------------------
+    */  
+    Route::get('usuario/{userId}/perfil/adicionar','UsuarioController@BuscarPerfisParaAdicionar') ; 
+    Route::post('usuario/{userId}/adicionar/perfil','UsuarioController@adicionarPerfilAoUsuario') ;
+    Route::delete('usuario/{userId}/delete/perfil/{perfilId}','UsuarioController@excluirPerfilDoUsuario') ;  
+    Route::post('usuario/{userId}/perfil/datatable','UsuarioController@BuscarPerfilDataTable') ; 
+    Route::post('usuario/{userId}/perfil/log/datatable','UsuarioController@BuscarPerfilDataTableLog');  
+    Route::post('usuario/ativacao/{userId}',   'UsuarioController@Ativar') ; 
+    Route::get('usuario/resetarSenha/{userId}','UsuarioController@ResetarSenha') ;  
+    Route::delete('usuario/desativacao/{userId}','UsuarioController@Desativar') ;  
+    Route::post('usuario/datatable',  'UsuarioController@getDatatable') ;
+    Route::resource('usuario','UsuarioController')->only([ 'show', 'store', 'update', 'destroy']);
+
+    /*
+    |--------------------------------------------------------------------------
+    | SEGURANCA PERFIL
+    |--------------------------------------------------------------------------
+    */  
+    Route::post('perfil/{perfilId}/adicionar/permissao','PerfilController@adicionarPermissaoAoPerfil');
+    Route::get('perfil/{perfilId}/permissao/adicionar','PerfilController@BuscarPermissoesParaAdicionar') ; 
+    Route::delete('perfil/{perfilId}/delete/permissao/{permissaoId}', 'PerfilController@excluirPermissaoDoPerfil') ; 
+    Route::post('perfil/{perfilId}/permissao/datatable','PerfilController@BuscarPermissaoDataTable') ;
+    Route::post('perfil/{perfilId}/permissao/log/datatable','PerfilController@BuscarPermissaoDataTableLog'); 
+    Route::post('perfil/{perfilId}/usuarios/datatable','PerfilController@BuscarUsuariosDataTable'); 
+    Route::post('perfil/datatable','PerfilController@getDatatable') ;  
+    Route::resource('perfil','PerfilController')->except(['create', 'edit' , 'index']); 
+
+    /*
+    |--------------------------------------------------------------------------
+    | SEGURANCA PERMISSAO
+    |--------------------------------------------------------------------------
+    */ 
+    Route::post('permissao/{permissaoId}/perfis/datatable','PermissaoController@BuscarPerfisDataTable');
+    Route::post('permissao/datatable', 'PermissaoController@getDatatable')->name('permissao.datatable');
+    Route::resource('permissao','PermissaoController')->except(['create', 'edit', 'index']); 
+    /*
+    |--------------------------------------------------------------------------
+    | LoginLog
+    |--------------------------------------------------------------------------
+    */   
+    Route::get('loginlog/all', 'LoginLogController@BuscarTodos') ;
+    Route::post('loginlog/datatable', 'LoginLogController@getDatatable');
+    Route::resource('loginlog','LoginLogController')->only(['show']); 
 
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -144,6 +220,9 @@ Route::namespace('Api\V1\Seguranca')->prefix('v1')->group(function () {
     Route::resource('loginlog','LoginLogController')->only(['show']); 
 
 });
+
+
+
 
  
 Route::namespace('Api\V1\Administrador')->prefix('v1')->group(function () {

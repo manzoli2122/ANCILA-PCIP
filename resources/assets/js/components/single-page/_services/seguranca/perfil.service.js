@@ -8,7 +8,7 @@ export const perfilService = {
 };
 
 
-const url = '/api/v1/perfil' ;
+const url = '/api/v2/perfil' ;
 
 
 

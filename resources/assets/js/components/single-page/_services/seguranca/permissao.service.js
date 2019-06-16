@@ -7,7 +7,7 @@ export const permissaoService = {
 };
 
 
-const url = '/api/v1/permissao' ;
+const url = '/api/v2/permissao' ;
 
 
 

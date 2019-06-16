@@ -11,7 +11,7 @@ export const userService = {
 };
 
 
-const url = '/api/v1/usuario' ;
+const url = '/api/v2/usuario' ;
 
 
 
