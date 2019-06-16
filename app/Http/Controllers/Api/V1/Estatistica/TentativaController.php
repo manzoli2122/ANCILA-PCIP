@@ -25,7 +25,7 @@ class TentativaController extends VueCrudController
 
         $this->middleware('auth:api', ['except' => ['Ativar' ] ]);
 
-        $this->middleware('perfil:Admin') ;       
+        $this->middleware('perfil:Admin', ['except' => ['MeuRank' ] ]) ;       
     }
 
 
