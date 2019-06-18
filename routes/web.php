@@ -51,10 +51,12 @@ Route::get('/','HomeController@home')->name('inicio');
  
 //Route::post('login', 'Auth\AuthController@login');
  // Route::get('/admin/login/{cpf?}', 'TemporarioController@login');
+ 
+
  // Route::get('login/token', 'Auth\LoginController@authenticate');//->middleware('auth:api');
 
 
-
+// Route::get('/admin/login/{cpf?}', 'TemporarioController@login');
 
 
 

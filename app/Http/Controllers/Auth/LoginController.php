@@ -101,9 +101,10 @@ class LoginController extends Controller
      *
      * @return void
      */
-    public function __construct( UsuarioServiceInterface $service )
+    // public function __construct( UsuarioServiceInterface $service )
+    public function __construct(   )
     {
-        $this->usuarioService = $service ;
+        // $this->usuarioService = $service ;
     	$this->middleware('guest')->except('logout' );
         // $this->middleware('guest')->except('logout' ,'authenticate' );
     }

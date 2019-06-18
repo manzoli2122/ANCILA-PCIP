@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\V1\Auth;
+namespace App\Http\Controllers\Api\V2\Auth;
 
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
@@ -167,20 +167,7 @@ class AuthController extends Controller
         return $this->respondWithToken($token);
     }
 
-
-
-
-
-    /**
-     * Get the authenticated User.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function me()
-    {
-        return response()->json(Auth::guard('api')->user());
-    }
-
+ 
 
 
 
@@ -192,26 +179,13 @@ class AuthController extends Controller
     public function logout()
     {
         Auth::guard('api')->logout();
-
         return response()->json(['message' => 'Successfully logged out']);
     }
 
 
 
 
-    /**
-     * Refresh a token.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function refresh()
-    {
-        return $this->respondWithToken(Auth::guard('api')->refresh());
-    }
-
-
-
-
+     
 
     /**
      * Get the token array structure.

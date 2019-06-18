@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Builder;
 use InvalidArgumentException;
 use Cache;  
 use DB;
-
+use Log;
 
 
 class User extends Authenticatable  implements JWTSubject
@@ -353,6 +353,7 @@ class User extends Authenticatable  implements JWTSubject
         }
         else{
             Cache::forget($cacheKey);
+            // Log::info('passou cache');
         }   
         $this->cachedPerfis();
     }

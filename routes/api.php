@@ -114,7 +114,6 @@ Route::namespace('Api\V2\Administrador')->prefix('v2')->group(function () {
     Route::post('assunto/datatable', 'AssuntoController@getDatatable');
     Route::resource('assunto',  'AssuntoController')->except(['create', 'edit' , 'index']); 
  
-
     /*
     |--------------------------------------------------------------------------
     | Pergunta
@@ -147,6 +146,33 @@ Route::namespace('Api\V2\Administrador')->prefix('v2')->group(function () {
 
 
 
+
+
+Route::namespace('Api\V2')->prefix('v2')->group(function () { 
+
+    Route::post('treinamento/proximo', 'TreinamentoController@proximo') ;
+    Route::post('treinamento', 'TreinamentoController@responder') ;
+    Route::post('treinamento/disciplina', 'TreinamentoController@alterarDisciplina');
+    Route::get('treinamento/disciplina', 'TreinamentoController@getDisciplina');
+ 
+    // Route::post('treinamento/todas', 'TreinamentoController@todas') ;
+    // Route::post('treinamento/dificuldade', 'TreinamentoController@alterarDificuldade');
+    // Route::post('treinamento/historico', 'TreinamentoController@historico') ; 
+
+});
+
+
+
+Route::namespace('Api\V2\Auth')->prefix('v2\auth')->group(function () { 
+    Route::post('login', 'AuthController@login');
+    Route::post('update/senha', 'AuthController@updateSenha') ;
+    Route::post('cadastro', 'AuthController@salvarCadastro') ;
+    Route::post('reset/senha', 'AuthController@resetarSenha') ;
+    Route::post('logout', 'AuthController@logout');
+});
+
+
+ 
 
 
 
