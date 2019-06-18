@@ -4,7 +4,7 @@ namespace  App\Http\Controllers\Api\V2\Estatistica;
 
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\Api\V1\VueCrudController;   
+use App\Http\Controllers\Api\V2\VueCrudController;   
 use App\Models\Administrador\Tentativa;  
 use Yajra\DataTables\DataTables;
 use Auth;

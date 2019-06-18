@@ -4,7 +4,7 @@ namespace  App\Http\Controllers\Api\V2\Seguranca;
 
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\Api\V1\VueCrudController;   
+use App\Http\Controllers\Api\V2\VueCrudController;   
 use App\Models\Seguranca\LogLogin;  
 use Yajra\DataTables\DataTables;
  
