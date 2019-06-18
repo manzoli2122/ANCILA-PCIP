@@ -77,9 +77,17 @@ class TentativaController extends VueCrudController
 
     // DEPENDE DA CRIAÇÃO DA VIEW COLOCACAO
     public function  ClassificaçãoQuery(    ){
-        $model = DB::select('select @row_number:=@row_number + 1 AS colocacao, rendimento ,  total, user_id  from classificacao ,(SELECT @row_number:=0) AS t'); 
+        $model = DB::select('select @row_number:=@row_number + 1 AS colocacao, rendimento ,  total, acertos, erros,  user_id  from classificacao ,(SELECT @row_number:=0) AS t'); 
         $collection = collect($model);
         return $collection;
+    }
+
+
+
+    // DEPENDE DA CRIAÇÃO DA VIEW COLOCACAO
+    public function  Classificação(    ){
+         $classificacao = $this->ClassificaçãoQuery();
+         return response()->json( $classificacao , 200); 
     }
 
 

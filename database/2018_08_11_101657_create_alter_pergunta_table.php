@@ -20,6 +20,8 @@ class CreateAlterPerguntaTable extends Migration
 
 
         create view classificacao as SELECT B.user_id, format(COUNT(CASE B.acerto WHEN true THEN 1 END ) /  COUNT(*) , 3) * 100 as rendimento ,
+            COUNT(CASE B.acerto WHEN true THEN 1 END )  as acertos ,
+            COUNT(CASE B.acerto WHEN false THEN 1 END )  as erros ,
             COUNT(*) as total
             from users_resposta_pergunta B
             GROUP BY B.user_id

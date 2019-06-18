@@ -11,6 +11,7 @@ Route::namespace('Api\V2\Estatistica')->prefix('v2')->group(function () {
     | TENTATIVA
     |--------------------------------------------------------------------------
     */   
+    Route::get('tentativa/classificacao',   'TentativaController@Classificação') ;
     Route::get('tentativa/rank',   'TentativaController@Rank') ;
     Route::post('tentativa/datatable', 'TentativaController@getDatatable');
     Route::resource('tentativa','TentativaController')->only(['show', 'index']); 
