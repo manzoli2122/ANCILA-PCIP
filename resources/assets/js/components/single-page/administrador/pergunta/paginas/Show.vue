@@ -50,14 +50,18 @@
 								<h4>
 									{{ item.id }} :  <span v-html="item.texto"></span>  
 									
-									<button v-if="item.id !== model.resposta_certa_id" class="btn btn-success btn-sm" v-on:click="alterarResposta(item.id)"><i class="fa fa-check"></i></button> 
+									<button v-if="item.id !== model.resposta_certa_id && model.status !== 'Finalizada'" class="btn btn-success btn-sm" v-on:click="alterarResposta(item.id)"><i class="fa fa-check"></i></button> 
+									
+									<!-- <button v-if="item.id !== model.resposta_certa_id" class="btn btn-success btn-sm" v-on:click="alterarResposta(item.id)"><i class="fa fa-check"></i></button>  -->
 
-									<button class="btn btn-danger btn-sm" v-on:click="verEditarResposta(item.texto, item.id )"><i class="fa fa-pencil"></i></button> 
+									<button v-if="model.status !== 'Finalizada'" class="btn btn-danger btn-sm" v-on:click="verEditarResposta(item.texto, item.id )"><i class="fa fa-pencil"></i></button> 
+
+									<!-- <button   class="btn btn-danger btn-sm" v-on:click="verEditarResposta(item.texto, item.id )"><i class="fa fa-pencil"></i></button>  -->
 
 									{{ item.count }}
 								</h4>
 							</div>
-							<button  class="btn btn-info" v-on:click="verResposta()"><i class="fa fa-plus"></i> Criar Resposta</button>  
+							<button  v-if="model.status !== 'Finalizada'" class="btn btn-info" v-on:click="verResposta()"><i class="fa fa-plus"></i> Criar Resposta</button>  
 						</section>
 					</div>    
 					<div class="card-footer text-right">

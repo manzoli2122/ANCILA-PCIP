@@ -9,7 +9,7 @@ export const assuntoService = {
 };
 
 
-const url = '/api/v1/assunto' ;
+const url = '/api/v2/assunto' ;
 
 
 

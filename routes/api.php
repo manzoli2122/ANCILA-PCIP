@@ -88,6 +88,69 @@ Route::namespace('Api\V2\Seguranca')->prefix('v2')->group(function () {
 
 
 
+Route::namespace('Api\V2\Administrador')->prefix('v2')->group(function () {
+
+    /*
+    |--------------------------------------------------------------------------
+    | Disciplina
+    |--------------------------------------------------------------------------
+    */  
+    Route::get('disciplina/all', 'DisciplinaController@BuscarTodos') ;
+    Route::delete('disciplina/desativacao/{disciplinaId}', 'DisciplinaController@destroy') ;
+    Route::post('disciplina/ativacao/{disciplinaId}', 'DisciplinaController@Ativar') ;   
+    Route::post('disciplina/{disciplinaId}/assuntos/datatable', 'DisciplinaController@BuscarAssuntosDataTable'); 
+    Route::post('disciplina/datatable', 'DisciplinaController@getDatatable');
+    Route::resource('disciplina', 'DisciplinaController')->except(['create', 'edit', 'index']); 
+
+    /*
+    |--------------------------------------------------------------------------
+    | Assunto
+    |--------------------------------------------------------------------------
+    */  
+    Route::get('assunto/all', 'AssuntoController@BuscarTodos') ;
+    Route::get('assunto/{id}/perguntas', 'AssuntoController@perguntas') ;
+    Route::delete('assunto/desativacao/{assuntoId}',   'AssuntoController@destroy') ; 
+    Route::post('assunto/ativacao/{assuntoId}',   'AssuntoController@Ativar') ;  
+    Route::post('assunto/datatable', 'AssuntoController@getDatatable');
+    Route::resource('assunto',  'AssuntoController')->except(['create', 'edit' , 'index']); 
+ 
+
+    /*
+    |--------------------------------------------------------------------------
+    | Pergunta
+    |--------------------------------------------------------------------------
+    */  
+
+    Route::post('pergunta/alterar/resposta/{perguntaId}', 'PerguntaController@AlterarResposta') ;     
+    Route::get('pergunta/datatable/pdf', 'PerguntaController@pdf');
+    Route::get('pergunta/all', 'PerguntaController@BuscarTodos') ;
+    Route::get('pergunta/all/criada', 'PerguntaController@BuscarCriada') ;
+    Route::delete('pergunta/desativacao/{perguntaId}',   'PerguntaController@destroy') ; 
+    Route::post('pergunta/ativacao/{perguntaId}',   'PerguntaController@Ativar') ; 
+    Route::post('pergunta/datatable', 'PerguntaController@getDatatable') ;
+    Route::resource('pergunta', 'PerguntaController')->except(['create', 'edit', 'index']);
+ 
+    /*
+    |--------------------------------------------------------------------------
+    | Respostas
+    |--------------------------------------------------------------------------
+    */ 
+    Route::delete('resposta/desativacao/{respostaId}',  'RespostaController@destroy') ; 
+    Route::post('resposta/ativacao/{respostaId}',   'RespostaController@Ativar') ;  
+    Route::post('resposta/datatable', 'RespostaController@getDatatable');
+    Route::resource('resposta', 'RespostaController')->except(['create', 'edit', 'index']);
+ 
+});
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -9,7 +9,7 @@ export const respostaService = {
 };
 
 
-const url = '/api/v1/resposta' ;
+const url = '/api/v2/resposta' ;
 
 
 

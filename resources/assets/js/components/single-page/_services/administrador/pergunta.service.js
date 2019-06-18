@@ -8,7 +8,7 @@ export const perguntaService = {
 };
 
 
-const url = '/api/v1/pergunta' ;
+const url = '/api/v2/pergunta' ;
 
 
 

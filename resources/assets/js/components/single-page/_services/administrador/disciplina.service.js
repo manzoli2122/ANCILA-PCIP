@@ -8,7 +8,7 @@ export const disciplinaService = {
 };
 
 
-const url = '/api/v1/disciplina' ;
+const url = '/api/v2/disciplina' ;
 
 
 

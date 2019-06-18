@@ -1,10 +1,10 @@
 <?php
 
-namespace  App\Http\Controllers\Api\V1\Administrador;
+namespace  App\Http\Controllers\Api\V2\Administrador;
 
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\Api\V1\VueCrudController;   
+use App\Http\Controllers\Api\V2\VueCrudController;   
 use App\Models\Administrador\Assunto;  
 use Yajra\DataTables\DataTables; 
 use Validator;
@@ -21,10 +21,12 @@ class AssuntoController extends VueCrudController
 		$this->dataTable = $dataTable ; 
         $this->route = 'assunto';
 
-        $this->middleware('auth:api', ['except' => [''] ]);        
+        $this->middleware('auth:api');        
 		 
-        $this->middleware('permissao:assunto');
-        $this->middleware('permissao:assunto-editar')->only('update');
+        $this->middleware('permissao:assuntos');
+        $this->middleware('permissao:assuntos_editar')->only('update');
+        $this->middleware('permissao:assuntos_cadastrar')->only('store');
+
         $this->middleware('perfil:Admin')->only( 'destroy');   
 	}
 

@@ -1,9 +1,9 @@
 <?php
 
-namespace  App\Http\Controllers\Api\V1\Administrador;
+namespace  App\Http\Controllers\Api\V2\Administrador;
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\Api\V1\VueCrudController;   
+use App\Http\Controllers\Api\V2\VueCrudController;   
 use App\Models\Administrador\Resposta;
 use Yajra\DataTables\DataTables;
 use Validator;
@@ -19,10 +19,10 @@ class RespostaController extends VueCrudController
         $this->route = 'resposta';
         
         $this->middleware('auth:api');
-         
-        $this->middleware('permissao:resposta') ; 
 
-        $this->middleware('permissao:resposta-editar')->only('update') ;   
+        $this->middleware('permissao:respostas') ; 
+
+        $this->middleware('permissao:respostas_editar')->only('update') ;   
         
         $this->middleware('perfil:Admin')->only('destroy');
 
@@ -75,10 +75,10 @@ class RespostaController extends VueCrudController
             ->setRowClass(function ($linha) {
                 $class = '';
                 if($linha->deleted_at != ''){
-                   $class .= 'alert-warning' ;
-               }
-               return $class;
-           })
+                 $class .= 'alert-warning' ;
+             }
+             return $class;
+         })
 
             ->make(true); 
 
@@ -146,7 +146,12 @@ class RespostaController extends VueCrudController
         try{ 
             if( !$model =  $this->model->find($id)   ){       
                 return response()->json('Item não encontrado.', 404 );    
-            }     
+            }   
+
+            if( $model->pergunta->status === 'Finalizada' ){
+                return response()->json('Operacao nao Permitida.', 401 ); 
+            }   
+            
             if( $request->input('correta') == 'true' ){
                 $model->pergunta->resposta_correta()->associate($model) ;
                 $model->pergunta->save();

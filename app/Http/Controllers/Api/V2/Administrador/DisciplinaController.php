@@ -1,9 +1,9 @@
 <?php
 
-namespace  App\Http\Controllers\Api\V1\Administrador;
+namespace  App\Http\Controllers\Api\V2\Administrador;
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\Api\V1\VueCrudController;   
+use App\Http\Controllers\Api\V2\VueCrudController;   
 use App\Models\Administrador\Disciplina; 
 use Yajra\DataTables\DataTables;
 use Validator;

@@ -1,10 +1,10 @@
 <?php
 
-namespace  App\Http\Controllers\Api\V1\Administrador;
+namespace  App\Http\Controllers\Api\V2\Administrador;
 
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\Api\V1\VueCrudController;   
+use App\Http\Controllers\Api\V2\VueCrudController;   
 use App\Models\Administrador\Pergunta;  
 use App\Models\Administrador\Resposta;
 use Yajra\DataTables\DataTables;
@@ -22,16 +22,62 @@ class PerguntaController extends VueCrudController
         $this->dataTable = $dataTable ; 
         $this->route = 'pergunta';
         
-        $this->middleware('auth:api', ['except' => [''] ]);
+        $this->middleware('auth:api');
 
-        $this->middleware('permissao:pergunta')->except('respostas', 'destroy') ;
+        $this->middleware('permissao:perguntas')->except('respostas', 'destroy') ;
+
+        // $this->middleware('permissao:AlterarResposta')->only('AlterarResposta') ;
         
-        $this->middleware('permissao:pergunta-editar')->only('update') ;
+        $this->middleware('permissao:perguntas_editar')->only('update' ,'AlterarResposta' ) ;
 
         $this->middleware('perfil:Admin')->only( 'destroy');
 
     }
 
+
+
+
+    /**
+    * Função para atualizar um model
+    *
+    * @param Request $request
+    *  
+    * @param int  $id
+    *    
+    * @return json
+    */
+    public function update(Request $request ,  $id )
+    {       
+        $validator = Validator::make( $request->all(), $this->model->rules() );
+        if ($validator->fails()) {
+            return response()->json(['message' =>  (string) $validator->errors() , 'error' => $validator->errors() ] , 422); 
+        }  
+        try{ 
+            if( !$model =  $this->model->find($id)   ){       
+                return response()->json('Item não encontrado.', 404 );    
+            }          
+
+            
+            if( $model->status === 'Finalizada' ){
+                if(Auth::guard('api')->user() ){
+                    if( !Auth::guard('api')->user()->hasPerfil('Admin') ){
+                        return response()->json('Operacao nao Permitida.', 401 ); 
+                    }
+                }  
+                else{
+                   return response()->json('Operacao nao Permitida.', 401 );  
+               }              
+           } 
+
+           if( !$update = $model->update($request->all())  ){
+            return response()->json('Nãp foi possivel atualizar.', 500 ); 
+        }            
+    }  
+    catch(Exception $e){
+        return response()->json( $e->getMessage() , 500);
+    } 
+    return response()->json( 'Atualização realizada com sucesso' , 200); 
+}
 
 
 
@@ -77,6 +123,11 @@ class PerguntaController extends VueCrudController
         if( !$resposta = Resposta::find( $request->input('resposta_id')) ){
             return response()->json('Item não encontrado.', 404 ); 
         } 
+
+        if( $model->status === 'Finalizada' ){
+            return response()->json('Operacao nao Permitida.', 401 ); 
+        } 
+
         $model->resposta_correta()->associate($resposta) ;
         $model->save(); 
         return response()->json( $model , 200 ); 
