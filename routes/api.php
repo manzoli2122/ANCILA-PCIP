@@ -164,7 +164,7 @@ Route::namespace('Api\V2')->prefix('v2')->group(function () {
 
 
 
-Route::namespace('Api\V2\Auth')->prefix('v2\auth')->group(function () { 
+Route::namespace('Api\V2\Auth')->prefix('v2/auth')->group(function () { 
     Route::post('login', 'AuthController@login');
     Route::post('update/senha', 'AuthController@updateSenha') ;
     Route::post('cadastro', 'AuthController@salvarCadastro') ;

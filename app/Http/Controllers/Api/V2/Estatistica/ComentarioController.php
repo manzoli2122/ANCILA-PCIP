@@ -21,8 +21,8 @@ class ComentarioController extends VueCrudController
         $this->model = $comentario ;    
         $this->dataTable = $dataTable ; 
         $this->route = 'comentario';          
-        $this->middleware('auth:api', ['except' => [''] ]);         
-        $this->middleware('perfil:Admin');
+        $this->middleware('auth:api');         
+        $this->middleware('perfil:Admin', ['except' => ['store'] ]);
 
     }
 

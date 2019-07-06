@@ -1,6 +1,6 @@
 <template> 
 	<div v-if="model" id="inicio">
-		<crudHeader :texto="'Pergunta - ' + model.id ">
+		<crudHeader :texto="'Pergunta - ' + model.id  + ' - ' + model.dificuldade+ ' - ' + model.status">
 			<li class="breadcrumb-item">
 				<router-link   :to="url_retorno" exact><a>Perguntas </a></router-link> 
 			</li>

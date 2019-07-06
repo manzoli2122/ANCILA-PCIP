@@ -58,7 +58,7 @@ class Pergunta extends Model
 
     public function rules($id = ''){
         return [
-            'texto' => 'required|min:3|max:2000',
+            'texto' => 'required|min:3|max:5000',
             //'descricao' => 'required|min:3|max:150',                
         ];
     }

@@ -25,6 +25,11 @@
 						<input type="text" id="email" name="email" class="form-control" v-model="form.email" v-bind:class="{ 'is-invalid': form.errors.has('email') }">
 					</crudFormElemento> 
  
+					<crudFormElemento :errors="form.errors.has('data_fim_pro')" :errors_texto="form.errors.get('data_fim_pro')">
+						<label for="data_fim_pro">Pro até:</label>
+						<input id="data_fim_pro" name="data_fim_pro" v-model="form.data_fim_pro" type="date" class="form-control input-lg" v-bind:class="{ 'is-invalid': form.errors.has('data_fim_pro') }">  
+					</crudFormElemento> 
+ 
 				</Formulario> 
 			</div> 
 		</div>   
@@ -51,6 +56,7 @@
 					nome: '',  
 					apelido: '',       
 					id: '',       
+					data_fim_pro: '',       
 					email: ''               
 				}),
 				api_url: userService.getUrl() + '/' + this.$route.params.id,
@@ -63,6 +69,7 @@
 				this.form.nome = this.model.nome;
 				this.form.apelido = this.model.apelido;  
 				this.form.email = this.model.email;  
+				this.form.data_fim_pro = this.model.data_fim_pro;  
 				this.form.id = this.model.id;  
 			}
 

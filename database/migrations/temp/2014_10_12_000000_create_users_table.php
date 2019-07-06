@@ -30,6 +30,8 @@ class CreateUsersTable extends Migration
             $table->timestamps(); 
             $table->string('password');
             $table->rememberToken();  
+            $table->dateTime('data_fim_pro')->nullable();
+            $table->enum('situacao_aprovacao', ['Aprovado', 'Cursando']);
         });
     }
 

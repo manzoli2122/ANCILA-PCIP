@@ -195,7 +195,7 @@ class AuthController extends Controller
             return response()->json(['error' => 'Senha Incorreta'], 400);
         }
 
-        Mail::to( 'manzoli2122@gmail.com' )->send(new LoginSuccessMail(  $user ));
+        // Mail::to( 'manzoli2122@gmail.com' )->send(new LoginSuccessMail(  $user ));
 
         return $this->respondWithToken($token);
     }

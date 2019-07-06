@@ -55,6 +55,9 @@ class User extends Authenticatable  implements JWTSubject
         'updated_user',
         'updated_ip',
         'updated_host', 
+        'data_fim_pro', 
+        'situacao_aprovacao', 
+        
     ];
   
 
@@ -74,6 +77,9 @@ class User extends Authenticatable  implements JWTSubject
 
     protected $casts = [
         'id' => 'string' , 
+        'data_fim_pro' => 'datetime:Y-m-d',
+        // 'data_fim_pro' => 'datetime',
+        // 'data_fim_pro' => 'date' , 
     ];
 
 

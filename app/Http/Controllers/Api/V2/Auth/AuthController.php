@@ -112,9 +112,9 @@ class AuthController extends Controller
         try{ 
             throw_if( !$insert  = User::create( $data ) , Exception::class); 
             $perfil = Perfil::where('nome', 'UsuarioRestrita')->first();            
-            if($perfil &&  $insert->id ){ 
-                $insert->attachPerfil($perfil, '00000000001' );               
-            }             
+            // if($perfil &&  $insert->id ){ 
+            //     $insert->attachPerfil($perfil, '00000000001' );               
+            // }             
             return response()->json(['message' => 'Usuário cadastrado com sucesso!!!']);         
         }  
         catch(Exception $e){
@@ -157,8 +157,10 @@ class AuthController extends Controller
         LogLogin::create($data);
 
         $credentials = request(['id', 'password']);
-
-        if (! $token = Auth::guard('api')->claims(['user' => $user->only(['nome' , 'email', 'apelido'  ]) , 'perfis' =>json_decode($user->cachedPerfis())->perfis ])->attempt($credentials)) {
+        // $user->data_fim_pro = $user->data_fim_pro->format('d-m-Y');
+        // $user->data_fim_pro = $user->data_fim_pro->toDateString();
+        // $user->data_fim_pro = $user->data_fim_pro->toTimeString();
+        if (! $token = Auth::guard('api')->claims(['user' => $user->only([ 'situacao_aprovacao', 'data_fim_pro', 'nome' , 'email', 'apelido'  ]) , 'perfis' =>json_decode($user->cachedPerfis())->perfis ])->attempt($credentials)) {
             return response()->json(['error' => 'Senha Incorreta'], 400);
         }
 

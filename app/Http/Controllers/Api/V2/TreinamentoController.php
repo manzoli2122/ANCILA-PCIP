@@ -12,7 +12,7 @@ use App\Models\Administrador\Resposta;
 use App\Models\Administrador\Tentativa;
 use App\Models\Administrador\Assunto;
 use DB;
-
+use Log;
 
 
 class TreinamentoController extends Controller
@@ -38,8 +38,12 @@ class TreinamentoController extends Controller
             $disciplina = $request->input('disciplina_id'); 
             $perguntas = $request->input('perguntas'); 
 
-            $status =  [  'Validada' , 'Finalizada' , 'Restrita'] ;
-
+            $status =  [  'Validada' , 'Finalizada' ] ; 
+            
+            if( Auth::guard('api')->user()->can('Restrita') ){
+                array_push($status, 'Restrita' );
+            }
+            
             if( !$models = $this->model->ativo()
                 ->whereNotIn( 'id' , $perguntas )
                 ->whereIn( 'pergunta.status' , $status  )
@@ -56,9 +60,6 @@ class TreinamentoController extends Controller
                 return response()->json(  'pergunta nao encontrada - 2' , 404);
             }
 
-
-
-
             $realizadas = Tentativa::select('pergunta_id' , DB::raw('count(*) as total')    )
 
             ->groupBy('pergunta_id') 
@@ -70,16 +71,22 @@ class TreinamentoController extends Controller
 
             $plucked = $realizadas->pluck('pergunta_id');
 
+            $models_ids = $models->pluck('id');
+
             $filtered = $models->whereNotIn('id',$plucked );
 
             if( $filtered->count() < 1 ){ 
 
                 if($realizadas->count() > 0){
 
-                    $model = $models->where('id' , $realizadas->where('total' , $realizadas->first()->total)->random()->pergunta_id )->first();
+                    $busca =  $realizadas->whereIn('pergunta_id' , $models_ids);
+
+                    $model = $models->where('id' , $busca->where('total' , $busca->first()->total)->random()->pergunta_id )->first();
+
+                    // $model = $models->where('id' , $realizadas->where('total' , $realizadas->first()->total)->random()->pergunta_id )->first();
 
                     $model->resposta = $model->resposta->shuffle();
-                    return response()->json(  $model->only( 'id' , 'texto' , 'resposta_certa_id' , 'resumo' , 'assunto' ,'resposta' , 'dificuldade') , 200); 
+                    return response()->json(  $model->only( 'id' ,'status' , 'texto' , 'resposta_certa_id' , 'resumo' , 'assunto' ,'resposta' , 'dificuldade') , 200); 
                 } 
                 else{
                     return response()->json(  'pergunta nao encontrada - 3' , 404);
@@ -90,7 +97,7 @@ class TreinamentoController extends Controller
                 $model = $filtered->random();
                 $model->resposta = $model->resposta->shuffle();
 
-                return response()->json(  $model->only( 'id' , 'texto' , 'resposta_certa_id' , 'resumo' , 'assunto' ,'resposta' , 'dificuldade') , 200);  
+                return response()->json(  $model->only( 'id' , 'status' ,'texto' , 'resposta_certa_id' , 'resumo' , 'assunto' ,'resposta' , 'dificuldade') , 200);  
             }
 
         }   
@@ -99,6 +106,69 @@ class TreinamentoController extends Controller
             return response()->json(  'pergunta nao encontrada' , 500);  ;
         }
     }
+
+
+
+    public function proximoAdmin(Request $request )
+    {
+        try {  
+            if( Auth::guard('api')->user()->hasPerfil('Admin') ){
+                $disciplina = $request->input('disciplina_id'); 
+                $perguntas = $request->input('perguntas'); 
+                // if( Auth::guard('api')->user()->hasPerfil('Admin') ){
+                //     $status =  ['Restrita'] ; 
+                // }
+                $status =  ['Restrita'] ; 
+                if( !$models = $this->model->ativo()
+                    ->whereNotIn( 'id' , $perguntas )
+                    ->whereIn( 'pergunta.status' , $status  )
+                    ->whereHas('assunto', function ($query) use ($disciplina) {
+                        $query->whereIn('disciplina_id',  $disciplina  );
+                    })
+                    ->with('resposta')->get()    )
+                {       
+                    return response()->json(  'pergunta nao encontrada - 1' , 404);             
+                } 
+                if( $models->count() < 1 ){             
+                    return response()->json(  'pergunta nao encontrada - 2' , 404);
+                } 
+                $realizadas = Tentativa::select('pergunta_id' , DB::raw('count(*) as total')    )
+                ->groupBy('pergunta_id') 
+                ->where('user_id' , Auth::guard('api')->user()->id ) 
+                ->where('disciplina_id' , $disciplina ) 
+                ->whereNotIn( 'pergunta_id' , $perguntas )
+                ->orderBy('total', 'asc')
+                ->get();   
+
+                $plucked = $realizadas->pluck('pergunta_id');
+                $models_ids = $models->pluck('id');
+                // Log::info( $models_ids );
+
+                $filtered = $models->whereNotIn('id',$plucked );
+
+                if( $filtered->count() < 1 ){ 
+                    if($realizadas->count() > 0){
+                        $busca =  $realizadas->whereIn('pergunta_id' , $models_ids);
+                        $model = $models->where('id' , $busca->where('total' , $busca->first()->total)->random()->pergunta_id )->first();
+                        $model->resposta = $model->resposta->shuffle();
+                        return response()->json(  $model->only( 'id' ,'status' , 'texto' , 'resposta_certa_id' , 'resumo' , 'assunto' ,'resposta' , 'dificuldade') , 200); 
+                    } 
+                    else{
+                        return response()->json(  'pergunta nao encontrada - 3' , 404);
+                    }
+                }
+                else{
+                    $model = $filtered->random();
+                    $model->resposta = $model->resposta->shuffle();
+                    return response()->json(  $model->only( 'id' ,'status' , 'texto' , 'resposta_certa_id' , 'resumo' , 'assunto' ,'resposta' , 'dificuldade') , 200);  
+                }
+            } 
+        }   
+        catch(Exception $e) {        
+            return response()->json(  'pergunta nao encontrada' , 500);  ;
+        }
+    }
+
 
 
 
@@ -167,7 +237,7 @@ class TreinamentoController extends Controller
         return response()->json( [  'disciplina' =>  session('disciplina' , [] )    ]   , 200); 
     }
 
- 
+
 
 
 
@@ -198,7 +268,7 @@ class TreinamentoController extends Controller
     // }
 
 
- 
+
     // public function historico(Request $request){ 
     //     $disciplina = $request->input('disciplina');
     //     $id = Auth::guard('api')->user()->id;
@@ -228,5 +298,5 @@ class TreinamentoController extends Controller
     //     return response()->json( [  'dificuldade' =>  session('dificuldade' , [] ) ] , 200);
     // }
 
- 
+
 }

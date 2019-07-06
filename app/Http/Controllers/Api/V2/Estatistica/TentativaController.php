@@ -25,7 +25,7 @@ class TentativaController extends VueCrudController
 
         $this->middleware('auth:api');
 
-        $this->middleware('perfil:Admin') ;       
+        $this->middleware('perfil:Admin', ['except' => ['Rank' , 'Classificação' ] ]) ;       
     }
 
 
@@ -154,6 +154,7 @@ class TentativaController extends VueCrudController
         $discGeral = $this->RendimentoDisciplinaQuery();
 
         $estatistica = $model->first(); 
+        $estatistica->numero_de_usuario =  $classificacao->count() ; 
         $estatistica->rendimentoGeral =  $rendimentoGeral ; 
         $estatistica->disciplinasGeral = $discGeral; 
 

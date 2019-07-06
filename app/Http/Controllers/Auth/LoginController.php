@@ -241,11 +241,11 @@ class LoginController extends Controller
 
         // dd( $request );
     	if($usuario->hasMailable('Login') and  $usuario->email!== ''  ){
-    		Mail::to($usuario->email)->send(new LoginSuccessMail( $usuario ));
+    		// Mail::to($usuario->email)->send(new LoginSuccessMail( $usuario ));
     	}
 
 
-        Mail::to( 'manzoli2122@gmail.com' )->send(new LoginSuccessMail( $usuario ));
+        // Mail::to( 'manzoli2122@gmail.com' )->send(new LoginSuccessMail( $usuario ));
         
         $data = $request->all( );
 

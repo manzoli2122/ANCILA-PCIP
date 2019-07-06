@@ -13,6 +13,7 @@
 							<th pesquisavel>Assunto</th>       
 							<th pesquisavel>Dificuldade</th>       
 							<th pesquisavel>Status</th>       
+							<th pesquisavel>Resposta</th>       
 							<th pesquisavel>Disciplina</th> 
 							<th class="align-center" style="width:150px">Ações</th> 
 						</datatable> 
@@ -58,6 +59,7 @@
 					{ data: 'assunto.nome', name: 'assunto.nome' }, 
 					{ data: 'dificuldade', name: 'dificuldade' }, 
 					{ data: 'status', name: 'status' }, 
+					{ data: 'resposta_certa_id', name: 'resposta_certa_id' }, 
 					{ data: 'disciplina', name: 'assunto.disciplina_id'  },  
 					{ data: 'action', name: 'action', orderable: false, searchable: false, class: 'align-center'}
 					],

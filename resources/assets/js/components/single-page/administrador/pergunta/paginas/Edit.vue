@@ -13,7 +13,7 @@
 						<div class="col-md-8"> 
 							<crudFormElemento :errors="form.errors.has('texto')" :errors_texto="form.errors.get('texto')">
 								<label for="texto">Pergunta:</label>
-								<textarea id="texto" name="texto" class="form-control" v-model="form.texto" style="height:270px" v-bind:class="{ 'is-invalid': form.errors.has('texto') }" v-bind:disabled="model.status == 'Finalizada'"> </textarea>   
+								<textarea id="texto" name="texto" class="form-control" v-model="form.texto" style="height:270px" v-bind:class="{ 'is-invalid': form.errors.has('texto') }" v-bind:disabled="model.status == 'Finalizada' && !admin"> </textarea>   
 							</crudFormElemento> 
 							</div>
 						<div class="col-md-4"> 
@@ -35,7 +35,7 @@
 						<div class="col-md-3"> 
 							<crudFormElemento :errors="form.errors.has('dificuldade')" :errors_texto="form.errors.get('dificuldade')">
 								<label for="dificuldade">Dificuldade:</label>
-								<select2  v-model="form.dificuldade" class="form-control" v-bind:class="{'is-invalid': form.errors.has('dificuldade')}" v-bind:disabled="model.status == 'Finalizada'">
+								<select2  v-model="form.dificuldade" class="form-control" v-bind:class="{'is-invalid': form.errors.has('dificuldade')}" v-bind:disabled="model.status == 'Finalizada' && !admin ">
 									<option   value="Muito Facil"> Muito Fácil </option>
 									<option   value="Facil"> Fácil </option>
 									<option   value="Medio"> Medio </option>
@@ -59,7 +59,7 @@
 						<div class="col-md-6"> 
 							<crudFormElemento :errors="form.errors.has('assunto_id')" :errors_texto="form.errors.get('assunto_id')">
 								<label for="assunto_id">Assunto:</label> 
-								<select2   v-model="form.assunto_id" class="form-control" v-bind:class="{ 'is-invalid': form.errors.has('assunto_id') }" v-bind:disabled="model.status == 'Finalizada'">
+								<select2   v-model="form.assunto_id" class="form-control" v-bind:class="{ 'is-invalid': form.errors.has('assunto_id') }" v-bind:disabled="model.status == 'Finalizada' && !admin">
 									<option    value="">Selecione a Assunto </option> 
 									<option v-for="item in assunto" :key="item.id" :value="item.id"> {{ item.nome }} - {{item.disciplina.nome}}</option>
 								</select2>     
@@ -68,7 +68,7 @@
 					</div> 
 					<crudFormElemento :errors="form.errors.has('resumo')" :errors_texto="form.errors.get('resumo')">
 						<label for="resumo">Resumo da Pergunta:</label>
-						<textarea id="resumo" name="resumo" class="form-control" v-model="form.resumo" style="height:300px" v-bind:class="{ 'is-invalid': form.errors.has('resumo') }" v-bind:disabled="model.status == 'Finalizada'"> </textarea>   
+						<textarea id="resumo" name="resumo" class="form-control" v-model="form.resumo" style="height:300px" v-bind:class="{ 'is-invalid': form.errors.has('resumo') }" v-bind:disabled="model.status == 'Finalizada' && !admin"> </textarea>   
 					</crudFormElemento> 
 				</Formulario>  
 			</div> 
@@ -121,6 +121,20 @@
 			}
 
 		},    
+
+		computed: {
+			admin () {
+ 				if(this.$store.state.authentication.perfis){
+ 					return this.$store.state.authentication.perfis.filter(
+ 						perfil => { if(perfil == 'Admin'){
+ 							return true;
+ 						}} ).length > 0 ;
+ 				}
+ 				return false;
+ 			},
+		},
+
+
 
 		created() {
 
