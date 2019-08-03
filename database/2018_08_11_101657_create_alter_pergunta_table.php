@@ -19,12 +19,25 @@ class CreateAlterPerguntaTable extends Migration
         }); 
 
 
-        create view classificacao as SELECT B.user_id, format(COUNT(CASE B.acerto WHEN true THEN 1 END ) /  COUNT(*) , 3) * 100 as rendimento ,
+        create view classificacao as SELECT B.user_id, C.situacao_aprovacao, format(COUNT(CASE B.acerto WHEN true THEN 1 END ) /  COUNT(*) , 3) * 100 as rendimento ,
             COUNT(CASE B.acerto WHEN true THEN 1 END )  as acertos ,
             COUNT(CASE B.acerto WHEN false THEN 1 END )  as erros ,
             COUNT(*) as total
-            from users_resposta_pergunta B
-            GROUP BY B.user_id
+            from users_resposta_pergunta B 
+            inner join users C ON B.user_id = C.id
+            GROUP BY B.user_id , C.situacao_aprovacao
+            HAVING count(*) >10
+            ORDER by rendimento desc
+
+
+
+            create view classificacao3 as SELECT B.user_id, C.situacao_aprovacao, C.nome, C.data_fim_pro, format(COUNT(CASE B.acerto WHEN true THEN 1 END ) /  COUNT(*) , 3) * 100 as rendimento ,
+            COUNT(CASE B.acerto WHEN true THEN 1 END )  as acertos ,
+            COUNT(CASE B.acerto WHEN false THEN 1 END )  as erros ,
+            COUNT(*) as total
+            from users_resposta_pergunta B 
+            inner join users C ON B.user_id = C.id
+            GROUP BY B.user_id , C.situacao_aprovacao, C.nome, C.data_fim_pro
             HAVING count(*) >10
             ORDER by rendimento desc
 

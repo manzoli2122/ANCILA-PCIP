@@ -19,17 +19,25 @@
 						<label for="apelido">Apelido:</label>
 						<input type="text" id="apelido" name="apelido" class="form-control" v-model="form.apelido" v-bind:class="{ 'is-invalid': form.errors.has('apelido') }"> 
 					</crudFormElemento>
-  
+
 					<crudFormElemento :errors="form.errors.has('email')" :errors_texto="form.errors.get('email')">
 						<label for="email">Email:</label>
 						<input type="text" id="email" name="email" class="form-control" v-model="form.email" v-bind:class="{ 'is-invalid': form.errors.has('email') }">
 					</crudFormElemento> 
- 
+
 					<crudFormElemento :errors="form.errors.has('data_fim_pro')" :errors_texto="form.errors.get('data_fim_pro')">
 						<label for="data_fim_pro">Pro até:</label>
 						<input id="data_fim_pro" name="data_fim_pro" v-model="form.data_fim_pro" type="date" class="form-control input-lg" v-bind:class="{ 'is-invalid': form.errors.has('data_fim_pro') }">  
 					</crudFormElemento> 
- 
+
+					<crudFormElemento :errors="form.errors.has('situacao_aprovacao')" :errors_texto="form.errors.get('situacao_aprovacao')">
+						<label for="situacao_aprovacao">situação aprovação:</label>
+						<select2  v-model="form.situacao_aprovacao" class="form-control" v-bind:class="{'is-invalid': form.errors.has('situacao_aprovacao')}"  >
+							<option   value="Aprovado"> Aprovado </option>
+							<option   value="Cursando"> Cursando </option> 
+						</select2> 
+					</crudFormElemento>  
+
 				</Formulario> 
 			</div> 
 		</div>   
@@ -57,6 +65,7 @@
 					apelido: '',       
 					id: '',       
 					data_fim_pro: '',       
+					situacao_aprovacao: '',       
 					email: ''               
 				}),
 				api_url: userService.getUrl() + '/' + this.$route.params.id,
@@ -70,6 +79,7 @@
 				this.form.apelido = this.model.apelido;  
 				this.form.email = this.model.email;  
 				this.form.data_fim_pro = this.model.data_fim_pro;  
+				this.form.situacao_aprovacao = this.model.situacao_aprovacao;  
 				this.form.id = this.model.id;  
 			}
 

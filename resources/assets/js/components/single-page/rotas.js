@@ -54,12 +54,12 @@ const headerVue = new Vue({
     render: h => h(Header)  
 });
 
- 
+
 const seguranca = new Vue({
     el: '#single',
     router,
     store,
- 
+
 });
 
  

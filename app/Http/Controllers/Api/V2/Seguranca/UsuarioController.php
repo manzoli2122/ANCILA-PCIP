@@ -15,6 +15,7 @@ use Auth;
 use Log;
 use Illuminate\Support\Facades\Mail;  
  
+use App\Mail\ResetSenhaMail; 
 
 
 
@@ -34,7 +35,7 @@ class UsuarioController extends VueCrudController
 		$this->dataTable = $dataTable ; 
 		$this->route = 'usuario';  
 
-		$this->middleware('auth:api', ['except' => [''] ]);
+		$this->middleware('auth:api', ['except' => ['ResetarSenha'] ]);
 
         // $this->middleware('permissao:usuarios');  
         // $this->middleware('perfil:Admin')->only('update', 'destroy' , 'excluirPerfilDoUsuario' , 'adicionarPerfilAoUsuario' , 'ResetarSenha'); 
@@ -347,7 +348,7 @@ class UsuarioController extends VueCrudController
     			} 
     			return '<a href="#/'. $this->route . '/'.$linha->id.'/perfil" class="btn btn-primary btn-sm" title="Perfis"><i class="fa fa-id-card"></i></a> ' 
 
-    			.'<a href="#" class="btn btn-warning btn-sm" title="Resetar Senha"><i class="fa fa-key"></i></a>'
+    			.'<a href="api/v2/usuario/resetarSenha/'.$linha->id.'" target="_blank" class="btn btn-warning btn-sm" title="Resetar Senha"><i class="fa fa-key"></i></a>'
     			.'<a href="#/'. $this->route . '/edit/'.$linha->id.'" class="btn btn-success btn-sm" title="Editar"><i class="fa fa-pencil"></i></a>'
 
     			.'<button data-id="'.$linha->id.'" btn-desativar class="btn btn-danger btn-sm" title="Destivar"><i class="fa fa-lock"></i></button>' ; 
@@ -388,7 +389,11 @@ class UsuarioController extends VueCrudController
     	if(!$model = $this->model->withoutGlobalScope('ativo')->find($userId)) {
     		return response()->json('Item não encontrado.', 404 );
     	}
-    	$model->password = bcrypt(  'pmes@123'  ); 
+
+        Mail::to( $model->email )->send(new ResetSenhaMail( 'pmes@123' ));
+
+    	$model->password = bcrypt(  'pmes@123'  );
+
     	$model->save();  
     	return back();
     }

@@ -30,3 +30,11 @@
 	}
 
 </script>
+
+
+<style >
+ .text-red{
+  color:red   !important;
+}
+ 
+</style>

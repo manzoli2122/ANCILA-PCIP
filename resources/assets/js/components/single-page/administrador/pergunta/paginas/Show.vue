@@ -265,7 +265,17 @@
 
 
 <style scoped>
+
 button{
 	margin-left: 5px;
 }
+
+
+.text-red{
+  color:red   !important;
+}
+ 
+
+
+
 </style>
